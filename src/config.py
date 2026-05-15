@@ -1,0 +1,41 @@
+from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+ROOT = Path(__file__).resolve().parent.parent
+DOCS_DIR = ROOT / "docs"
+DATA_DIR = ROOT / "data"
+PARSED_DIR = DATA_DIR / "parsed"
+QDRANT_DIR = DATA_DIR / "qdrant"
+PARENTS_DB = DATA_DIR / "parents.sqlite"
+
+for d in (DATA_DIR, PARSED_DIR, QDRANT_DIR):
+    d.mkdir(parents=True, exist_ok=True)
+
+# Chunking — sizes are in characters (Chinese ≈ 1 char per token for budgeting)
+PARENT_SIZE = 1200
+PARENT_OVERLAP = 100
+CHILD_SIZE = 256
+CHILD_OVERLAP = 32
+
+# Embedding
+EMBED_MODEL = "BAAI/bge-m3"
+EMBED_DIM = 1024
+EMBED_BATCH = 16
+
+# Retrieval
+DENSE_TOP_K = 20
+SPARSE_TOP_K = 20
+FINAL_TOP_K = 5
+MAX_CONTEXT_CHARS = 6000
+
+# Qdrant
+COLLECTION = "pincheng_docs"
+
+# LLM — Zhipu GLM via OpenAI-compatible API
+ZHIPU_API_KEY = os.getenv("ZHIPU_API_KEY", "")
+ZHIPU_BASE_URL = "https://open.bigmodel.cn/api/paas/v4/"
+LLM_MODEL = os.getenv("LLM_MODEL", "glm-4-plus")
+LLM_TEMPERATURE = 0.2

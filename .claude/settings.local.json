@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip index *)",
+      "Bash(py -0)",
+      "Bash(where uv *)",
+      "Bash(where conda *)",
+      "Bash(pip install *)",
+      "Bash(uv venv *)",
+      "Bash(uv pip *)",
+      "Bash(.venv/Scripts/python.exe -c \"import sys; print\\('Python', sys.version\\); from src import config, chunk, ingest, embed, index, retrieve, generate; print\\('OK: all src modules import'\\)\")",
+      "Bash(.venv/Scripts/python.exe -c \"import subprocess; r = subprocess.run\\(['mineru', '--help'], capture_output=True, text=True\\); print\\('mineru CLI present:', r.returncode == 0\\); print\\(r.stdout[:300] if r.returncode == 0 else r.stderr[:300]\\)\")",
+      "Bash(.venv/Scripts/python.exe -c \"from src.ingest import _mineru_exe; print\\('mineru exe:', _mineru_exe\\(\\)\\)\")"
+    ]
+  }
+}
