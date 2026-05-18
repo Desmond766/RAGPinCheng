@@ -19,8 +19,11 @@ def _client() -> QdrantClient:
     return QdrantClient(path=str(QDRANT_DIR))
 
 
-def _ensure_collection(client: QdrantClient) -> None:
+def _ensure_collection(client: QdrantClient, reset: bool = False) -> None:
+    """Create the Qdrant collection if missing. If reset=True, drop first."""
     if client.collection_exists(COLLECTION):
+        if not reset:
+            return
         client.delete_collection(COLLECTION)
     client.create_collection(
         collection_name=COLLECTION,
@@ -33,7 +36,8 @@ def _ensure_collection(client: QdrantClient) -> None:
     )
 
 
-def _init_parents_db() -> sqlite3.Connection:
+def _init_parents_db(reset: bool = False) -> sqlite3.Connection:
+    """Open parents.sqlite and ensure schema. If reset=True, wipe all rows."""
     conn = sqlite3.connect(PARENTS_DB)
     conn.execute(
         """
@@ -47,12 +51,28 @@ def _init_parents_db() -> sqlite3.Connection:
         )
         """
     )
-    conn.execute("DELETE FROM parents")
+    if reset:
+        conn.execute("DELETE FROM parents")
     return conn
 
 
-def store_parents(parents: Iterable[Parent]) -> None:
-    conn = _init_parents_db()
+def reset_index() -> None:
+    """Drop the Qdrant collection and wipe parents.sqlite. Use before a full rebuild."""
+    client = _client()
+    try:
+        if client.collection_exists(COLLECTION):
+            client.delete_collection(COLLECTION)
+    finally:
+        client.close()
+    conn = _init_parents_db(reset=True)
+    conn.commit()
+    conn.close()
+    print("[reset] dropped Qdrant collection and cleared parents.sqlite")
+
+
+def store_parents(parents: Iterable[Parent], reset: bool = False) -> None:
+    """Insert/replace parents. With reset=True, wipes the table first."""
+    conn = _init_parents_db(reset=reset)
     rows = [
         (p.parent_id, p.doc_title, p.category, p.section_path, p.source_path, p.text)
         for p in parents
@@ -89,9 +109,12 @@ def fetch_parents(parent_ids: list[str]) -> dict[str, dict]:
     }
 
 
-def index_children(children: list[Child]) -> None:
+def index_children(children: list[Child], reset: bool = False) -> None:
+    """Embed and upsert children into Qdrant. With reset=True, drops the
+    collection first; otherwise upserts (deterministic IDs mean re-running
+    the same doc overwrites in place rather than duplicating)."""
     client = _client()
-    _ensure_collection(client)
+    _ensure_collection(client, reset=reset)
 
     for start in tqdm(range(0, len(children), EMBED_BATCH), desc="embed+upsert"):
         batch = children[start : start + EMBED_BATCH]

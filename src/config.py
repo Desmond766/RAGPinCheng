@@ -34,8 +34,13 @@ MAX_CONTEXT_CHARS = 6000
 # Qdrant
 COLLECTION = "pincheng_docs"
 
+# MinerU cloud API (set to use cloud parsing instead of local CLI)
+MINERU_API_KEY = os.getenv("MINERU_API_KEY", "")
+MINERU_API_BASE = "https://mineru.net/api/v4"
+MINERU_MAX_PAGES = 200  # cloud API per-file page limit; larger PDFs are split
+
 # LLM — Zhipu GLM via OpenAI-compatible API
 ZHIPU_API_KEY = os.getenv("ZHIPU_API_KEY", "")
 ZHIPU_BASE_URL = "https://open.bigmodel.cn/api/paas/v4/"
-LLM_MODEL = os.getenv("LLM_MODEL", "glm-4-plus")
+LLM_MODEL = os.getenv("LLM_MODEL", "glm-4.6v")
 LLM_TEMPERATURE = 0.2

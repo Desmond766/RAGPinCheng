@@ -4,7 +4,7 @@ from __future__ import annotations
 import streamlit as st
 
 from src.config import COLLECTION, EMBED_MODEL, LLM_MODEL
-from src.generate import generate
+from src.generate import generate, rewrite_query
 from src.index import collection_stats, parents_count
 from src.retrieve import retrieve
 
@@ -56,19 +56,32 @@ def main() -> None:
     if not query:
         return
 
+    # History BEFORE appending the new user turn — used for query rewriting.
+    prior_history = [
+        {"role": m["role"], "content": m["content"]}
+        for m in st.session_state.messages
+    ]
+
     st.session_state.messages.append({"role": "user", "content": query})
     with st.chat_message("user"):
         st.markdown(query)
 
     with st.chat_message("assistant"):
+        if prior_history:
+            with st.spinner("理解上下文中..."):
+                search_query = rewrite_query(prior_history, query)
+        else:
+            search_query = query
+        if search_query != query:
+            st.caption(f"🔄 检索改写：{search_query}")
         with st.spinner("检索资料中..."):
-            parents = retrieve(query)
+            parents = retrieve(search_query)
         if not parents:
             answer_text = "资料中未找到相关内容。"
             sources_payload = []
         else:
             with st.spinner("生成答案中..."):
-                answer = generate(query, parents)
+                answer = generate(search_query, parents)
             answer_text = answer.text
             sources_payload = [
                 {

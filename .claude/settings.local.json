@@ -10,7 +10,17 @@
       "Bash(uv pip *)",
       "Bash(.venv/Scripts/python.exe -c \"import sys; print\\('Python', sys.version\\); from src import config, chunk, ingest, embed, index, retrieve, generate; print\\('OK: all src modules import'\\)\")",
       "Bash(.venv/Scripts/python.exe -c \"import subprocess; r = subprocess.run\\(['mineru', '--help'], capture_output=True, text=True\\); print\\('mineru CLI present:', r.returncode == 0\\); print\\(r.stdout[:300] if r.returncode == 0 else r.stderr[:300]\\)\")",
-      "Bash(.venv/Scripts/python.exe -c \"from src.ingest import _mineru_exe; print\\('mineru exe:', _mineru_exe\\(\\)\\)\")"
+      "Bash(.venv/Scripts/python.exe -c \"from src.ingest import _mineru_exe; print\\('mineru exe:', _mineru_exe\\(\\)\\)\")",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:mineru.net)",
+      "WebFetch(domain:opendatalab.github.io)",
+      "Bash(.venv/Scripts/pip.exe install *)",
+      "Bash(./.venv/Scripts/pip.exe install *)",
+      "PowerShell(& .\\\\.venv\\\\Scripts\\\\pip.exe install \"pypdf>=4.0.0\" 2>&1)",
+      "PowerShell(& .\\\\.venv\\\\Scripts\\\\python.exe -m pip install \"pypdf>=4.0.0\" 2>&1)",
+      "PowerShell(& .\\\\.venv\\\\Scripts\\\\python.exe -c \"from src.ingest import _split_pdf_for_cloud, _cloud_parse_batch, _cloud_parse; print\\('ok'\\)\")",
+      "PowerShell(& .\\\\.venv\\\\Scripts\\\\python.exe -c \"import ast; ast.parse\\(open\\(r'src\\\\ingest.py', encoding='utf-8'\\).read\\(\\)\\); print\\('syntax ok'\\)\")"
     ]
   }
 }
