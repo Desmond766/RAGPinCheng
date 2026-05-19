@@ -60,19 +60,43 @@ def _section_path(meta: dict) -> str:
     return " > ".join(parts) if parts else "(intro)"
 
 
-TABLE_RE = re.compile(r"(\n\|[^\n]*\|(?:\n\|[^\n]*\|)+)", re.MULTILINE)
+PIPE_TABLE_RE = re.compile(r"(\n\|[^\n]*\|(?:\n\|[^\n]*\|)+)", re.MULTILINE)
+HTML_TABLE_RE = re.compile(r"<table\b[^>]*>.*?</table>", re.DOTALL | re.IGNORECASE)
+HTML_TR_RE = re.compile(r"<tr\b[^>]*>.*?</tr>", re.DOTALL | re.IGNORECASE)
+HTML_TABLE_OPEN_RE = re.compile(r"<table\b[^>]*>", re.IGNORECASE)
+HTML_TABLE_CLOSE_RE = re.compile(r"</table>\s*$", re.IGNORECASE)
 FORMULA_RE = re.compile(r"\$\$.+?\$\$", re.DOTALL)
+
+# Tables ≤ this size stay atomic in one parent (even if it overflows
+# PARENT_SIZE). Larger tables are row-split with header propagation.
+ATOMIC_TABLE_MAX = 2 * PARENT_SIZE
+
+
+def _find_protected_spans(text: str) -> list[tuple[int, int, str]]:
+    """Find table / formula spans. Returns sorted (start, end, kind) tuples
+    with overlapping ranges resolved by keeping the earlier-starting span."""
+    spans: list[tuple[int, int, str]] = []
+    for m in HTML_TABLE_RE.finditer(text):
+        spans.append((m.start(), m.end(), "table"))
+    for m in PIPE_TABLE_RE.finditer(text):
+        spans.append((m.start(), m.end(), "table"))
+    for m in FORMULA_RE.finditer(text):
+        spans.append((m.start(), m.end(), "formula"))
+    spans.sort()
+    # Drop spans that start before the previous span ended (overlap).
+    deduped: list[tuple[int, int, str]] = []
+    last_end = -1
+    for s, e, k in spans:
+        if s >= last_end:
+            deduped.append((s, e, k))
+            last_end = e
+    return deduped
 
 
 def _split_protected(text: str) -> list[tuple[str, str]]:
     """Split text into (content_type, chunk) segments where tables/formulas
     are isolated atomic chunks and prose is everything else."""
-    spans: list[tuple[int, int, str]] = []
-    for m in TABLE_RE.finditer(text):
-        spans.append((m.start(), m.end(), "table"))
-    for m in FORMULA_RE.finditer(text):
-        spans.append((m.start(), m.end(), "formula"))
-    spans.sort()
+    spans = _find_protected_spans(text)
 
     out: list[tuple[str, str]] = []
     cursor = 0
@@ -90,15 +114,105 @@ def _split_protected(text: str) -> list[tuple[str, str]]:
     return out or [("prose", text.strip())]
 
 
+def _split_table_with_header(table_html: str, max_size: int) -> list[str]:
+    """Row-split an oversized HTML table, prepending the original first <tr>
+    (header row) to every fragment so each chunk carries the column labels.
+
+    Returns a list of complete `<table>...</table>` strings. If the table is
+    already within `max_size` or can't be split (no rows / single row), it's
+    returned unchanged.
+    """
+    if len(table_html) <= max_size:
+        return [table_html]
+
+    open_m = HTML_TABLE_OPEN_RE.match(table_html)
+    if not open_m:
+        return [table_html]
+    open_tag = open_m.group(0)
+    inner = table_html[open_m.end():]
+    inner = HTML_TABLE_CLOSE_RE.sub("", inner).strip()
+
+    rows = HTML_TR_RE.findall(inner)
+    if len(rows) < 2:
+        return [table_html]
+
+    header = rows[0]
+    body = rows[1:]
+    close_tag = "</table>"
+
+    wrapper_overhead = len(open_tag) + len(close_tag) + len(header)
+    body_budget = max(max_size - wrapper_overhead, 200)
+
+    chunks: list[str] = []
+    current: list[str] = []
+    current_size = 0
+    for row in body:
+        if current and current_size + len(row) > body_budget:
+            chunks.append(open_tag + header + "".join(current) + close_tag)
+            current = [row]
+            current_size = len(row)
+        else:
+            current.append(row)
+            current_size += len(row)
+    if current:
+        chunks.append(open_tag + header + "".join(current) + close_tag)
+    return chunks
+
+
 def _split_parents(section_text: str) -> list[str]:
+    """Split a section into parent-sized chunks.
+
+    Tables are kept atomic up to ATOMIC_TABLE_MAX. Tables larger than that are
+    split row-by-row with header propagation, so every fragment carries the
+    column-label row. Non-table prose uses the original recursive splitter.
+    """
     if len(section_text) <= PARENT_SIZE:
         return [section_text]
-    splitter = RecursiveCharacterTextSplitter(
+
+    spans = _find_protected_spans(section_text)
+    if not spans:
+        splitter = RecursiveCharacterTextSplitter(
+            chunk_size=PARENT_SIZE,
+            chunk_overlap=PARENT_OVERLAP,
+            separators=["\n\n", "\n", "。", "；", "，", " ", ""],
+        )
+        return splitter.split_text(section_text)
+
+    segments: list[tuple[str, str]] = []  # (kind, text)
+    cursor = 0
+    for start, end, kind in spans:
+        if start > cursor:
+            prose = section_text[cursor:start]
+            if prose.strip():
+                segments.append(("prose", prose))
+        segments.append((kind, section_text[start:end]))
+        cursor = end
+    if cursor < len(section_text):
+        tail = section_text[cursor:]
+        if tail.strip():
+            segments.append(("prose", tail))
+
+    prose_splitter = RecursiveCharacterTextSplitter(
         chunk_size=PARENT_SIZE,
         chunk_overlap=PARENT_OVERLAP,
         separators=["\n\n", "\n", "。", "；", "，", " ", ""],
     )
-    return splitter.split_text(section_text)
+
+    parents: list[str] = []
+    for kind, text in segments:
+        if kind == "table" and text.lstrip().lower().startswith("<table"):
+            if len(text) <= ATOMIC_TABLE_MAX:
+                parents.append(text)
+            else:
+                parents.extend(_split_table_with_header(text, ATOMIC_TABLE_MAX))
+        elif kind in ("table", "formula"):
+            parents.append(text)
+        else:
+            if len(text) <= PARENT_SIZE:
+                parents.append(text)
+            else:
+                parents.extend(prose_splitter.split_text(text))
+    return parents
 
 
 def _split_children(parent_text: str) -> list[tuple[str, str]]:
