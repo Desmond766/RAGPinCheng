@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import re
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Iterable
 
 from langchain_text_splitters import (
@@ -244,7 +244,10 @@ def chunk_document(doc: ParsedDoc) -> tuple[list[Parent], list[Child]]:
     for sec in sections:
         section_path = _section_path(sec.metadata)
         for parent_text in _split_parents(sec.page_content):
-            parent_id = _stable_id(doc.doc_title, section_path, parent_text[:80])
+            # Hash the full parent text, not a prefix: header-propagated table
+            # fragments share the same opening 80 chars (the column-label row)
+            # and would otherwise collide on parent_id.
+            parent_id = _stable_id(doc.doc_title, section_path, parent_text)
             parents.append(
                 Parent(
                     parent_id=parent_id,
