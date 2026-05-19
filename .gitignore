@@ -9,3 +9,4 @@ venv/
 docs/
 CLAUDE.md
 .claude/
+rag_cheatsheet.html
