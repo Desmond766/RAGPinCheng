@@ -70,21 +70,30 @@ def main() -> None:
         st.markdown(query)
 
     with st.chat_message("assistant"):
-        with st.spinner("检索并生成中..."):
-            result = chat.ask(query)
-        if result.rewrite_applied:
-            st.caption(f"🔄 检索改写：{result.search_query}")
-        st.markdown(result.answer_text)
-        # The turn was just appended to state — re-read its sources for display.
+        with st.spinner("检索中..."):
+            prep, stream = chat.ask_stream(query)
+        if prep.rewrite_applied:
+            st.caption(f"🔄 检索改写：{prep.search_query}")
+        # Stream tokens as they arrive; st.write_stream returns the full text.
+        # When this returns, the stream wrapper has already finalized state,
+        # so chat.state.messages[-1] and chat.last_turn_result are populated.
+        st.write_stream(stream)
         last_msg = chat.state.messages[-1]
         if last_msg.sources_for_ui:
             _render_sources(last_msg.sources_for_ui)
+        result = chat.last_turn_result
         with st.expander("🔍 调试信息"):
+            timing_md = (
+                "  ".join(f"`{k}={v:.2f}s`" for k, v in result.timings.items())
+                if result and result.timings
+                else "(no timing data)"
+            )
             st.markdown(
-                f"- history_chars: `{result.history_chars}`\n"
-                f"- budget: `{result.budget}`\n"
-                f"- fresh_sources: `{len(result.fresh_sources)}`\n"
-                f"- final_sources (after merge): `{len(result.final_sources)}`"
+                f"- timings: {timing_md}\n"
+                f"- history_chars: `{result.history_chars if result else 0}`\n"
+                f"- budget: `{result.budget if result else 0}`\n"
+                f"- fresh_sources: `{len(result.fresh_sources) if result else 0}`\n"
+                f"- final_sources (after merge): `{len(result.final_sources) if result else 0}`"
             )
 
 

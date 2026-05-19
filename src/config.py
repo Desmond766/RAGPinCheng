@@ -42,5 +42,5 @@ MINERU_MAX_PAGES = 200  # cloud API per-file page limit; larger PDFs are split
 # LLM — Zhipu GLM via OpenAI-compatible API
 ZHIPU_API_KEY = os.getenv("ZHIPU_API_KEY", "")
 ZHIPU_BASE_URL = "https://open.bigmodel.cn/api/paas/v4/"
-LLM_MODEL = os.getenv("LLM_MODEL", "glm-4.6v")
+LLM_MODEL = os.getenv("LLM_MODEL", "glm-4.6")
 LLM_TEMPERATURE = 0.2

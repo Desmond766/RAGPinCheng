@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Iterator
 
 from openai import OpenAI
 
@@ -25,6 +26,20 @@ class Answer:
     context_chars: int = 0
     budget_used: int = 0   # chars actually packed into <sources> after budget trim
     budget: int = 0        # the budget passed in (for telemetry / regression detection)
+
+
+@dataclass
+class GenerationPrep:
+    """Everything determined synchronously before the LLM call.
+
+    Shared by the sync and streaming code paths so message construction and
+    source-packing aren't duplicated.
+    """
+    used_sources: list[RetrievedParent]
+    messages: list[dict]
+    model: str
+    context_chars: int
+    budget: int
 
 
 def _build_context(
@@ -53,6 +68,41 @@ def _client() -> OpenAI:
     if not ZHIPU_API_KEY:
         raise RuntimeError("ZHIPU_API_KEY is not set. Add it to .env.")
     return OpenAI(api_key=ZHIPU_API_KEY, base_url=ZHIPU_BASE_URL)
+
+
+def _prepare_generation(
+    query: str,
+    parents: list[RetrievedParent],
+    history: list[dict] | None,
+    budget: int | None,
+) -> GenerationPrep:
+    """Build the messages list and decide which parents fit under `budget`.
+
+    Pure / synchronous: makes no API call. Both `generate()` and
+    `stream_generate()` build on this so they agree on what gets sent.
+    """
+    effective_budget = MAX_CONTEXT_CHARS if budget is None else max(budget, 0)
+    context, used = _build_context(parents, effective_budget)
+    user_msg = render_prompt("answer_user", context=context, query=query)
+
+    messages: list[dict] = [
+        {"role": "system", "content": load_prompt("answer_system")}
+    ]
+    if history:
+        for m in history:
+            role = m.get("role")
+            content = m.get("content") or ""
+            if role in ("user", "assistant") and content:
+                messages.append({"role": role, "content": content})
+    messages.append({"role": "user", "content": user_msg})
+
+    return GenerationPrep(
+        used_sources=used,
+        messages=messages,
+        model=LLM_MODEL,
+        context_chars=len(context),
+        budget=effective_budget,
+    )
 
 
 def rewrite_query(
@@ -93,6 +143,7 @@ def rewrite_query(
                 {"role": "system", "content": load_prompt("rewrite_system")},
                 {"role": "user", "content": user_msg},
             ],
+            extra_body={"thinking": {"type": "disabled"}},
         )
         rewritten = (resp.choices[0].message.content or "").strip()
     except Exception:
@@ -108,7 +159,7 @@ def generate(
     history: list[dict] | None = None,
     budget: int | None = None,
 ) -> Answer:
-    """Run the answering LLM call.
+    """Run the answering LLM call (non-streaming).
 
     Channel separation:
       - `history` (conversation channel) is interleaved as native chat turns.
@@ -118,33 +169,58 @@ def generate(
         message only, never into history.
       - `query` is the user's original question, not the retrieval rewrite.
     """
-    effective_budget = MAX_CONTEXT_CHARS if budget is None else max(budget, 0)
-    context, used = _build_context(parents, effective_budget)
-    user_msg = render_prompt("answer_user", context=context, query=query)
-
-    messages: list[dict] = [
-        {"role": "system", "content": load_prompt("answer_system")}
-    ]
-    if history:
-        for m in history:
-            role = m.get("role")
-            content = m.get("content") or ""
-            if role in ("user", "assistant") and content:
-                messages.append({"role": role, "content": content})
-    messages.append({"role": "user", "content": user_msg})
-
+    prep = _prepare_generation(query, parents, history, budget)
     client = _client()
     resp = client.chat.completions.create(
-        model=LLM_MODEL,
+        model=prep.model,
         temperature=LLM_TEMPERATURE,
-        messages=messages,
+        messages=prep.messages,
+        extra_body={"thinking": {"type": "disabled"}},
     )
     return Answer(
         text=resp.choices[0].message.content or "",
-        sources=used,
-        messages=messages,
-        model=LLM_MODEL,
-        context_chars=len(context),
-        budget_used=len(context),
-        budget=effective_budget,
+        sources=prep.used_sources,
+        messages=prep.messages,
+        model=prep.model,
+        context_chars=prep.context_chars,
+        budget_used=prep.context_chars,
+        budget=prep.budget,
     )
+
+
+def stream_generate(
+    query: str,
+    parents: list[RetrievedParent],
+    history: list[dict] | None = None,
+    budget: int | None = None,
+) -> tuple[GenerationPrep, Iterator[str]]:
+    """Streaming variant of `generate()`.
+
+    Returns `(prep, generator)`:
+      - `prep` is resolved synchronously: which parents got packed, what
+        messages will be sent, model/context telemetry. Render this up-front
+        in the UI.
+      - `generator` yields text deltas as they arrive from the LLM. The full
+        answer text is the concatenation of all yielded chunks.
+
+    The same channel-separation rules as `generate()` apply.
+    """
+    prep = _prepare_generation(query, parents, history, budget)
+    client = _client()
+    resp = client.chat.completions.create(
+        model=prep.model,
+        temperature=LLM_TEMPERATURE,
+        messages=prep.messages,
+        stream=True,
+        extra_body={"thinking": {"type": "disabled"}},
+    )
+
+    def _iter() -> Iterator[str]:
+        for chunk in resp:
+            if not chunk.choices:
+                continue
+            delta = chunk.choices[0].delta.content
+            if delta:
+                yield delta
+
+    return prep, _iter()

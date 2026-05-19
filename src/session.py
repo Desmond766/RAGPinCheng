@@ -7,13 +7,22 @@ Channel separation is enforced here:
   - Conversation channel: `SessionState.messages` (text only; <sources> stripped)
   - Knowledge channel: `SessionState.last_sources` (typed RetrievedParent objects)
 The two never mix inside the message list sent to the LLM.
+
+Two entry points share the pipeline:
+  - `ask()` — synchronous, returns a fully resolved TurnResult. Used by the
+    eval CLI and any programmatic caller that wants the complete answer.
+  - `ask_stream()` — returns (prep, generator). Consume the generator to drive
+    token-by-token UI rendering; state is finalized when the generator
+    exhausts, and `self.last_turn_result` then holds the full TurnResult.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from time import perf_counter
+from typing import Iterator
 
 from .config import MAX_CONTEXT_CHARS
-from .generate import Answer, generate, rewrite_query
+from .generate import Answer, GenerationPrep, generate, rewrite_query, stream_generate
 from .retrieve import RetrievedParent, retrieve
 
 # Fixed reserve (chars) inside MAX_CONTEXT_CHARS for system prompt + question
@@ -87,7 +96,8 @@ class TurnResult:
 
     Kept separate from `Answer` so that `Answer` stays a pure LLM-call result
     and `TurnResult` carries the orchestration-level metrics (rewrite,
-    merge stats, budget) used by the eval CLI and Streamlit debug panels.
+    merge stats, budget, timings) used by the eval CLI and Streamlit debug
+    panels.
     """
     answer_text: str
     sources: list[RetrievedParent]
@@ -98,6 +108,27 @@ class TurnResult:
     history_chars: int
     budget: int
     rewrite_applied: bool
+    timings: dict[str, float] = field(default_factory=dict)
+
+
+@dataclass
+class StreamingTurnPrep:
+    """Pre-stream snapshot returned by ChatSession.ask_stream().
+
+    Everything determined before the LLM stream begins, so the UI can render
+    headers/captions/source previews up-front and then drive `text_stream` for
+    the answer body. After the stream is consumed, the full TurnResult is
+    available on the owning session as `last_turn_result`.
+    """
+    search_query: str
+    rewrite_applied: bool
+    fresh_sources: list[RetrievedParent]
+    final_sources: list[RetrievedParent]
+    used_sources: list[RetrievedParent]
+    history_chars: int
+    budget: int
+    timings: dict[str, float]
+    no_source_fallback: bool = False
 
 
 def retrieve_for_turn(
@@ -127,24 +158,76 @@ class ChatSession:
 
     def __init__(self) -> None:
         self.state = SessionState()
+        # Populated at the end of every turn (sync or streaming).
+        # Streaming callers read this AFTER consuming the text generator to
+        # get sources / timings / debug info.
+        self.last_turn_result: TurnResult | None = None
 
     def reset(self) -> None:
         self.state.reset()
+        self.last_turn_result = None
+
+    # ── Internal helpers ──────────────────────────────────────────────────────
+
+    def _resolve_search_query(self, query: str) -> tuple[str, float]:
+        """Step ①: pick the query to send to retrieval, with timing.
+
+        Skips the rewrite LLM call when:
+          - There is no prior history (first turn).
+          - The new question is literally identical to the most recent user
+            message (whitespace-stripped). In that case we reuse the cached
+            `last_search_query` so a repeat question doesn't pay the rewrite
+            cost twice.
+        """
+        t0 = perf_counter()
+        prior = self.state.history_for_rewrite()
+        if not prior:
+            return query, perf_counter() - t0
+
+        last_user = next(
+            (m["content"] for m in reversed(prior) if m["role"] == "user"),
+            None,
+        )
+        if (
+            last_user is not None
+            and self.state.last_search_query
+            and query.strip() == last_user.strip()
+        ):
+            return self.state.last_search_query, perf_counter() - t0
+
+        rewritten = rewrite_query(prior, query)
+        return rewritten, perf_counter() - t0
+
+    def _sources_for_ui(
+        self, parents: list[RetrievedParent]
+    ) -> list[dict]:
+        return [
+            {
+                "doc_title": p.doc_title,
+                "section_path": p.section_path,
+                "category": p.category,
+                "score": p.score,
+                "text": p.text,
+                "parent_id": p.parent_id,
+            }
+            for p in parents
+        ]
+
+    # ── Sync entry point ──────────────────────────────────────────────────────
 
     def ask(self, query: str) -> TurnResult:
-        # ① REWRITE — only when there's prior history.
-        prior_for_rewrite = self.state.history_for_rewrite()
-        if prior_for_rewrite:
-            search_query = rewrite_query(prior_for_rewrite, query)
-        else:
-            search_query = query
+        timings: dict[str, float] = {}
+
+        # ① REWRITE
+        search_query, rewrite_t = self._resolve_search_query(query)
+        timings["rewrite"] = rewrite_t
         rewrite_applied = search_query != query
 
-        # ② RETRIEVE fresh.
+        # ② RETRIEVE + ③ MERGE
+        t = perf_counter()
         fresh_sources = retrieve(search_query)
-
-        # ③ MERGE with prior turn's carry-forward.
         final_sources = retrieve_for_turn(fresh_sources, self.state.last_sources)
+        timings["retrieve"] = perf_counter() - t
 
         # No-source escape hatch.
         if not final_sources:
@@ -152,7 +235,9 @@ class ChatSession:
             self.state.append_turn(query, fallback, sources_for_ui=[])
             self.state.last_sources = []
             self.state.last_search_query = search_query
-            return TurnResult(
+            timings["generate"] = 0.0
+            timings["total"] = sum(timings.values())
+            result = TurnResult(
                 answer_text=fallback,
                 sources=[],
                 search_query=search_query,
@@ -162,36 +247,32 @@ class ChatSession:
                 history_chars=0,
                 budget=0,
                 rewrite_applied=rewrite_applied,
+                timings=timings,
             )
+            self.last_turn_result = result
+            return result
 
         # ④ GENERATE with history + dynamic budget.
         history_msgs = self.state.history_for_llm(k=HISTORY_TURNS)
         history_chars = sum(len(m["content"]) for m in history_msgs)
         budget = max(MAX_CONTEXT_CHARS - history_chars - RESERVE_CHARS, 0)
+        t = perf_counter()
         answer = generate(
             query=query,
             parents=final_sources,
             history=history_msgs,
             budget=budget,
         )
+        timings["generate"] = perf_counter() - t
+        timings["total"] = sum(timings.values())
 
         # ⑤ UPDATE STATE — assistant text only; sources stripped from history.
-        sources_for_ui = [
-            {
-                "doc_title": p.doc_title,
-                "section_path": p.section_path,
-                "category": p.category,
-                "score": p.score,
-                "text": p.text,
-                "parent_id": p.parent_id,
-            }
-            for p in answer.sources
-        ]
+        sources_for_ui = self._sources_for_ui(answer.sources)
         self.state.append_turn(query, answer.text, sources_for_ui=sources_for_ui)
         self.state.last_sources = final_sources
         self.state.last_search_query = search_query
 
-        return TurnResult(
+        result = TurnResult(
             answer_text=answer.text,
             sources=answer.sources,
             search_query=search_query,
@@ -201,4 +282,205 @@ class ChatSession:
             history_chars=history_chars,
             budget=budget,
             rewrite_applied=rewrite_applied,
+            timings=timings,
+        )
+        self.last_turn_result = result
+        return result
+
+    # ── Streaming entry point ─────────────────────────────────────────────────
+
+    def ask_stream(
+        self, query: str
+    ) -> tuple[StreamingTurnPrep, Iterator[str]]:
+        """Streaming variant of `ask()`.
+
+        Returns `(prep, generator)`. The generator yields text deltas; when
+        it exhausts (or the consumer closes it), state is finalized and
+        `self.last_turn_result` is set with the full TurnResult.
+        """
+        timings: dict[str, float] = {}
+
+        # ① REWRITE
+        search_query, rewrite_t = self._resolve_search_query(query)
+        timings["rewrite"] = rewrite_t
+        rewrite_applied = search_query != query
+
+        # ② RETRIEVE + ③ MERGE
+        t = perf_counter()
+        fresh_sources = retrieve(search_query)
+        final_sources = retrieve_for_turn(fresh_sources, self.state.last_sources)
+        timings["retrieve"] = perf_counter() - t
+
+        # No-source path: stream the fallback message and finalize.
+        if not final_sources:
+            fallback = "资料中未找到相关内容。"
+            prep = StreamingTurnPrep(
+                search_query=search_query,
+                rewrite_applied=rewrite_applied,
+                fresh_sources=[],
+                final_sources=[],
+                used_sources=[],
+                history_chars=0,
+                budget=0,
+                timings=dict(timings),
+                no_source_fallback=True,
+            )
+
+            def _fallback_iter() -> Iterator[str]:
+                yield fallback
+
+            stream = self._wrap_stream(
+                _fallback_iter(),
+                query=query,
+                search_query=search_query,
+                rewrite_applied=rewrite_applied,
+                fresh_sources=[],
+                final_sources=[],
+                gen_prep=None,
+                history_chars=0,
+                budget=0,
+                timings_so_far=dict(timings),
+            )
+            return prep, stream
+
+        # ④ STREAM GENERATE with history + dynamic budget.
+        history_msgs = self.state.history_for_llm(k=HISTORY_TURNS)
+        history_chars = sum(len(m["content"]) for m in history_msgs)
+        budget = max(MAX_CONTEXT_CHARS - history_chars - RESERVE_CHARS, 0)
+        gen_prep, raw_stream = stream_generate(
+            query=query,
+            parents=final_sources,
+            history=history_msgs,
+            budget=budget,
+        )
+
+        prep = StreamingTurnPrep(
+            search_query=search_query,
+            rewrite_applied=rewrite_applied,
+            fresh_sources=fresh_sources,
+            final_sources=final_sources,
+            used_sources=gen_prep.used_sources,
+            history_chars=history_chars,
+            budget=budget,
+            timings=dict(timings),
+        )
+
+        stream = self._wrap_stream(
+            raw_stream,
+            query=query,
+            search_query=search_query,
+            rewrite_applied=rewrite_applied,
+            fresh_sources=fresh_sources,
+            final_sources=final_sources,
+            gen_prep=gen_prep,
+            history_chars=history_chars,
+            budget=budget,
+            timings_so_far=dict(timings),
+        )
+        return prep, stream
+
+    def _wrap_stream(
+        self,
+        raw_stream: Iterator[str],
+        *,
+        query: str,
+        search_query: str,
+        rewrite_applied: bool,
+        fresh_sources: list[RetrievedParent],
+        final_sources: list[RetrievedParent],
+        gen_prep: GenerationPrep | None,
+        history_chars: int,
+        budget: int,
+        timings_so_far: dict[str, float],
+    ) -> Iterator[str]:
+        """Accumulate streamed text, time the generate stage, then finalize.
+
+        `try/finally` covers the cases where the consumer abandons the
+        generator (Streamlit rerun, exception) — partial text still flushes
+        to state and `last_turn_result` so the UI stays coherent.
+        """
+        accumulated: list[str] = []
+        t0 = perf_counter()
+        try:
+            for chunk in raw_stream:
+                accumulated.append(chunk)
+                yield chunk
+        finally:
+            gen_time = perf_counter() - t0
+            full_text = "".join(accumulated)
+            timings = dict(timings_so_far)
+            timings["generate"] = gen_time
+            timings["total"] = sum(timings.values())
+            self._finalize_streaming_turn(
+                query=query,
+                search_query=search_query,
+                rewrite_applied=rewrite_applied,
+                fresh_sources=fresh_sources,
+                final_sources=final_sources,
+                gen_prep=gen_prep,
+                full_text=full_text,
+                history_chars=history_chars,
+                budget=budget,
+                timings=timings,
+            )
+
+    def _finalize_streaming_turn(
+        self,
+        *,
+        query: str,
+        search_query: str,
+        rewrite_applied: bool,
+        fresh_sources: list[RetrievedParent],
+        final_sources: list[RetrievedParent],
+        gen_prep: GenerationPrep | None,
+        full_text: str,
+        history_chars: int,
+        budget: int,
+        timings: dict[str, float],
+    ) -> None:
+        """Mirror of the ⑤ UPDATE STATE block in `ask()`, for the streaming path."""
+        if gen_prep is None:
+            # no-source fallback
+            self.state.append_turn(query, full_text, sources_for_ui=[])
+            self.state.last_sources = []
+            self.state.last_search_query = search_query
+            self.last_turn_result = TurnResult(
+                answer_text=full_text,
+                sources=[],
+                search_query=search_query,
+                fresh_sources=[],
+                final_sources=[],
+                answer=None,
+                history_chars=0,
+                budget=0,
+                rewrite_applied=rewrite_applied,
+                timings=timings,
+            )
+            return
+
+        sources_for_ui = self._sources_for_ui(gen_prep.used_sources)
+        self.state.append_turn(query, full_text, sources_for_ui=sources_for_ui)
+        self.state.last_sources = final_sources
+        self.state.last_search_query = search_query
+
+        answer = Answer(
+            text=full_text,
+            sources=gen_prep.used_sources,
+            messages=gen_prep.messages,
+            model=gen_prep.model,
+            context_chars=gen_prep.context_chars,
+            budget_used=gen_prep.context_chars,
+            budget=gen_prep.budget,
+        )
+        self.last_turn_result = TurnResult(
+            answer_text=full_text,
+            sources=gen_prep.used_sources,
+            search_query=search_query,
+            fresh_sources=fresh_sources,
+            final_sources=final_sources,
+            answer=answer,
+            history_chars=history_chars,
+            budget=budget,
+            rewrite_applied=rewrite_applied,
+            timings=timings,
         )

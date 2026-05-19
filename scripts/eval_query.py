@@ -82,6 +82,15 @@ def _print_llm_messages(result: TurnResult) -> None:
         print(m["content"])
 
 
+def _print_timings(result: TurnResult) -> None:
+    if not result.timings:
+        return
+    print(f"\n{SEP}\n[TIMINGS]\n{SEP}")
+    width = max(len(k) for k in result.timings)
+    for k, v in result.timings.items():
+        print(f"  {k.ljust(width)} : {v:6.2f}s")
+
+
 def _print_answer(result: TurnResult) -> None:
     print(f"\n{SEP}\n[ANSWER]\n{SEP}")
     print(result.answer_text)
@@ -91,6 +100,7 @@ def _print_answer(result: TurnResult) -> None:
             f"  {i}. [{p.doc_title}] §{p.section_path}  "
             f"(score={p.score:.4f}, parent_id={p.parent_id[:8]})"
         )
+    _print_timings(result)
     print()
 
 
@@ -106,7 +116,9 @@ def ask(chat: ChatSession, query: str, preview_chars: int) -> None:
 
     _print_retrieval(result, preview_chars)
     if result.answer is None:
-        print(f"\n[ANSWER] {result.answer_text}\n")
+        print(f"\n[ANSWER] {result.answer_text}")
+        _print_timings(result)
+        print()
         return
     _print_llm_messages(result)
     _print_answer(result)
