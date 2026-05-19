@@ -20,7 +20,11 @@
       "PowerShell(& .\\\\.venv\\\\Scripts\\\\pip.exe install \"pypdf>=4.0.0\" 2>&1)",
       "PowerShell(& .\\\\.venv\\\\Scripts\\\\python.exe -m pip install \"pypdf>=4.0.0\" 2>&1)",
       "PowerShell(& .\\\\.venv\\\\Scripts\\\\python.exe -c \"from src.ingest import _split_pdf_for_cloud, _cloud_parse_batch, _cloud_parse; print\\('ok'\\)\")",
-      "PowerShell(& .\\\\.venv\\\\Scripts\\\\python.exe -c \"import ast; ast.parse\\(open\\(r'src\\\\ingest.py', encoding='utf-8'\\).read\\(\\)\\); print\\('syntax ok'\\)\")"
+      "PowerShell(& .\\\\.venv\\\\Scripts\\\\python.exe -c \"import ast; ast.parse\\(open\\(r'src\\\\ingest.py', encoding='utf-8'\\).read\\(\\)\\); print\\('syntax ok'\\)\")",
+      "Bash(/Users/zihan/Codes/RAGPinCheng/.venv/bin/pip list *)",
+      "Bash(/Users/zihan/Codes/RAGPinCheng/.venv/bin/python --version)",
+      "Read(//Library/Frameworks/Python.framework/Versions/**)",
+      "Bash(.venv/bin/python *)"
     ]
   }
 }
