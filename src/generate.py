@@ -51,9 +51,11 @@ def _build_context(
     used: list[RetrievedParent] = []
     total = 0
     for p in parents:
+        company_attr = f' company="{p.company}"' if p.company else ""
         if p.doc_type == "transcript" and p.start_time:
             block = (
                 f'<source id="{p.parent_id[:8]}" doc="{p.doc_title}" '
+                f'category="{p.category}"{company_attr} '
                 f'time="{p.start_time}" type="transcript">\n'
                 f"{p.text}\n"
                 f"</source>"
@@ -61,6 +63,7 @@ def _build_context(
         else:
             block = (
                 f'<source id="{p.parent_id[:8]}" doc="{p.doc_title}" '
+                f'category="{p.category}"{company_attr} '
                 f'section="{p.section_path}" type="pdf">\n'
                 f"{p.text}\n"
                 f"</source>"

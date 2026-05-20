@@ -39,6 +39,7 @@ class ParsedDoc:
     doc_title: str
     markdown_path: Path
     doc_type: str = "pdf"  # "pdf" | "transcript"
+    company: str | None = None  # second-level folder under 公司内部标准/
 
 
 def _safe_stem(pdf: Path) -> str:
@@ -244,7 +245,7 @@ def iter_pdfs() -> Iterator[Path]:
         yield p
 
 
-TRANSCRIPTIONS_DIR = DOCS_DIR / "transcriptions"
+TRANSCRIPTIONS_DIR = DOCS_DIR / "教学视频"
 _TRANSCRIPT_PREFIX = "MinerU_markdown_文字记录："
 _TRANSCRIPT_TITLE_RE = __import__("re").compile(
     r"^\s*\**\s*文字记录[:：]\s*(.+?)\s*\**\s*$"
@@ -297,11 +298,13 @@ def ingest_all(force: bool = False) -> list[ParsedDoc]:
         final_md = PARSED_DIR / f"{stem}.md"
         parts = pdf.relative_to(DOCS_DIR).parts
         category = parts[0] if len(parts) > 1 else "uncategorized"
+        # Only 公司内部标准 carries a company name (second-level folder).
+        company = parts[1] if category == "公司内部标准" and len(parts) > 2 else None
         doc_title = pdf.stem
 
         if final_md.exists() and not force:
             print(f"[skip] {pdf.name}")
-            docs.append(ParsedDoc(pdf, category, doc_title, final_md))
+            docs.append(ParsedDoc(pdf, category, doc_title, final_md, company=company))
             continue
 
         print(f"[parse] {pdf.name}")
@@ -312,7 +315,7 @@ def ingest_all(force: bool = False) -> list[ParsedDoc]:
             continue
 
         final_md.write_text(markdown, encoding="utf-8")
-        docs.append(ParsedDoc(pdf, category, doc_title, final_md, doc_type="pdf"))
+        docs.append(ParsedDoc(pdf, category, doc_title, final_md, doc_type="pdf", company=company))
 
     # Transcripts are already markdown — no MinerU pass needed.
     for md_path in iter_transcripts():
@@ -320,7 +323,7 @@ def ingest_all(force: bool = False) -> list[ParsedDoc]:
         docs.append(
             ParsedDoc(
                 source_path=md_path,
-                category="transcriptions",
+                category="教学视频",
                 doc_title=doc_title,
                 markdown_path=md_path,
                 doc_type="transcript",

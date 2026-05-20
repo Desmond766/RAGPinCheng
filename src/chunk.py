@@ -38,6 +38,7 @@ class Parent:
     source_path: str
     doc_type: str = "pdf"            # "pdf" | "transcript"
     start_time: str | None = None    # HH:MM:SS, only for transcripts
+    company: str | None = None       # only set for category=="公司内部标准"
 
 
 @dataclass
@@ -53,6 +54,7 @@ class Child:
     content_type: str  # prose | table | formula
     doc_type: str = "pdf"            # "pdf" | "transcript"
     start_time: str | None = None    # HH:MM:SS, only for transcripts
+    company: str | None = None       # only set for category=="公司内部标准"
 
 
 def _stable_id(*parts: str) -> str:
@@ -302,6 +304,7 @@ def chunk_transcript(doc: ParsedDoc) -> tuple[list[Parent], list[Child]]:
                 source_path=str(doc.source_path),
                 doc_type="transcript",
                 start_time=first_ts,
+                company=doc.company,
             )
         )
         for ts, body in group:
@@ -321,6 +324,7 @@ def chunk_transcript(doc: ParsedDoc) -> tuple[list[Parent], list[Child]]:
                     content_type="prose",
                     doc_type="transcript",
                     start_time=ts,
+                    company=doc.company,
                 )
             )
     return parents, children
@@ -352,6 +356,7 @@ def chunk_document(doc: ParsedDoc) -> tuple[list[Parent], list[Child]]:
                     section_path=section_path,
                     source_path=str(doc.source_path),
                     doc_type="pdf",
+                    company=doc.company,
                 )
             )
             header_prefix = f"{doc.doc_title} > {section_path}\n\n"
@@ -369,6 +374,7 @@ def chunk_document(doc: ParsedDoc) -> tuple[list[Parent], list[Child]]:
                         source_path=str(doc.source_path),
                         content_type=ctype,
                         doc_type="pdf",
+                        company=doc.company,
                     )
                 )
     return parents, children

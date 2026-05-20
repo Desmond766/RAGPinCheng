@@ -49,6 +49,7 @@ class RetrievedParent:
     matched_children: list[str]
     doc_type: str = "pdf"
     start_time: str | None = None
+    company: str | None = None
 
 
 # Matches Chinese standard codes: GB / GB/T / JGJ / JGJ/T / CECS / YB / JG /
@@ -244,6 +245,7 @@ def retrieve(
                 matched_children=parent_children[pid],
                 doc_type=p.get("doc_type") or "pdf",
                 start_time=p.get("start_time"),
+                company=p.get("company"),
             )
         )
     return out
