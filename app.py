@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import streamlit as st
 
-from src.config import COLLECTION, EMBED_MODEL, LLM_MODEL
-from src.index import collection_stats, parents_count
+from src.config import COLLECTION, EMBED_MODEL, LLM_MODEL, RERANK_ENABLED, RERANKER_MODEL
+from src.index import collection_stats, list_categories, parents_count
 from src.session import ChatSession
 
 st.set_page_config(page_title="品诚钢构知识助手", page_icon="🔩", layout="wide")
@@ -15,6 +15,18 @@ def _warm_model():
     from src.embed import get_model
     get_model()
     return True
+
+
+@st.cache_resource(show_spinner="正在加载重排序模型 (BGE-reranker-v2-m3)...")
+def _warm_reranker():
+    from src.rerank import get_reranker
+    get_reranker()
+    return True
+
+
+@st.cache_data(ttl=60)
+def _categories() -> list[str]:
+    return list_categories()
 
 
 def _get_session() -> ChatSession:
@@ -50,14 +62,27 @@ def main() -> None:
         st.metric("父段落 (SQLite)", parents_count())
         st.markdown("---")
         st.markdown(f"**嵌入模型:** `{EMBED_MODEL}`")
+        st.markdown(
+            f"**重排模型:** `{RERANKER_MODEL if RERANK_ENABLED else '— 已禁用'}`"
+        )
         st.markdown(f"**生成模型:** `{LLM_MODEL}`")
         st.markdown(f"**Qdrant 集合:** `{COLLECTION}`")
         st.markdown(f"**当前轮次:** {chat.state.turn_index}")
+        st.markdown("---")
+        all_categories = _categories()
+        selected_categories = st.multiselect(
+            "🗂 限定分类（留空 = 全部）",
+            options=all_categories,
+            default=[],
+            help="只在选中的分类中检索；不选则覆盖全部语料。",
+        )
         if st.button("清空对话"):
             chat.reset()
             st.rerun()
 
     _warm_model()
+    if RERANK_ENABLED:
+        _warm_reranker()
 
     # Replay history from session state.
     for msg in chat.state.messages:
@@ -75,7 +100,9 @@ def main() -> None:
 
     with st.chat_message("assistant"):
         with st.spinner("检索中..."):
-            prep, stream = chat.ask_stream(query)
+            prep, stream = chat.ask_stream(
+                query, categories=selected_categories or None
+            )
         if prep.rewrite_applied:
             st.caption(f"🔄 检索改写：{prep.search_query}")
         # Stream tokens as they arrive; st.write_stream returns the full text.

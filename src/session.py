@@ -217,7 +217,9 @@ class ChatSession:
 
     # ── Sync entry point ──────────────────────────────────────────────────────
 
-    def ask(self, query: str) -> TurnResult:
+    def ask(
+        self, query: str, categories: list[str] | None = None
+    ) -> TurnResult:
         timings: dict[str, float] = {}
 
         # ① REWRITE
@@ -227,7 +229,7 @@ class ChatSession:
 
         # ② RETRIEVE + ③ MERGE
         t = perf_counter()
-        fresh_sources = retrieve(search_query)
+        fresh_sources = retrieve(search_query, categories=categories)
         final_sources = retrieve_for_turn(fresh_sources, self.state.last_sources)
         timings["retrieve"] = perf_counter() - t
 
@@ -292,7 +294,7 @@ class ChatSession:
     # ── Streaming entry point ─────────────────────────────────────────────────
 
     def ask_stream(
-        self, query: str
+        self, query: str, categories: list[str] | None = None
     ) -> tuple[StreamingTurnPrep, Iterator[str]]:
         """Streaming variant of `ask()`.
 
@@ -309,7 +311,7 @@ class ChatSession:
 
         # ② RETRIEVE + ③ MERGE
         t = perf_counter()
-        fresh_sources = retrieve(search_query)
+        fresh_sources = retrieve(search_query, categories=categories)
         final_sources = retrieve_for_turn(fresh_sources, self.state.last_sources)
         timings["retrieve"] = perf_counter() - t
 

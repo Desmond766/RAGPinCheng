@@ -20,9 +20,17 @@ def _client() -> QdrantClient:
 
 
 def _ensure_collection(client: QdrantClient, reset: bool = False) -> None:
-    """Create the Qdrant collection if missing. If reset=True, drop first."""
+    """Create the Qdrant collection if missing. If reset=True, drop first.
+
+    Also ensures payload indexes used by the retriever:
+      - `category` (keyword)  — fast equality filter for category scoping.
+      - `text`     (full-text) — enables MatchText for the code-boost prefetch.
+    Indexes are created idempotently; failure to create (e.g. already exists)
+    is swallowed so this stays a no-op on warm runs.
+    """
     if client.collection_exists(COLLECTION):
         if not reset:
+            _ensure_payload_indexes(client)
             return
         client.delete_collection(COLLECTION)
     client.create_collection(
@@ -34,6 +42,32 @@ def _ensure_collection(client: QdrantClient, reset: bool = False) -> None:
             "sparse": models.SparseVectorParams(),
         },
     )
+    _ensure_payload_indexes(client)
+
+
+def _ensure_payload_indexes(client: QdrantClient) -> None:
+    try:
+        client.create_payload_index(
+            collection_name=COLLECTION,
+            field_name="category",
+            field_schema=models.PayloadSchemaType.KEYWORD,
+        )
+    except Exception:
+        pass
+    try:
+        client.create_payload_index(
+            collection_name=COLLECTION,
+            field_name="text",
+            field_schema=models.TextIndexParams(
+                type=models.TextIndexType.TEXT,
+                tokenizer=models.TokenizerType.MULTILINGUAL,
+                min_token_len=2,
+                max_token_len=20,
+                lowercase=True,
+            ),
+        )
+    except Exception:
+        pass
 
 
 def _init_parents_db(reset: bool = False) -> sqlite3.Connection:
@@ -216,6 +250,19 @@ def collection_stats() -> dict:
         return {"children": info.points_count or 0}
     finally:
         client.close()
+
+
+def list_categories() -> list[str]:
+    """Distinct categories present in the parents store, sorted alphabetically."""
+    if not PARENTS_DB.exists():
+        return []
+    conn = sqlite3.connect(PARENTS_DB)
+    rows = conn.execute(
+        "SELECT DISTINCT category FROM parents WHERE category IS NOT NULL "
+        "ORDER BY category"
+    ).fetchall()
+    conn.close()
+    return [r[0] for r in rows if r[0]]
 
 
 def parents_count() -> int:

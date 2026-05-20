@@ -26,10 +26,20 @@ EMBED_DIM = 1024
 EMBED_BATCH = 16
 
 # Retrieval
-DENSE_TOP_K = 20
-SPARSE_TOP_K = 20
+DENSE_TOP_K = 60
+SPARSE_TOP_K = 60
+# Code-boost prefetch (extra pool restricted to children whose text contains
+# a detected standard-code identifier; only fires when codes appear in the query).
+CODE_BOOST_TOP_K = 40
+# Children handed to the cross-encoder reranker before parent dedupe.
+RERANK_TOP_K = 40
 FINAL_TOP_K = 5
 MAX_CONTEXT_CHARS = 6000
+
+# Reranker (cross-encoder). Set RERANK_ENABLED=False to disable and fall back
+# to RRF order from Qdrant.
+RERANKER_MODEL = "BAAI/bge-reranker-v2-m3"
+RERANK_ENABLED = True
 
 # Qdrant
 COLLECTION = "pincheng_docs"
