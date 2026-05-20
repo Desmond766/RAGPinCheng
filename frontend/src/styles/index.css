@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+}
+
+/* Tighter list spacing inside chat bubbles */
+.prose-tight ul, .prose-tight ol {
+  margin: 0.25rem 0;
+  padding-left: 1.25rem;
+}
+.prose-tight li {
+  margin: 0.125rem 0;
+}
+.prose-tight p {
+  margin: 0.5rem 0;
+}
+.prose-tight code {
+  background: #f1f5f9;
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.prose-tight pre {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.85em;
+  margin: 0.5rem 0;
+}
+.prose-tight table {
+  border-collapse: collapse;
+  margin: 0.5rem 0;
+  display: block;
+  overflow-x: auto;
+}
+.prose-tight th, .prose-tight td {
+  border: 1px solid #e5e7eb;
+  padding: 4px 8px;
+}
+.prose-tight h1, .prose-tight h2, .prose-tight h3 {
+  font-weight: 600;
+  margin: 0.6rem 0 0.3rem;
+}
+
+/* Blinking caret while streaming */
+.caret::after {
+  content: "▍";
+  margin-left: 2px;
+  color: #9ca3af;
+  animation: blink 1s steps(2) infinite;
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}

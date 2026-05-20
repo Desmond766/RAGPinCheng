@@ -25,7 +25,24 @@
       "Bash(/Users/zihan/Codes/RAGPinCheng/.venv/bin/python --version)",
       "Read(//Library/Frameworks/Python.framework/Versions/**)",
       "Bash(.venv/bin/python *)",
-      "Bash(wait %1)"
+      "Bash(wait %1)",
+      "Bash(.venv/bin/pip install *)",
+      "Bash(uv --version)",
+      "Bash(VIRTUAL_ENV=/Users/zihan/Codes/RAGPinCheng/.venv uv pip install 'sse-starlette>=2.1.0')",
+      "Bash(curl -sf http://127.0.0.1:8000/api/health -o /dev/null)",
+      "Bash(curl -s http://127.0.0.1:8000/api/health)",
+      "Bash(curl -s http://127.0.0.1:8000/api/categories)",
+      "Bash(curl -s http://127.0.0.1:8000/api/config)",
+      "Bash(curl -s -X POST http://127.0.0.1:8000/api/sessions)",
+      "Bash(npm --version)",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(npx vite *)",
+      "Bash(npm run *)",
+      "Bash(curl -sf http://127.0.0.1:5173/ -o /dev/null)",
+      "Bash(curl -sI http://127.0.0.1:5173/)",
+      "Bash(curl -s http://127.0.0.1:5173/)",
+      "Bash(curl -s http://127.0.0.1:5173/api/health)"
     ]
   }
 }

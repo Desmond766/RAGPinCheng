@@ -1,0 +1,377 @@
+{
+  "info": {
+    "name": "PinCheng BIM RAG API",
+    "_postman_id": "b2d7c2c8-8aaa-4a0a-9f1a-pincheng-rag-v1",
+    "description": "FastAPI endpoints for the 品诚 BIM 知识库 RAG backend.\n\nBefore running:\n1. Start the backend:  `.venv/bin/python -m uvicorn api.main:app --port 8000`\n2. Create an environment with a variable `baseUrl` = `http://127.0.0.1:8000`.\n3. Run `Create Session` once — its Test script captures `sid` into the env so the chat / get / delete requests reuse it.\n\nThe chat endpoint streams via SSE. Postman waits for the full stream to finish before displaying the body (no token-by-token rendering); use `curl -N` if you want to see tokens arrive live.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000",
+      "description": "Backend root. Override in an Environment if you change the port."
+    },
+    {
+      "key": "sid",
+      "value": "",
+      "description": "Captured automatically by the 'Create Session' request's Tests script."
+    }
+  ],
+  "item": [
+    {
+      "name": "Health & metadata",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "health"]
+            },
+            "description": "Liveness probe. Returns corpus sizes (Qdrant children + SQLite parents)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.test('status=ok', () => pm.expect(j.status).to.eql('ok'));",
+                  "pm.test('children > 0', () => pm.expect(j.children).to.be.above(0));",
+                  "pm.test('parents > 0', () => pm.expect(j.parents).to.be.above(0));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Config",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/config",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "config"]
+            },
+            "description": "Returns embed / reranker / LLM model names and the Qdrant collection name. Used by the sidebar."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "['embed_model','reranker_model','rerank_enabled','llm_model','collection'].forEach(k =>",
+                  "  pm.test(`has ${k}`, () => pm.expect(j).to.have.property(k))",
+                  ");"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories"]
+            },
+            "description": "Distinct top-level category folders under docs/. Used to populate the sidebar multi-select filter."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.test('categories is array', () => pm.expect(j.categories).to.be.an('array'));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sessions",
+      "item": [
+        {
+          "name": "Create Session (captures sid)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sessions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sessions"]
+            },
+            "description": "Creates a new in-memory ChatSession on the backend. The Tests script stores `session_id` into the `sid` collection/environment variable so downstream requests can use `{{sid}}`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.test('returns session_id', () => pm.expect(j.session_id).to.be.a('string'));",
+                  "// Save in both env (if active) and collection variables so it works either way.",
+                  "pm.environment.set('sid', j.session_id);",
+                  "pm.collectionVariables.set('sid', j.session_id);",
+                  "console.log('captured sid =', j.session_id);"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Get Session State",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sessions/{{sid}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sessions", "{{sid}}"]
+            },
+            "description": "Returns turn_index + the full message log (user / assistant pairs, including sources_for_ui under each assistant turn). Use this to verify state was mutated after a /chat call."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.test('has turn_index', () => pm.expect(j).to.have.property('turn_index'));",
+                  "pm.test('messages is array', () => pm.expect(j.messages).to.be.an('array'));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Delete Session",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sessions/{{sid}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sessions", "{{sid}}"]
+            },
+            "description": "Drops the session (equivalent to the UI's 新建对话). Returns 204 No Content on success, 404 if the session is not found."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('204 or 404', () => pm.expect([204, 404]).to.include(pm.response.code));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Chat (SSE)",
+      "item": [
+        {
+          "name": "Chat — first turn",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "text/event-stream" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"Revit 建模交付时的命名规则是什么？\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sessions/{{sid}}/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sessions", "{{sid}}", "chat"]
+            },
+            "description": "POST a question to the session.\n\nResponse is text/event-stream:\n  event: prep   — search query, source previews, history/budget telemetry\n  event: token  — one per LLM delta (repeated many times)\n  event: done   — final answer_text, timings, full sources list\n  event: error  — uncaught exception (then connection closes)\n\nPostman waits for the whole stream before displaying it — expect a 10-30 s spinner before the body appears. For live token-by-token output, use:\n  curl -N -X POST {{baseUrl}}/api/sessions/<sid>/chat -H 'content-type: application/json' -d '{\"query\":\"…\"}'\n\nTips:\n• Optional category filter: add `\"categories\": [\"行业规范\"]` (or any value from /api/categories) to scope retrieval.\n• Run the 'Get Session State' request after this completes — turn_index should be 1 and you should see two messages."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "pm.test('is SSE', () => pm.expect(pm.response.headers.get('Content-Type') || '').to.include('text/event-stream'));",
+                  "const body = pm.response.text();",
+                  "pm.test('has prep event', () => pm.expect(body).to.include('event: prep'));",
+                  "pm.test('has at least one token', () => pm.expect(body).to.include('event: token'));",
+                  "pm.test('has done event', () => pm.expect(body).to.include('event: done'));",
+                  "pm.test('no error event', () => pm.expect(body).to.not.include('event: error'));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Chat — follow-up (carry-forward + rewrite)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "text/event-stream" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"它有哪些具体步骤？\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sessions/{{sid}}/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sessions", "{{sid}}", "chat"]
+            },
+            "description": "Pronoun-laden follow-up against the same session. The `prep` event should report `rewrite_applied: true` and a standalone `search_query`. `final_count` may exceed `fresh_count` (carry-forward of last turn's top sources)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.text();",
+                  "// Parse the first prep block out of the SSE stream.",
+                  "const m = body.match(/event: prep\\n+data: (\\{[^\\n]*\\})/);",
+                  "pm.test('found prep event', () => pm.expect(m, 'no prep block').to.not.be.null);",
+                  "if (m) {",
+                  "  const prep = JSON.parse(m[1]);",
+                  "  console.log('prep:', prep);",
+                  "  pm.test('rewrite_applied = true on follow-up', () =>",
+                  "    pm.expect(prep.rewrite_applied).to.eql(true));",
+                  "  pm.test('search_query is standalone (no 它)', () =>",
+                  "    pm.expect(prep.search_query).to.not.equal('它有哪些具体步骤？'));",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Chat — with category filter",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "text/event-stream" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"什么是疲劳校核？\",\n  \"categories\": [\"uncategorized\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sessions/{{sid}}/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sessions", "{{sid}}", "chat"]
+            },
+            "description": "Restricts retrieval to the given category list. Use any value returned by GET /api/categories. Pass an empty array or omit `categories` to search the whole corpus."
+          },
+          "response": []
+        },
+        {
+          "name": "Chat — invalid session (expect 404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"hello\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sessions/does-not-exist/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sessions", "does-not-exist", "chat"]
+            },
+            "description": "Negative test: chat against an unknown session id must 404."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('404', () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Chat — empty query (expect 422)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sessions/{{sid}}/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sessions", "{{sid}}", "chat"]
+            },
+            "description": "Negative test: Pydantic rejects an empty query (min_length=1) with HTTP 422."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('422', () => pm.response.to.have.status(422));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    }
+  ]
+}

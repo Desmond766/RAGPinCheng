@@ -7,7 +7,7 @@ from src.config import COLLECTION, EMBED_MODEL, LLM_MODEL, RERANK_ENABLED, RERAN
 from src.index import collection_stats, list_categories, parents_count
 from src.session import ChatSession
 
-st.set_page_config(page_title="品诚钢构知识助手", page_icon="🔩", layout="wide")
+st.set_page_config(page_title="品诚 BIM 知识库", page_icon="📚", layout="wide")
 
 
 @st.cache_resource(show_spinner="正在加载嵌入模型 (BGE-M3)...")
@@ -50,8 +50,8 @@ def _render_sources(sources: list[dict]) -> None:
 
 
 def main() -> None:
-    st.title("🔩 品诚钢构知识助手")
-    st.caption("基于公司内部钢结构标准与设计手册的检索增强问答")
+    st.title("📚 品诚 BIM 知识库")
+    st.caption("汇总公司行业规范、客户要求、内部标准、项目资料与培训视频的企业知识库")
 
     chat = _get_session()
 
@@ -91,7 +91,7 @@ def main() -> None:
             if msg.role == "assistant" and msg.sources_for_ui:
                 _render_sources(msg.sources_for_ui)
 
-    query = st.chat_input("请输入问题，例如：Q235钢的抗拉强度设计值是多少？")
+    query = st.chat_input("请输入问题，例如：Revit 建模交付时命名规则是什么？")
     if not query:
         return
 
