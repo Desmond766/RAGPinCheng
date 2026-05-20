@@ -38,6 +38,7 @@ class ParsedDoc:
     category: str
     doc_title: str
     markdown_path: Path
+    doc_type: str = "pdf"  # "pdf" | "transcript"
 
 
 def _safe_stem(pdf: Path) -> str:
@@ -243,6 +244,46 @@ def iter_pdfs() -> Iterator[Path]:
         yield p
 
 
+TRANSCRIPTIONS_DIR = DOCS_DIR / "transcriptions"
+_TRANSCRIPT_PREFIX = "MinerU_markdown_文字记录："
+_TRANSCRIPT_TITLE_RE = __import__("re").compile(
+    r"^\s*\**\s*文字记录[:：]\s*(.+?)\s*\**\s*$"
+)
+
+
+def iter_transcripts() -> Iterator[Path]:
+    """Yield only `文字记录：` markdown files; `智能纪要：` files are skipped."""
+    if not TRANSCRIPTIONS_DIR.exists():
+        return
+    for p in sorted(TRANSCRIPTIONS_DIR.glob("*.md")):
+        if p.name.startswith(_TRANSCRIPT_PREFIX):
+            yield p
+
+
+def _transcript_title(md_path: Path) -> str:
+    """Read the title from the first non-empty line of a transcript file.
+
+    Falls back to the filename stem (minus the MinerU prefix) if the first
+    line doesn't match the expected `**文字记录：<title>**` shape.
+    """
+    try:
+        with md_path.open("r", encoding="utf-8") as fh:
+            for line in fh:
+                line = line.strip()
+                if not line:
+                    continue
+                m = _TRANSCRIPT_TITLE_RE.match(line)
+                if m:
+                    return m.group(1).strip()
+                break
+    except OSError:
+        pass
+    stem = md_path.stem
+    if stem.startswith(_TRANSCRIPT_PREFIX):
+        stem = stem[len(_TRANSCRIPT_PREFIX):]
+    return stem
+
+
 def ingest_all(force: bool = False) -> list[ParsedDoc]:
     use_cloud = bool(MINERU_API_KEY)
     if use_cloud:
@@ -271,7 +312,21 @@ def ingest_all(force: bool = False) -> list[ParsedDoc]:
             continue
 
         final_md.write_text(markdown, encoding="utf-8")
-        docs.append(ParsedDoc(pdf, category, doc_title, final_md))
+        docs.append(ParsedDoc(pdf, category, doc_title, final_md, doc_type="pdf"))
+
+    # Transcripts are already markdown — no MinerU pass needed.
+    for md_path in iter_transcripts():
+        doc_title = _transcript_title(md_path)
+        docs.append(
+            ParsedDoc(
+                source_path=md_path,
+                category="transcriptions",
+                doc_title=doc_title,
+                markdown_path=md_path,
+                doc_type="transcript",
+            )
+        )
+        print(f"[transcript] {doc_title}")
 
     return docs
 

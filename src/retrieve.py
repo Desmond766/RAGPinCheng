@@ -23,6 +23,8 @@ class RetrievedParent:
     text: str
     score: float
     matched_children: list[str]
+    doc_type: str = "pdf"
+    start_time: str | None = None
 
 
 def retrieve(query: str, top_k: int = FINAL_TOP_K) -> list[RetrievedParent]:
@@ -79,6 +81,8 @@ def retrieve(query: str, top_k: int = FINAL_TOP_K) -> list[RetrievedParent]:
                 text=p["text"],
                 score=parent_score[pid],
                 matched_children=parent_children[pid],
+                doc_type=p.get("doc_type") or "pdf",
+                start_time=p.get("start_time"),
             )
         )
     return out

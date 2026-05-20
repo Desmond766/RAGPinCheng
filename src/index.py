@@ -37,7 +37,11 @@ def _ensure_collection(client: QdrantClient, reset: bool = False) -> None:
 
 
 def _init_parents_db(reset: bool = False) -> sqlite3.Connection:
-    """Open parents.sqlite and ensure schema. If reset=True, wipe all rows."""
+    """Open parents.sqlite and ensure schema. If reset=True, wipe all rows.
+
+    Schema is migrated forward on open: missing columns are added in place so
+    incremental builds work after a code update without requiring --reset.
+    """
     conn = sqlite3.connect(PARENTS_DB)
     conn.execute(
         """
@@ -47,10 +51,17 @@ def _init_parents_db(reset: bool = False) -> sqlite3.Connection:
             category TEXT,
             section_path TEXT,
             source_path TEXT,
-            text TEXT
+            text TEXT,
+            doc_type TEXT,
+            start_time TEXT
         )
         """
     )
+    existing = {row[1] for row in conn.execute("PRAGMA table_info(parents)").fetchall()}
+    if "doc_type" not in existing:
+        conn.execute("ALTER TABLE parents ADD COLUMN doc_type TEXT")
+    if "start_time" not in existing:
+        conn.execute("ALTER TABLE parents ADD COLUMN start_time TEXT")
     if reset:
         conn.execute("DELETE FROM parents")
     return conn
@@ -74,11 +85,23 @@ def store_parents(parents: Iterable[Parent], reset: bool = False) -> None:
     """Insert/replace parents. With reset=True, wipes the table first."""
     conn = _init_parents_db(reset=reset)
     rows = [
-        (p.parent_id, p.doc_title, p.category, p.section_path, p.source_path, p.text)
+        (
+            p.parent_id,
+            p.doc_title,
+            p.category,
+            p.section_path,
+            p.source_path,
+            p.text,
+            p.doc_type,
+            p.start_time,
+        )
         for p in parents
     ]
     conn.executemany(
-        "INSERT OR REPLACE INTO parents VALUES (?,?,?,?,?,?)", rows
+        "INSERT OR REPLACE INTO parents "
+        "(parent_id, doc_title, category, section_path, source_path, text, doc_type, start_time) "
+        "VALUES (?,?,?,?,?,?,?,?)",
+        rows,
     )
     conn.commit()
     conn.close()
@@ -91,7 +114,8 @@ def fetch_parents(parent_ids: list[str]) -> dict[str, dict]:
     conn = sqlite3.connect(PARENTS_DB)
     placeholders = ",".join("?" * len(parent_ids))
     rows = conn.execute(
-        f"SELECT parent_id, doc_title, category, section_path, source_path, text "
+        f"SELECT parent_id, doc_title, category, section_path, source_path, text, "
+        f"doc_type, start_time "
         f"FROM parents WHERE parent_id IN ({placeholders})",
         parent_ids,
     ).fetchall()
@@ -104,6 +128,8 @@ def fetch_parents(parent_ids: list[str]) -> dict[str, dict]:
             "section_path": r[3],
             "source_path": r[4],
             "text": r[5],
+            "doc_type": r[6] or "pdf",
+            "start_time": r[7],
         }
         for r in rows
     }
@@ -112,12 +138,45 @@ def fetch_parents(parent_ids: list[str]) -> dict[str, dict]:
 def index_children(children: list[Child], reset: bool = False) -> None:
     """Embed and upsert children into Qdrant. With reset=True, drops the
     collection first; otherwise upserts (deterministic IDs mean re-running
-    the same doc overwrites in place rather than duplicating)."""
+    the same doc overwrites in place rather than duplicating).
+
+    Skip-existing: when not resetting, we query Qdrant for which `child_id`s
+    are already present and only embed the remainder. Since IDs are
+    deterministic UUIDv5 over content, an existing ID guarantees its vector
+    was computed from the same `embed_text` we'd produce now — re-embedding
+    would be wasted work. Edits to source content produce a NEW id, so this
+    skip never masks stale data; it only suppresses redundant re-embeds.
+    """
     client = _client()
     _ensure_collection(client, reset=reset)
 
-    for start in tqdm(range(0, len(children), EMBED_BATCH), desc="embed+upsert"):
-        batch = children[start : start + EMBED_BATCH]
+    to_index: list[Child] = children
+    if not reset and children:
+        all_ids = [c.child_id for c in children]
+        existing: set[str] = set()
+        # qdrant-client's retrieve() tolerates large id lists; chunk anyway
+        # to stay polite on local file mode.
+        CHUNK = 256
+        for i in range(0, len(all_ids), CHUNK):
+            recs = client.retrieve(
+                collection_name=COLLECTION,
+                ids=all_ids[i : i + CHUNK],
+                with_payload=False,
+                with_vectors=False,
+            )
+            existing.update(str(r.id) for r in recs)
+        to_index = [c for c in children if c.child_id not in existing]
+        skipped = len(children) - len(to_index)
+        if skipped:
+            print(f"[qdrant] skipping {skipped} already-indexed children")
+
+    if not to_index:
+        client.close()
+        print(f"[qdrant] nothing new to index for '{COLLECTION}'")
+        return
+
+    for start in tqdm(range(0, len(to_index), EMBED_BATCH), desc="embed+upsert"):
+        batch = to_index[start : start + EMBED_BATCH]
         embs = encode([c.embed_text for c in batch])
         points = []
         for c, e in zip(batch, embs):
@@ -138,12 +197,14 @@ def index_children(children: list[Child], reset: bool = False) -> None:
                         "source_path": c.source_path,
                         "content_type": c.content_type,
                         "text": c.text,
+                        "doc_type": c.doc_type,
+                        "start_time": c.start_time,
                     },
                 )
             )
         client.upsert(collection_name=COLLECTION, points=points)
     client.close()
-    print(f"[qdrant] indexed {len(children)} children into '{COLLECTION}'")
+    print(f"[qdrant] indexed {len(to_index)} new children into '{COLLECTION}'")
 
 
 def collection_stats() -> dict:

@@ -36,6 +36,8 @@ class Parent:
     category: str
     section_path: str
     source_path: str
+    doc_type: str = "pdf"            # "pdf" | "transcript"
+    start_time: str | None = None    # HH:MM:SS, only for transcripts
 
 
 @dataclass
@@ -49,6 +51,8 @@ class Child:
     section_path: str
     source_path: str
     content_type: str  # prose | table | formula
+    doc_type: str = "pdf"            # "pdf" | "transcript"
+    start_time: str | None = None    # HH:MM:SS, only for transcripts
 
 
 def _stable_id(*parts: str) -> str:
@@ -234,7 +238,98 @@ def _split_children(parent_text: str) -> list[tuple[str, str]]:
     return children
 
 
+TRANSCRIPT_TURN_RE = re.compile(
+    r"^说话人\s+\d+\s+(\d{1,2}:\d{2}:\d{2})\s*$",
+    re.MULTILINE,
+)
+
+
+def _parse_transcript_turns(markdown: str) -> list[tuple[str, str]]:
+    """Split a transcript markdown into [(HH:MM:SS, body), ...] turns.
+
+    Anything before the first speaker marker (title + meta table) is dropped —
+    it carries no timestamp and the title is already in `doc_title`.
+    """
+    matches = list(TRANSCRIPT_TURN_RE.finditer(markdown))
+    turns: list[tuple[str, str]] = []
+    for i, m in enumerate(matches):
+        start_time = m.group(1)
+        body_start = m.end()
+        body_end = matches[i + 1].start() if i + 1 < len(matches) else len(markdown)
+        body = markdown[body_start:body_end].strip()
+        if body:
+            turns.append((start_time, body))
+    return turns
+
+
+def chunk_transcript(doc: ParsedDoc) -> tuple[list[Parent], list[Child]]:
+    """Chunk a video transcript: one child per speaker turn, parents pack
+    consecutive turns up to PARENT_SIZE. Parent inherits first child's
+    start_time so citations can render `[doc @HH:MM:SS]`.
+    """
+    markdown = doc.markdown_path.read_text(encoding="utf-8")
+    turns = _parse_transcript_turns(markdown)
+    parents: list[Parent] = []
+    children: list[Child] = []
+
+    # Greedy-pack turns into parents.
+    groups: list[list[tuple[str, str]]] = []
+    current: list[tuple[str, str]] = []
+    current_size = 0
+    for ts, body in turns:
+        turn_text_len = len(body) + len(ts) + 16  # rough overhead for the marker
+        if current and current_size + turn_text_len > PARENT_SIZE:
+            groups.append(current)
+            current = []
+            current_size = 0
+        current.append((ts, body))
+        current_size += turn_text_len
+    if current:
+        groups.append(current)
+
+    section_path = "transcript"
+    for group in groups:
+        first_ts = group[0][0]
+        parent_text = "\n\n".join(f"说话人 {ts}\n{body}" for ts, body in group)
+        parent_id = _stable_id(doc.doc_title, "transcript", first_ts, parent_text)
+        parents.append(
+            Parent(
+                parent_id=parent_id,
+                text=parent_text,
+                doc_title=doc.doc_title,
+                category=doc.category,
+                section_path=section_path,
+                source_path=str(doc.source_path),
+                doc_type="transcript",
+                start_time=first_ts,
+            )
+        )
+        for ts, body in group:
+            child_text = f"说话人 {ts}\n{body}"
+            embed_text = f"{doc.doc_title} @{ts}\n\n{body}"
+            child_id = _stable_id(parent_id, "transcript", ts, body[:80])
+            children.append(
+                Child(
+                    child_id=child_id,
+                    parent_id=parent_id,
+                    text=child_text,
+                    embed_text=embed_text,
+                    doc_title=doc.doc_title,
+                    category=doc.category,
+                    section_path=section_path,
+                    source_path=str(doc.source_path),
+                    content_type="prose",
+                    doc_type="transcript",
+                    start_time=ts,
+                )
+            )
+    return parents, children
+
+
 def chunk_document(doc: ParsedDoc) -> tuple[list[Parent], list[Child]]:
+    if doc.doc_type == "transcript":
+        return chunk_transcript(doc)
+
     markdown = doc.markdown_path.read_text(encoding="utf-8")
     header_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=HEADERS, strip_headers=False)
     sections = header_splitter.split_text(markdown)
@@ -256,6 +351,7 @@ def chunk_document(doc: ParsedDoc) -> tuple[list[Parent], list[Child]]:
                     category=doc.category,
                     section_path=section_path,
                     source_path=str(doc.source_path),
+                    doc_type="pdf",
                 )
             )
             header_prefix = f"{doc.doc_title} > {section_path}\n\n"
@@ -272,6 +368,7 @@ def chunk_document(doc: ParsedDoc) -> tuple[list[Parent], list[Child]]:
                         section_path=section_path,
                         source_path=str(doc.source_path),
                         content_type=ctype,
+                        doc_type="pdf",
                     )
                 )
     return parents, children

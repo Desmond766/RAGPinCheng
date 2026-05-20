@@ -51,11 +51,20 @@ def _build_context(
     used: list[RetrievedParent] = []
     total = 0
     for p in parents:
-        block = (
-            f'<source id="{p.parent_id[:8]}" doc="{p.doc_title}" section="{p.section_path}">\n'
-            f"{p.text}\n"
-            f"</source>"
-        )
+        if p.doc_type == "transcript" and p.start_time:
+            block = (
+                f'<source id="{p.parent_id[:8]}" doc="{p.doc_title}" '
+                f'time="{p.start_time}" type="transcript">\n'
+                f"{p.text}\n"
+                f"</source>"
+            )
+        else:
+            block = (
+                f'<source id="{p.parent_id[:8]}" doc="{p.doc_title}" '
+                f'section="{p.section_path}" type="pdf">\n'
+                f"{p.text}\n"
+                f"</source>"
+            )
         if total + len(block) > budget and used:
             break
         blocks.append(block)

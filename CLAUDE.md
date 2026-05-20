@@ -12,11 +12,13 @@ PDFs in `docs/` are parsed to markdown, chunked, embedded with BGE-M3, indexed i
 
 All commands run from the repo root, with the project venv (`.venv`) activated.
 
+- **Install dependencies**: `pip install -r requirements.txt`
 - **Run the chat UI**: `streamlit run app.py`
 - **Build / extend the index** (parse PDFs → chunk → embed → upsert): `python scripts/build_index.py`
   - **Incremental by default** — re-running with new PDFs in `docs/` keeps existing indexed content (deterministic UUIDv5 IDs mean same content overwrites in place, new content is appended).
   - `--force-parse` re-parses PDFs even if cached markdown exists in `data/parsed/`.
   - `--reset` drops the Qdrant collection and wipes `parents.sqlite` before building (full rebuild from scratch — use after changing chunking or embedding logic).
+- **Single-doc isolation test**: `python scripts/test_single_doc.py "<path-to-pdf>"` — wipes Qdrant + parents.sqlite, indexes only that PDF, drops into a REPL. Intentionally destructive; use `build_index.py` for non-destructive incremental indexing.
 - **Retrieval smoke test** (no LLM, no API key needed): `python scripts/test_retrieve.py "<question>"` (or no arg for default probes).
 - **Interactive RAG agent with full debug output** (requires `ZHIPU_API_KEY`): `python scripts/eval_query.py ["<seed question>"]`. Drops into a REPL after the optional seed turn; slash commands: `/reset`, `/history`, `/verbose N`, `/full`, `/short`, `/exit`. Routes through the same `ChatSession` as the Streamlit app, so eval reproduces UI behavior exactly.
 
@@ -26,15 +28,20 @@ No test suite, lint, or typecheck is configured.
 
 - `ZHIPU_API_KEY` — Zhipu GLM (OpenAI-compatible at `https://open.bigmodel.cn/api/paas/v4/`). Required for generation, not for retrieval.
 - `MINERU_API_KEY` — if set, `src/ingest.py` uses the MinerU cloud API (fast, ~1 min/PDF). If unset, falls back to local `mineru` CLI (slow, CPU-only).
-- `LLM_MODEL` — overrides the default Zhipu model (default `glm-4.6v`).
+- `LLM_MODEL` — overrides the default Zhipu model (default `glm-4.6`, see `src/config.py`).
 
 ## Architecture
 
 The pipeline has four data stages owned by `src/` modules, plus a session orchestration layer that sits on top for multi-turn conversations. Code uses dataclasses to pass typed records between stages — read the dataclass at the top of each file to understand its contract.
 
 1. **Ingest** (`src/ingest.py`): walks `docs/<category>/*.pdf` and produces `data/parsed/<safe_stem>.md`. Cloud path = presign → PUT upload → submit task → poll → download (zip or .md). The folder under `docs/` becomes the `category` metadata. Markdown is cached; re-runs skip already-parsed PDFs unless `--force`.
+   - **Video transcripts** (`docs/transcriptions/MinerU_markdown_文字记录：*.md`) are picked up here too via `iter_transcripts()`. They are *already* markdown (MinerU-exported) — no parse pass needed; the file is consumed directly. `doc_title` is read from the first `**文字记录：<title>**` line of the file. `智能纪要：` summary files in the same folder are skipped on purpose (decision: index transcripts only so every video citation carries a timestamp). Each transcript ParsedDoc carries `doc_type="transcript"` and `category="transcriptions"`.
 
-2. **Chunk** (`src/chunk.py`): parent-child chunking on the markdown.
+2. **Chunk** (`src/chunk.py`): parent-child chunking on the markdown. Branches on `ParsedDoc.doc_type`:
+   - **Transcripts** (`doc_type="transcript"`) go through `chunk_transcript`: `TRANSCRIPT_TURN_RE` splits the file by `说话人 N HH:MM:SS` markers. Each speaker turn becomes one atomic child carrying its own `start_time`; consecutive turns are greedy-packed into parents up to `PARENT_SIZE`. The parent inherits the **first** child's timestamp, which is what gets rendered in citations. No header-splitter, no table/formula detection — transcripts are flat prose.
+   - **PDFs** (`doc_type="pdf"`) use the original header-anchored path described below.
+
+   Both Parent and Child dataclasses carry `doc_type` and an optional `start_time`. PDFs leave `start_time=None`.
    - `MarkdownHeaderTextSplitter` (#/##/###) → header-anchored sections form parents. Oversized sections are further split by `RecursiveCharacterTextSplitter` (PARENT_SIZE=1200 chars).
    - Children (CHILD_SIZE=256) are produced **per parent**, but tables (HTML `<table>` blocks, pipe `| ... |` tables) and `$$ ... $$` formula blocks are detected by `_find_protected_spans` / `_split_protected` and emitted as **atomic children** — never split mid-row or mid-LaTeX. Each child carries a `content_type` of `prose | table | formula`.
    - **Table-atomicity overrides PARENT_SIZE**: HTML tables up to `ATOMIC_TABLE_MAX = 2 * PARENT_SIZE` stay in a single parent even when they overflow the regular parent budget. Larger HTML tables are row-split by `_split_table_with_header`, which **prepends the original first `<tr>` (header row) to every fragment** so each chunk still carries its column labels.
@@ -48,7 +55,7 @@ The pipeline has four data stages owned by `src/` modules, plus a session orches
 
 4. **Retrieve + Generate** (`src/retrieve.py`, `src/generate.py`):
    - `retrieve()` runs Qdrant's native `query_points` with two `Prefetch`es (dense, sparse) fused by `FusionQuery(RRF)`. Over-fetches `top_k * 4` children, then dedupes by `parent_id` and expands the surviving parents from SQLite. Returns `RetrievedParent` dataclasses with score + matched child snippets.
-   - `generate(query, parents, history, budget)` packs parents into `<source id=… doc=… section=…>` blocks up to the per-turn `budget` (chars), interleaves `history` turns as native chat messages, then calls Zhipu via the `openai` SDK. The system prompt forces Chinese, citation format `[doc_title §section_path]`, and "资料中未找到相关内容。" on miss — do not weaken these rules without intent.
+   - `generate(query, parents, history, budget)` packs parents into `<source>` blocks up to the per-turn `budget` (chars). The block shape branches on `doc_type`: PDFs render as `<source id=… doc=… section=… type="pdf">`, transcripts as `<source id=… doc=… time="HH:MM:SS" type="transcript">`. History turns are interleaved as native chat messages, then Zhipu is called via the `openai` SDK. The system prompt forces Chinese, dual citation formats (`[doc §section]` for PDFs, `[doc @HH:MM:SS]` for transcripts), and "资料中未找到相关内容。" on miss — do not weaken these rules without intent.
    - `rewrite_query(history, question)` does one cheap LLM call to rewrite a follow-up question into a standalone one using recent chat history, so retrieval works across turns. Returns `question` unchanged on empty history or any error (best-effort, never raises).
 
 5. **Session orchestration** (`src/session.py`): `ChatSession.ask(query)` drives the 5-stage per-turn pipeline: **① rewrite → ② retrieve fresh → ③ merge with carry-forward → ④ generate → ⑤ update state**. Both `app.py` and `scripts/eval_query.py` go through this — never call `retrieve()` / `generate()` directly from UI/CLI code, route through `ChatSession`.
@@ -77,4 +84,5 @@ To add a new prompt: drop a `.md` in `prompts/`, then call `load_prompt("name")`
 - **Qdrant file mode locks the directory** — only one process can open `data/qdrant/` at a time. `_client()` in `index.py` and the inline `QdrantClient(path=...)` in `retrieve.py` both open per-call and close immediately; don't hold a client open across requests or you'll lock out the Streamlit app.
 - **The protected-block regexes in `chunk.py` matter**: if PDFs start producing differently-shaped tables or inline math, update `HTML_TABLE_RE` / `PIPE_TABLE_RE` / `FORMULA_RE` rather than letting them split mid-row. For oversized HTML tables, also check `_split_table_with_header` still finds the `<tr>` header row to propagate.
 - **The category metadata** is derived from the first folder under `docs/`. Adding a new PDF directly in `docs/` (with no subfolder) produces `category="uncategorized"`. Current subfolders reflect early test material (steel-structure codes) and will broaden over time as BIM / Revit / asset-management content is added.
+- **Scratch / reference files at repo root** are not part of the runtime: `TODO` (running todo list), `i-want-to-build-nested-moore.md` (original design plan), `rag_cheatsheet.html` (reference cheatsheet). Don't treat them as authoritative — code + this CLAUDE.md are the source of truth.
 - **Don't bypass `ChatSession`** for new UIs or scripts — replicating the rewrite/carry/budget/channel-separation logic in another caller is how invariants drift. Add new entry points by instantiating `ChatSession` and consuming `TurnResult`, the way `app.py` and `eval_query.py` do.

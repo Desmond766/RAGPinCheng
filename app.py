@@ -26,8 +26,12 @@ def _get_session() -> ChatSession:
 def _render_sources(sources: list[dict]) -> None:
     with st.expander(f"📎 参考来源 ({len(sources)})"):
         for i, s in enumerate(sources, 1):
+            if s.get("doc_type") == "transcript" and s.get("start_time"):
+                locator = f"🎬 @{s['start_time']}"
+            else:
+                locator = f"§{s['section_path']}"
             st.markdown(
-                f"**{i}. [{s['doc_title']}] §{s['section_path']}**  "
+                f"**{i}. [{s['doc_title']}] {locator}**  "
                 f"·  分类: `{s['category']}`  ·  得分: {s['score']:.4f}"
             )
             st.caption(s["text"][:400] + ("..." if len(s["text"]) > 400 else ""))

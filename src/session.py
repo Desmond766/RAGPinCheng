@@ -209,6 +209,8 @@ class ChatSession:
                 "score": p.score,
                 "text": p.text,
                 "parent_id": p.parent_id,
+                "doc_type": p.doc_type,
+                "start_time": p.start_time,
             }
             for p in parents
         ]
