@@ -44,7 +44,7 @@ def _render_sources(sources: list[dict]) -> None:
                 locator = f"§{s['section_path']}"
             st.markdown(
                 f"**{i}. [{s['doc_title']}] {locator}**  "
-                f"·  分类: `{s['category']}`  ·  得分: {s['score']:.4f}"
+                f"·  分类: `{s['category']}`"
             )
             st.caption(s["text"][:400] + ("..." if len(s["text"]) > 400 else ""))
 
@@ -126,6 +126,12 @@ def main() -> None:
                 f"- fresh_sources: `{len(result.fresh_sources) if result else 0}`\n"
                 f"- final_sources (after merge): `{len(result.final_sources) if result else 0}`"
             )
+            if result and result.sources:
+                score_lines = "\n".join(
+                    f"  {i}. [{p.doc_title}] · 重排: `{p.score:.4f}` · RRF: `{p.rrf_score:.4f}`"
+                    for i, p in enumerate(result.sources, 1)
+                )
+                st.markdown(f"- 来源得分:\n{score_lines}")
 
 
 if __name__ == "__main__":

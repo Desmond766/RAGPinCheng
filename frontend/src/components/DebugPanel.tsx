@@ -43,6 +43,20 @@ export function DebugPanel({ msg }: { msg: ChatMessage }) {
               </>
             )}
           </div>
+          {(done?.sources?.length ?? prep?.used_sources?.length ?? 0) > 0 && (
+            <div className="mt-1">
+              <div className="font-medium">来源得分:</div>
+              <ol className="ml-4 list-decimal">
+                {(done?.sources ?? prep?.used_sources ?? []).map((s, i) => (
+                  <li key={s.parent_id + i}>
+                    <span className="text-ink">{s.doc_title}</span>{" "}
+                    · 重排 <code>{s.score.toFixed(4)}</code>{" "}
+                    · RRF <code>{s.rrf_score.toFixed(4)}</code>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
         </div>
       )}
     </div>

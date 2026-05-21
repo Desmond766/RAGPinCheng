@@ -17,12 +17,13 @@ Two entry points share the pipeline:
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from time import perf_counter
 from typing import Iterator
 
 from .config import MAX_CONTEXT_CHARS
 from .generate import Answer, GenerationPrep, generate, rewrite_query, stream_generate
+from .rerank import rerank_scores
 from .retrieve import RetrievedParent, retrieve
 
 # Fixed reserve (chars) inside MAX_CONTEXT_CHARS for system prompt + question
@@ -134,22 +135,35 @@ class StreamingTurnPrep:
 def retrieve_for_turn(
     fresh: list[RetrievedParent],
     last_sources: list[RetrievedParent] | None,
+    query: str,
     carry: int = CARRY_SOURCES,
 ) -> list[RetrievedParent]:
     """Merge fresh retrieval with the top-`carry` of last turn's sources.
 
-    Dedup by parent_id; fresh ranking wins ties. The carry-forward is a
-    safety net for thin follow-up rewrites that fail to re-find a chunk
-    the user is clearly still discussing.
+    Carry-forward parents are RE-SCORED against the current `query` via the
+    same cross-encoder used in fresh retrieval, so their scores live on the
+    same scale and can be sorted together with fresh results. Without this,
+    a highly relevant carry-forward could be silently squeezed out of the
+    budget by less relevant fresh hits ranked above it.
     """
     if not last_sources or carry <= 0:
         return list(fresh)
+
     seen = {p.parent_id for p in fresh}
-    merged = list(fresh)
-    for p in last_sources[:carry]:
-        if p.parent_id not in seen:
-            merged.append(p)
-            seen.add(p.parent_id)
+    carry_candidates = [p for p in last_sources[:carry] if p.parent_id not in seen]
+    if not carry_candidates:
+        return list(fresh)
+
+    # Rescore against the current query so scores are comparable to fresh.
+    # Reranking on parent text (vs child) is acceptable here because
+    # carry-forward is capped at CARRY_SOURCES (=2) — the extra cost is small.
+    new_scores = rerank_scores(query, [p.text for p in carry_candidates])
+    rescored = [
+        replace(p, score=float(s)) for p, s in zip(carry_candidates, new_scores)
+    ]
+
+    merged = list(fresh) + rescored
+    merged.sort(key=lambda p: p.score, reverse=True)
     return merged
 
 
@@ -207,6 +221,7 @@ class ChatSession:
                 "section_path": p.section_path,
                 "category": p.category,
                 "score": p.score,
+                "rrf_score": p.rrf_score,
                 "text": p.text,
                 "parent_id": p.parent_id,
                 "doc_type": p.doc_type,
@@ -230,7 +245,9 @@ class ChatSession:
         # ② RETRIEVE + ③ MERGE
         t = perf_counter()
         fresh_sources = retrieve(search_query, categories=categories)
-        final_sources = retrieve_for_turn(fresh_sources, self.state.last_sources)
+        final_sources = retrieve_for_turn(
+            fresh_sources, self.state.last_sources, search_query
+        )
         timings["retrieve"] = perf_counter() - t
 
         # No-source escape hatch.
@@ -312,7 +329,9 @@ class ChatSession:
         # ② RETRIEVE + ③ MERGE
         t = perf_counter()
         fresh_sources = retrieve(search_query, categories=categories)
-        final_sources = retrieve_for_turn(fresh_sources, self.state.last_sources)
+        final_sources = retrieve_for_turn(
+            fresh_sources, self.state.last_sources, search_query
+        )
         timings["retrieve"] = perf_counter() - t
 
         # No-source path: stream the fallback message and finalize.

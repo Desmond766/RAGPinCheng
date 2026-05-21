@@ -4,6 +4,7 @@ export type Source = {
   section_path: string;
   category: string;
   score: number;
+  rrf_score: number;
   text: string;
   doc_type: string;
   start_time: string | null;

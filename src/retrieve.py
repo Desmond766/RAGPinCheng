@@ -50,6 +50,7 @@ class RetrievedParent:
     doc_type: str = "pdf"
     start_time: str | None = None
     company: str | None = None
+    rrf_score: float = 0.0
 
 
 # Matches Chinese standard codes: GB / GB/T / JGJ / JGJ/T / CECS / YB / JG /
@@ -200,6 +201,9 @@ def retrieve(
     if not points:
         return []
 
+    # Preserve RRF score per child before reranking overwrites ordering.
+    child_rrf: dict[str, float] = {str(p.id): p.score for p in points}
+
     # Cross-encoder rerank on full child text.
     if RERANK_ENABLED:
         passages = [p.payload["text"] for p in points]
@@ -211,20 +215,25 @@ def retrieve(
         scored = [(p, p.score) for p in points]
 
     # Dedupe children by parent_id, keeping the best score per parent.
+    # rrf_score for a parent = best RRF score among its matched children.
     parent_order: list[str] = []
     parent_score: dict[str, float] = {}
+    parent_rrf: dict[str, float] = {}
     parent_children: dict[str, list[str]] = {}
     for point, score in scored:
         pid = point.payload["parent_id"]
         snippet = point.payload["text"][:120].replace("\n", " ")
+        child_id = str(point.id)
         if pid in parent_score:
             parent_children[pid].append(snippet)
+            parent_rrf[pid] = max(parent_rrf[pid], child_rrf.get(child_id, 0.0))
             continue
         if len(parent_order) >= top_k:
             # Cap reached: don't admit a new parent, but keep scanning so
             # already-accepted parents can still gather child snippets above.
             continue
         parent_score[pid] = float(score)
+        parent_rrf[pid] = child_rrf.get(child_id, 0.0)
         parent_order.append(pid)
         parent_children[pid] = [snippet]
     parents = fetch_parents(parent_order)
@@ -246,6 +255,7 @@ def retrieve(
                 doc_type=p.get("doc_type") or "pdf",
                 start_time=p.get("start_time"),
                 company=p.get("company"),
+                rrf_score=parent_rrf.get(pid, 0.0),
             )
         )
     return out

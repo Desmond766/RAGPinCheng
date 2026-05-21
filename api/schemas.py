@@ -22,6 +22,7 @@ class SourceDTO(BaseModel):
     section_path: str
     category: str
     score: float
+    rrf_score: float = 0.0
     text: str
     doc_type: str
     start_time: str | None = None
@@ -85,6 +86,7 @@ def source_to_dto(d: dict[str, Any]) -> SourceDTO:
         section_path=d.get("section_path") or "",
         category=d.get("category") or "",
         score=float(d.get("score") or 0.0),
+        rrf_score=float(d.get("rrf_score") or 0.0),
         text=d.get("text") or "",
         doc_type=d.get("doc_type") or "pdf",
         start_time=d.get("start_time"),

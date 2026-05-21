@@ -28,8 +28,6 @@ export function SourcesPanel({ sources }: { sources: Source[] }) {
               </div>
               <div className="text-xs text-muted mt-0.5">
                 分类: <code className="bg-gray-100 px-1 rounded">{s.category || "—"}</code>
-                {"  ·  得分: "}
-                {s.score.toFixed(4)}
               </div>
               <div className="text-xs text-gray-600 mt-1 whitespace-pre-wrap line-clamp-6">
                 {s.text.length > 400 ? s.text.slice(0, 400) + "…" : s.text}
