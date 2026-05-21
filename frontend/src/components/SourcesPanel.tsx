@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { api } from "../api/client";
+import { CITATION_EVENT, type CitationDetail } from "./citations";
 import type { Source } from "../types";
 
 function locator(s: Source): string {
@@ -6,8 +8,140 @@ function locator(s: Source): string {
   return `§${s.section_path || "(无)"}`;
 }
 
-export function SourcesPanel({ sources }: { sources: Source[] }) {
+function SourceCard({
+  s,
+  i,
+  id,
+  highlight,
+  cardRef,
+  sessionId,
+  messageId,
+}: {
+  s: Source;
+  i: number;
+  id: string;
+  highlight: boolean;
+  cardRef: (el: HTMLLIElement | null) => void;
+  sessionId: string | null;
+  messageId: string;
+}) {
+  const [reportOpen, setReportOpen] = useState(false);
+  const [note, setNote] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  async function submit() {
+    setSubmitting(true);
+    setErr(null);
+    try {
+      await api.sendFeedback({
+        kind: "citation",
+        note: note.trim() || undefined,
+        session_id: sessionId,
+        message_id: messageId,
+        parent_id: s.parent_id,
+        doc_title: s.doc_title,
+        section_path: s.section_path,
+        start_time: s.start_time,
+        category: s.category,
+      });
+      setSent(true);
+      setReportOpen(false);
+      setNote("");
+    } catch (e: any) {
+      setErr(e?.message || String(e));
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <li
+      id={id}
+      ref={cardRef}
+      className={
+        "border-l-2 pl-3 transition-colors duration-500 " +
+        (highlight
+          ? "border-accent bg-blue-50 dark:bg-blue-900/20"
+          : "border-gray-200 dark:border-gray-700")
+      }
+    >
+      <div className="flex items-start justify-between gap-2">
+        <div className="font-medium text-ink">
+          {i + 1}. [{s.doc_title}] <span className="text-muted">{locator(s)}</span>
+        </div>
+        <button
+          type="button"
+          title="报告引用有误"
+          onClick={() => setReportOpen((v) => !v)}
+          className="text-xs text-muted hover:text-red-600 shrink-0"
+        >
+          {sent ? "已报告" : "⚠ 报错"}
+        </button>
+      </div>
+      <div className="text-xs text-muted mt-0.5">
+        分类: <code className="bg-gray-100 px-1 rounded">{s.category || "—"}</code>
+      </div>
+      <div className="text-xs text-gray-600 mt-1 whitespace-pre-wrap line-clamp-6">
+        {s.text.length > 400 ? s.text.slice(0, 400) + "…" : s.text}
+      </div>
+      {reportOpen && (
+        <div className="mt-2 flex flex-col gap-1.5">
+          <textarea
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="可选：为什么这条引用有误？"
+            rows={2}
+            className="border border-gray-300 rounded p-2 text-xs bg-white dark:bg-gray-800"
+          />
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={submit}
+              disabled={submitting}
+              className="px-2 py-1 rounded bg-red-600 text-white text-xs disabled:opacity-50"
+            >
+              {submitting ? "提交中…" : "提交报告"}
+            </button>
+            {err && <span className="text-xs text-red-600">{err}</span>}
+          </div>
+        </div>
+      )}
+    </li>
+  );
+}
+
+export function SourcesPanel({
+  sources,
+  messageId,
+  sessionId,
+}: {
+  sources: Source[];
+  messageId: string;
+  sessionId: string | null;
+}) {
   const [open, setOpen] = useState(false);
+  const [highlightIdx, setHighlightIdx] = useState<number | null>(null);
+  const refs = useRef<Record<number, HTMLLIElement | null>>({});
+
+  useEffect(() => {
+    function onCitation(e: Event) {
+      const detail = (e as CustomEvent<CitationDetail>).detail;
+      if (!detail || detail.messageId !== messageId) return;
+      setOpen(true);
+      setHighlightIdx(detail.sourceIndex);
+      // Wait for the panel to expand, then scroll the card into view.
+      requestAnimationFrame(() => {
+        const el = refs.current[detail.sourceIndex];
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+      window.setTimeout(() => setHighlightIdx(null), 1800);
+    }
+    window.addEventListener(CITATION_EVENT, onCitation);
+    return () => window.removeEventListener(CITATION_EVENT, onCitation);
+  }, [messageId]);
+
   if (!sources?.length) return null;
   return (
     <div className="mt-3 border border-gray-200 rounded-lg bg-white/60">
@@ -22,17 +156,18 @@ export function SourcesPanel({ sources }: { sources: Source[] }) {
       {open && (
         <ol className="px-4 py-2 space-y-3 text-sm">
           {sources.map((s, i) => (
-            <li key={s.parent_id + i} className="border-l-2 border-gray-200 pl-3">
-              <div className="font-medium text-ink">
-                {i + 1}. [{s.doc_title}] <span className="text-muted">{locator(s)}</span>
-              </div>
-              <div className="text-xs text-muted mt-0.5">
-                分类: <code className="bg-gray-100 px-1 rounded">{s.category || "—"}</code>
-              </div>
-              <div className="text-xs text-gray-600 mt-1 whitespace-pre-wrap line-clamp-6">
-                {s.text.length > 400 ? s.text.slice(0, 400) + "…" : s.text}
-              </div>
-            </li>
+            <SourceCard
+              key={s.parent_id + i}
+              s={s}
+              i={i}
+              id={`src-${messageId}-${i}`}
+              highlight={highlightIdx === i}
+              cardRef={(el) => {
+                refs.current[i] = el;
+              }}
+              sessionId={sessionId}
+              messageId={messageId}
+            />
           ))}
         </ol>
       )}

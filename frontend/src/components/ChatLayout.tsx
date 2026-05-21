@@ -62,7 +62,7 @@ export function ChatLayout() {
             )}
           </div>
         </header>
-        <MessageList messages={messages} />
+        <MessageList messages={messages} sessionId={sessionId} />
         <Composer
           onSend={(t) => send(t, selected)}
           disabled={sending || !sessionId}

@@ -137,6 +137,7 @@ def retrieve_for_turn(
     last_sources: list[RetrievedParent] | None,
     query: str,
     carry: int = CARRY_SOURCES,
+    categories: list[str] | None = None,
 ) -> list[RetrievedParent]:
     """Merge fresh retrieval with the top-`carry` of last turn's sources.
 
@@ -145,12 +146,20 @@ def retrieve_for_turn(
     same scale and can be sorted together with fresh results. Without this,
     a highly relevant carry-forward could be silently squeezed out of the
     budget by less relevant fresh hits ranked above it.
+
+    If `categories` is set, carry-forward parents outside that filter are
+    dropped — otherwise a category switch (e.g. 行业规范 → 教学视频) would
+    still leak last turn's off-category sources into the new turn.
     """
     if not last_sources or carry <= 0:
         return list(fresh)
 
     seen = {p.parent_id for p in fresh}
-    carry_candidates = [p for p in last_sources[:carry] if p.parent_id not in seen]
+    allowed = set(categories) if categories else None
+    carry_candidates = [
+        p for p in last_sources[:carry]
+        if p.parent_id not in seen and (allowed is None or p.category in allowed)
+    ]
     if not carry_candidates:
         return list(fresh)
 
@@ -246,7 +255,8 @@ class ChatSession:
         t = perf_counter()
         fresh_sources = retrieve(search_query, categories=categories)
         final_sources = retrieve_for_turn(
-            fresh_sources, self.state.last_sources, search_query
+            fresh_sources, self.state.last_sources, search_query,
+            categories=categories,
         )
         timings["retrieve"] = perf_counter() - t
 
@@ -330,7 +340,8 @@ class ChatSession:
         t = perf_counter()
         fresh_sources = retrieve(search_query, categories=categories)
         final_sources = retrieve_for_turn(
-            fresh_sources, self.state.last_sources, search_query
+            fresh_sources, self.state.last_sources, search_query,
+            categories=categories,
         )
         timings["retrieve"] = perf_counter() - t
 

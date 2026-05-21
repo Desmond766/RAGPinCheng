@@ -42,7 +42,11 @@
       "Bash(curl -sf http://127.0.0.1:5173/ -o /dev/null)",
       "Bash(curl -sI http://127.0.0.1:5173/)",
       "Bash(curl -s http://127.0.0.1:5173/)",
-      "Bash(curl -s http://127.0.0.1:5173/api/health)"
+      "Bash(curl -s http://127.0.0.1:5173/api/health)",
+      "Bash(python3 *)",
+      "Bash(brew list *)",
+      "Read(//opt/homebrew/bin/**)",
+      "Bash(pyenv versions *)"
     ]
   }
 }

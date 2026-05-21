@@ -40,6 +40,11 @@ MAX_CONTEXT_CHARS = 6000
 # to RRF order from Qdrant.
 RERANKER_MODEL = "BAAI/bge-reranker-v2-m3"
 RERANK_ENABLED = True
+# When True, the reranker scores `"{doc_title} > {section_path}\n\n{text}"`
+# instead of raw `text`. Mirrors what the dense embedder sees (Child.embed_text)
+# and prevents loss of section-identifying terms (e.g. product codes in
+# section headers) at rerank time.
+RERANK_USE_HEADER = True
 
 # Qdrant
 COLLECTION = "pincheng_docs"

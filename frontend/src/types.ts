@@ -35,15 +35,35 @@ export type ChatEvent =
   | { type: "done"; data: DoneData }
   | { type: "error"; data: { message: string } };
 
+export type ChatStage = "retrieving" | "generating" | "streaming" | "done";
+
 export type ChatMessage = {
   id: string;
   role: "user" | "assistant" | "system";
   content: string;
+  query?: string;
   sources?: Source[];
   prep?: PrepData;
   done?: DoneData;
   streaming?: boolean;
+  stage?: ChatStage;
   error?: string;
+};
+
+export type FeedbackPayload = {
+  session_id?: string | null;
+  turn_index?: number | null;
+  message_id?: string | null;
+  kind: "answer" | "citation";
+  rating?: "up" | "down";
+  note?: string;
+  parent_id?: string;
+  doc_title?: string;
+  section_path?: string;
+  start_time?: string | null;
+  category?: string;
+  query?: string;
+  answer_text?: string;
 };
 
 export type ApiConfig = {

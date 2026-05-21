@@ -78,6 +78,29 @@ class DoneEvent(BaseModel):
     budget: int
 
 
+class FeedbackRequest(BaseModel):
+    """User feedback on either an assistant answer or a specific cited source."""
+    session_id: str | None = None
+    turn_index: int | None = None
+    message_id: str | None = None
+    kind: str  # "answer" | "citation"
+    rating: str | None = None  # "up" | "down"
+    note: str | None = None
+    # Citation reports carry the offending source.
+    parent_id: str | None = None
+    doc_title: str | None = None
+    section_path: str | None = None
+    start_time: str | None = None
+    category: str | None = None
+    # Optional context for answer-level feedback.
+    query: str | None = None
+    answer_text: str | None = None
+
+
+class FeedbackResponse(BaseModel):
+    ok: bool
+
+
 def source_to_dto(d: dict[str, Any]) -> SourceDTO:
     """Convert the dict shape from ChatSession._sources_for_ui to SourceDTO."""
     return SourceDTO(

@@ -1,3 +1,4 @@
+import { useTheme } from "../hooks/useTheme";
 import type { ApiConfig, Health } from "../types";
 
 export function Sidebar({
@@ -19,15 +20,25 @@ export function Sidebar({
   health: Health | null;
   turnIndex: number;
 }) {
+  const [theme, toggleTheme] = useTheme();
   return (
     <aside className="w-72 shrink-0 border-r border-gray-200 bg-panel/70 backdrop-blur-sm flex flex-col">
-      <div className="px-4 py-4 border-b border-gray-200">
+      <div className="px-4 py-4 border-b border-gray-200 space-y-2">
         <button
           type="button"
           onClick={onNewChat}
           className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
         >
           ＋ 新建对话
+        </button>
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50 flex items-center justify-center gap-2"
+          aria-label="切换主题"
+        >
+          <span>{theme === "dark" ? "☀️" : "🌙"}</span>
+          <span>{theme === "dark" ? "浅色模式" : "深色模式"}</span>
         </button>
       </div>
 

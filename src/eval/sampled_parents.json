@@ -1,0 +1,1033 @@
+{
+  "seed": 42,
+  "buckets": {
+    "transcript": [
+      {
+        "parent_id": "72ffbf4f-9524-5a7d-8e68-ec22e33d838f",
+        "doc_title": "人1 20250702早上培训（要求、流程解读、命名标准） 2026年5月20日",
+        "section_path": "transcript",
+        "doc_type": "transcript",
+        "category": "教学视频",
+        "start_time": "01:04:40",
+        "text_len": 1108,
+        "text": "说话人 01:04:40\n这个是第一个阶段的一个内容，方案阶段，我们要配合的。可能在方案阶段，我们这边还会配合具体的相应的包括，比如说帮甲方审了一些二维平面布局，或者机房座位的一些的建议，这个就是二维的一个配合，这个我没写进去，这个就是看项目情况去配合。如果说方案阶段弄完了，对吧？再往下就是到扩初阶段，扩初设计。但不是说所有的项目它都分的很明显，有坡度设计跟施工图设计。如果说有些时间比较紧张的，可能这一个流程就没了。这个流程就没了，直接跳到下面一个流程，是共图设计阶段。我先说下正常周期 OK 的情况下的话，有这个阶段的。扩出阶段我们要做什么？甲方会提供一版初稿的图纸，这稿图纸是怎样的？初步设计的，它的深度是很粗糙的，就相当于比如说建筑，常规我们建筑是有很多的大样的，这个前期可能它就是一张建筑平面图，结构也是一样的，结构你如果说真的一个完整全套图是，它也是非常多的一些的局部节点跟大样的，前期。\n\n说话人 01:05:51\n或者说有分了很多张的图，比如柱柱图、梁图、板图，它是有分了好几张的，前期它也就是一张，所有的梁板柱墙，所有的信息都在一张平面图上体现，所以这个就前期比较粗糙的图纸就这样，建筑一张，平面一张，机电也是一样的，机电如果说你像完整的，可能它有很多个系统图，或者说大样，前期给到我们的初版图的也就一张，水一张，暖一张，电一张，就是体现这个管线干管的一个匹配，这个就是对于你们后面初模建模的内容，就是这种深度的图纸。所以这个就是扩组阶段，但扩组阶段的话一。\n\n说话人 01:06:30\n一般我们优先是以二维分析去考虑，我优先是不建模，先进行二维的一个截图的分析，所以这个阶段我们要做什么内容？一个是收集归档图纸，这个一般项目负责人做的，如果说后面你们到这个阶段的话，这个就是你们要做的。比如说这个项目是你进行一个整体的统筹，这个就是你去做，或者说你负责广东，后面一般这个你就得接触这个归档的一个内容，所以归档你就得涉及到刚说的，就这个，归档图纸归档，甲方一般是发到群上或者邮件发送，你就得下载下来，然后按照我们的这个版本要求跟命名要求去匹配这个名称。把资料归档到共享上，所以这个就是一个资料的归档。\n\n说话人 01:07:14\n在归档完以后，你得同步告知项目群里面，告知大家图纸收到这个图纸，给大家一个告知。接着就是建筑平面布局的一个分析，提供 BIM 意见的一个报告，这个就是我刚说的建筑平面的一个复核跟建议，这个一般就是有一定广东经验的人才能到这个阶段去做的。再往下，相应的就是广东平面的一个分析，提供一个 BIM 意见的报告，所以这个就所有的这些扩图阶段，我们都是优先以二维分析去考虑的。"
+      },
+      {
+        "parent_id": "99ac28df-808a-58b8-88b1-8743b82c0e76",
+        "doc_title": "人2 4.2.14插座建模 2026年5月20日",
+        "section_path": "transcript",
+        "doc_type": "transcript",
+        "category": "教学视频",
+        "start_time": "00:18:22",
+        "text_len": 1125,
+        "text": "说话人 00:18:22\n这个暖心情。这个我们先也是输入300哈，如果我们输入300的话，它其实距地的话不是300，这个跟足有关系哈，所以你要输入305.5，要加上5.5它才会是3。诶，哦，测量错了，哦，刚刚距地高度的测量值搞错了，应该是这个，我把面层给隐藏了，应该是这个才是300。如果你输入300的话，会少个5.5哈，少个5点。5，所以我们要输入30，305.5才会是正确的距地高度的数值。所以这种等于0的话，我们就正常输入300就可以了。如果后面有数字叫你加5.5，或者是其他另外多少的话，我们要在距地高度的基础上，再去加上下面后面的一个小数值。\n\n说话人 00:19:25\n这个是大家要注意的哦，放置的时候要注意一下。这边的话也是300的插座，另外。两边是两个无孔插座，还有个是电视跟 AP 插座，我们可以这边下拉选择，哎呀，可以搜索，在这里搜索也可以，电视。这个就当电视的，就是电视单口的就可以了。还有个是 AP， 输入 AP。我们用这个 APP， 点错了，这个是 AP 的，好，都放置好之后，我们先调整一下这个高度为300，这个也是300，调好了，我们开始这个定位要定位一下哈，定位，这个是定位线，对准这个中心。中心点，它这个定位线是定位在。白板的中间的，预留穿线的中间的，我们定位一个之后，其他的两边都要向中间的靠拢。其他的话就是我们给它对齐，边对边对齐哈，它的面板对齐就可以了，面板对齐面板，面板都要挨着。如果出现这种不要旋转此位置的话，它不让你移动的，不让你对齐的时候，你就移动过去，点对点移动过去，靠边移动。\n\n说话人 00:21:25\n像这个也是，这个我们对，平面先对齐一下，给它对齐过去，好，对齐完之后我们看一下平面，看它就是这样挨在一起的，上面还有距地900的，还有一个，我们可以给它复制一个上去，距地900，测量一下，这个也是距地900，没错哈，那这个地方的这个插座我们就已经建好了，再画一个。\n\n说话人 00:22:01\n这个厨房，这边是厨房的哈，像厨房这边的话，开关也会，插座也会比较多。像厨房的这个位置的话，大，基本上我们用的就是这个是2，看一下图纸，那像这几个，我们是这个。这个，二是热水器，热水器的三孔，我们就找这个三孔哈。就是 CM 可以快捷键，然后这边可以去选择三孔，三孔我们可以找这个三孔，然后对应的这个数值是2050，2050输入。放置下来，没对准的话，定位给它对齐一下，诶，这个就可以了。这个好像是2050，是不是在下面？我们要做完之后打个剖面，确认一下它的高度。这个是，好嘞，这个得用，没错，2050，这个高度是。嗯，距地，这个距地高度，测量的时候一定要量最下面那条线哈，距地的那条线，这个就没错了。"
+      },
+      {
+        "parent_id": "a6b8bfd4-5bd8-552e-ad38-b5ce27ecd2d1",
+        "doc_title": "人1 20250702早上培训（要求、流程解读、命名标准） 2026年5月20日",
+        "section_path": "transcript",
+        "doc_type": "transcript",
+        "category": "教学视频",
+        "start_time": "00:10:23",
+        "text_len": 1156,
+        "text": "说话人 00:10:23\n在这个广中跟吊架完成之后是你们出图，你们在做出图的时候也是一样的，不是说你做这个任务，你就不用管它的模型到底怎样，你同步的监着审核它的模型是否有存在碰撞，或者说不到位的情况。这样就是双向的一个反馈。因为你如果说不管他的碰撞，或者说有问题的点，后面你出图，你是基于现有的你做完了，后面他改完以后，你还得再更新，这个是对你自己的一个工作量的图增。因为有接触过出图的，你就应该知道，我们所有出图弄完以后都得重新再导一遍的。就标注，只要你有更新，我们的出图都得重新再跟再导出一遍，然后再匹配到这个 CAD 图上，所以这个都是一个重复的工作量。你要想不去重复这些，首先基于你的力所能及的范围内，保证它的一个质量。这不止说是针对你当下任务的质量，就是像我刚说的承上启下的任务，跟你也都是相息息相关的。所以这个点我希望你们有这种意识，就后面在真正做任务的时候，要看一下上一个跟你相关的前后的一个任务的情况，你要起到一个复核跟监督的一个作用。\n\n说话人 00:11:47\n还有一个就是啥呢？因为我们的机电的内容多，而且也比较细，所以我非常注重无效的返工。这个返工可能是多方面原因的，有的是设计原因，有的是甲方原因，有的是我们自身原因。但是对于我们来讲，可控的是我们自身原因，所以我们要优先把自身原因导致的返工尽量性的去避免。\n\n说话人 00:12:19\n你怎么去控自身的返工呢？那就是你们学的精不精？包括对项目的要求，就是懂不懂？你只有把这些的掌握透了，你相应的才能做到可控。所以就是返工这个，我希望就是能成为你们，脑海里的一根弦，一直是要警醒自己的，因为这个都是跟效率挂钩，你讲到效率，说白一点，最终化成的就是钱。所以就是，一个人，你赚的多跟少，这个都是息息相关的。所以我希望就是在这个质量上，在保证保质保量的前提下，尽量减少我们的一个自身的返工。\n\n说话人 00:13:08\n这个是针对第二个方面质量的要求，第三个节点性的要求。因为我们公司之所以能活到现在，不只说它的成果质量好，还有一个点就是我们的节点性强，要求高，甲方给到的我们的节点，我们都是尽力的去保证它的节点的一个。满足要求。因为我们这边的 BIM 不是后 BIM， 我们的 BIM 是随着设计院的出图同步进行的。比如定的，他是定的7月3号招标出图，我们 BIM 的成果也是同步的以7月3号的节点提提提资给这个招标合约部的。所以就是一个同步的一个流程，所以我希望就是这个节点，无论是外部节点还是内部节点，只要给到你们的一个节点性的要求，我希望你们按照这个节点去完成任务。尤其就是像当天的给的任务，当天要去把这个任务收掉，而不是相应的留个10%或者5%扔到第二天去。所以就是这个节点性的要求，我希望你们有这个概念，而且也要按这个要求去完成。"
+      },
+      {
+        "parent_id": "be03e61e-4806-5a39-b8d8-740ab7f883cc",
+        "doc_title": "人2 4.2.14插座建模 2026年5月20日",
+        "section_path": "transcript",
+        "doc_type": "transcript",
+        "category": "教学视频",
+        "start_time": "00:09:09",
+        "text_len": 948,
+        "text": "说话人 00:09:09\n那插座的话，给大家示范几个比较典型的哈，比如说像这个是电视这边的，电视，卫生间的、厨房的，这三个是比较典型的，像卧室里边的话，它的类型会比较。我。卧室里面的它这个插座的类型就比较单一的，一般就是五孔或者是网络插座这些。外面的话包含的类型会比较多。在这个放置之前的话，先给大家弄了几个我们插座的样式。这个是我做的一个，把我们样板里面的插座的类型都给大家。整理一个出来给一下，说给大家看一下，大概先看一下，先了解一下这个样式。比如说这个就是 AP 插座，这是 AP 插座的样子，其实我们图纸上用什么插座都可以。这个就是 AP 插座，我们图纸上有什么名称叫什么的话，我们基本上这个图纸上的呃族用的这个名称也是一样的。像我们 AP 插座的话，你就可以搜索 AP， 其实都能找到这个族。像这个是三孔插座的。这个是三孔带这个插头的，这个是一般有项目需要的时候，我们会用这个带插头的，它其实也是三孔的，只是外面多一个插的插头。\n\n说话人 00:10:53\n这个是倒三孔的，这个是宝装的一个三孔的，这个是内凹三孔的，内凹三孔的话主要是用在冰箱插座的话都是用这个内凹三孔的，三孔内凹的。这种的话是三孔带开关的，这两个都是带开关，就是一个大开关，一个小开关的区别。这个的话是五孔插座，这个的话也是仿的一个五孔插座，有时候的话项目它有一些会设计这个倒过来的，所以我们有准备这个组。像这个就是带插头的五孔了，这边的话是也是五孔，它只是这两个孔的话是方向不一样，我们正常是竖的，它这个是横的，所以这个是依据，这些的话是依据这个项目需求来使用的。\n\n说话人 00:11:46\n这个也是内凹的五孔，这个是内凹五孔，有时候它图纸会告诉我们是需要内凹的，那我们就用这个内凹的。好，这个就是正常的五孔加五孔加开关的，前面是三孔加开关，这个是五孔加开关哦。对，像这些，这个就是五孔加开关，带个盒子的，像这个就是我们前面说的防溅插座，就是这种有带盒子的。防溅型的，我们后面图后面会括号这个防溅型哈。嗯，所以如果说图纸上有表达这个防溅的话，我们就选择这个防溅型的。这些的话就是这些。这个是会客面板，有时候图纸上会告诉我们它插座就叫会客面板，你就选用会客面板就好。这个就是三孔带插，带防溅盒的。这些都是带防溅盒的。"
+      },
+      {
+        "parent_id": "66864c7f-28c3-52d4-9350-163985d42bf1",
+        "doc_title": "人1 20250702早上培训（要求、流程解读、命名标准） 2026年5月20日",
+        "section_path": "transcript",
+        "doc_type": "transcript",
+        "category": "教学视频",
+        "start_time": "00:00:05",
+        "text_len": 1033,
+        "text": "说话人 00:00:05\n在正式培训之前，我这边先对大家的一些要求先简单的说一下。因为昨天跟大家是把整个公司的一个情况、基本概况以及我们的一个业务的情况跟大家做了一个介绍。对于大家的具体要求，昨天会上我是没有去过多的说的。所以在正式这个培训之前，基于大家业务一些要求，我简单的说一下。\n\n说话人 00:00:33\n第一个就是态度，无论是哪一届的新人来。这边首当其冲，我给大家一个优先的要求点，就是态度是第一的。所以态度的话，我这边有几个要求。第一个是服从这个安排，这个，尤其针对你们新人来讲，这个执行力一定是得到位的。无论说是我们培训组的导师，还是说后面你们真正到实地的各个组中去，组长的安排的一些任务，以及其他领导一起安排的一些任务，一定是要有这个执行力，真正把这个任务贯落实到位。\n\n说话人 00:01:15\n第二个就是责任心，责任心是非常重要的，不只是说对自己的负责，还有对项目的负责，所以一定是针对你们安排给你们的每一件的事情也好，或者任务也好，一定是尽心尽力的去把它做好，而不是说一副这种无所谓的态度，因为我们做的是项目，落地型的项目，它不是开玩笑的。可能是因为你的马虎或者粗心，现场就会返工拆改，最终到最后的都是实打实的钱的一个损失。\n\n说话人 00:01:55\n如果说要碰到甲方要追责的，我们都得被扣款了，所以这个责任心是非常重要的，所以希望在这个后续的项目也好，或者说现在你们正在要经历的这个培训实操也好，一定是要有，带着这个责任心去把这个事情做好。那另外一个就是。学习的态度，学习的态度这个，不只是体现在说上课你们要认真听讲，做好笔记，包括相应的课后的，你们自己的安排时间的去学习也好，或者说实操也好，你相应的要保证一个正向积极的一个态度，不是说应付型的去掌握这些东西，因为这些的真正学到的能力也好，本领也好，是对你们自己终身受用的，只要你是做这一行。\n\n说话人 00:02:52\n你无论在哪家公司，或者说在哪个城市，这都是非常有用的。所以我希望你们本着一个积极向上的态度去面对我们这次的一个培训。因为这次我们培训也都是专门的，像卫工专门的把这个项目停掉了，不做项目了，抽出专门的人来带你们的。所以我希望我们用心的去带，你们也用心的去学，而不是三心二意的。因为既然给大家创造了这样的一个条件，刚好这批次人也来得比较的一个集中，所以我们有这个条件跟这个机会。去把这个做好。还有一个就啥呢？情绪。可能因为现在只是刚开始，可能你们觉得前面的可能觉得还好。"
+      },
+      {
+        "parent_id": "7e9ab182-71ff-54b8-b8d3-e57cb1b9a029",
+        "doc_title": "人2 4.2.14插座建模 2026年5月20日",
+        "section_path": "transcript",
+        "doc_type": "transcript",
+        "category": "教学视频",
+        "start_time": "00:00:01",
+        "text_len": 1074,
+        "text": "说话人 00:00:01\n哈喽，大家好，我是小张。这节课的话是讲插座的插座的一个建模。在讲插座之前，建模之前，我们先同样来看一下这个图纸哈。这个看插座的图纸的话，也是在精装图里面有一个机电点位图，或者是它有时候叫机电点位图，有时候叫开关插座，插座图纸，有时候叫开关，有时候是插座图，有时候是机电点位图。我们可以看一下它平面上，这个其实跟开关很像，它挺图面上有这个插座的图例，引出这个插座，它还会有这个插座样式的一个大样，告诉你这个插座是什么插座，距离高度是多少。比如说这个是客厅的哈，像客厅这个电视机这里的话，这可能会比较多的一个插座，我们看一下它下面，这个是它的一个大样图，就是它一般会有个圈起来，把这一部分的这个插座都圈起来，引引出来，这边就是我们看过去，这些插座就是可以看得出来，这个是五孔的，两个五孔的， PVC 管的，这两个是 PVC 管，这个是电视的，这个是网络的。\n\n说话人 00:01:28\n这边有告诉你这个高度是多少，以及这个也是高度是多少，它会对应告诉你我们这个是什么插座，电视插座， AP 插座， AP 的话就是网络。这个是五孔的一个插座。这边的话，它是会有一个图例，告诉我们图例名称，一个安装的一个高度。其实我们图面上的话都有，如果说图面上有给我们安装高度了，我们就不以这个表里面的安装高度为为准，我们具体还是以平面上标出来的高度为准的哈。如果说平面上没有标出来的话，它其实平面标出来的，基本上跟这个表格标出来基本是一致的。如果有不一致的话，我们还是以平面的引出的高度为准，这边的话，我们可以提出让设计修改这个后面的高度。我看一下，比如说这边都有给，都有给。\n\n说话人 00:02:48\n好，我们认识一下这些图例哈，像这个就是弱电箱，强电箱，燃气表，像这些，有一些是不需要我们放置的哈，像这个燃气表是属于机电范畴的，我们不需要去绘制。像下面的插座的话，像扫地机器人 SD， 它就是扫地就 SD 了，烟的话就是 Y， 抽油烟机的插座，它就是用烟的手写字母，这个净水器就是 J 嘛，垃圾的是 LG， 所以很多它的图例的话，会用缩写来。代表就是用这个图例，然后最普通的就是这个 C， C 的话就是普通的五孔插座。这些的话都是一些插座的符号，对应的像洗衣机呀、马桶的，普通的。下面还有这种是导轨插座，导轨插座就是插座是可以移动的，一般在餐边桌的时候会出现。下面还会有电视机的插座、电话插座、 AP 插座，这个是报警器按钮，这个是等位电，等电位盒子，这种的话是。预留接线盒的一个表达的方式，带白板，带白板我们一般就是用白板的组去放置。"
+      }
+    ],
+    "table_formula": [
+      {
+        "parent_id": "04b544d9-839e-5b78-a6f9-a3d8d27f530a",
+        "doc_title": "钢结构基础 上册",
+        "section_path": "7.6.1 螺栓的排列和构造要求",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 778,
+        "text": "<table><tr><td>工字钢型号</td><td>12</td><td>14</td><td>16</td><td>18</td><td>20</td><td>22</td><td>25</td><td>28</td><td>32</td><td>36</td><td>40</td><td>45</td><td>50</td><td>56</td><td>63</td></tr><tr><td>线距  $a_{\\min}$ </td><td>40</td><td>40</td><td>50</td><td>55</td><td>60</td><td>65</td><td>65</td><td>70</td><td>75</td><td>80</td><td>80</td><td>85</td><td>90</td><td>95</td><td>95</td></tr><tr><td>槽钢型号</td><td>12</td><td>14</td><td>16</td><td>18</td><td>20</td><td>22</td><td>25</td><td>28</td><td>32</td><td>36</td><td>40</td><td>—</td><td>—</td><td>—</td><td>—</td></tr><tr><td>线距  $a_{\\min}$ </td><td>30</td><td>35</td><td>35</td><td>40</td><td>40</td><td>45</td><td>45</td><td>45</td><td>50</td><td>56</td><td>60</td><td>—</td><td>—</td><td>—</td><td>—</td></tr></table>"
+      },
+      {
+        "parent_id": "f780762b-eeab-5375-b2a6-991acb77ad70",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "7.6.2.1 玻璃钢采光瓦的选择要求",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1170,
+        "text": "# 7.6.2.1 玻璃钢采光瓦的选择要求  \n对玻璃纤维增强聚酯采光板应按《玻璃纤维增强聚酯波纹板》（GB/T 14206—93）的  \n规定来要求，其他形状的玻璃钢采光制品也应参照执行。  \n原材料应符合国家有关标准，优先选用采用玻璃纤维毡和使用机械成型的方法制造的产品。产品的公差尺寸可按 GB/T 14206—93 要求，即其极限偏差；长度 +20 和 -5mm，宽度 +25 和 -5mm，厚度 +0.2 和 -0.1mm，波高 ±2mm，波长 ±2mm。随着彩板建筑的日渐完善，对采光瓦的制作公差要求越来越严，因此必要时可增加订货要求。  \n玻璃钢采光瓦厚度选择时应注意与彩色钢板厚度相协调，在满足采光、檩距要求下宁薄勿厚。避免因玻璃钢的两层、三层或四层搭接，造成的搭接口孔隙过大而导致漏雨现象（见图7-21）。一般玻璃钢瓦厚度为1.0\\~2.5mm厚。  \n玻璃钢采光瓦的厚度选择与標距和荷载有密切关系，为减少板厚，建议不选用上人的作法。其合理標距应通过试验来确定。玻璃钢采光瓦的  \n![](images/401c59a9e50ede30285a7fdde7dd87ab060ac06580575ada307ed200b319ea79.jpg)  \n<details>\n<summary>text_image</summary>  \n四层搭接\n二层搭接\n</details>  \n图 7-21 玻璃钢采光瓦搭接示意  \n寿命应在15年以上。玻璃钢采光瓦为阻燃型时其氧指数≥30。玻璃钢采光瓦的主要物理力学参数参考中国建筑标准设计研究所编的“建筑产品优选集1991.3总40”（表7-32），该表为秦皇岛耀华玻璃钢厂的产品性能。  \n表 7-32 主要物理力学参数  \n<table><tr><td>项目</td><td>参数</td><td>项目</td><td>参数</td></tr><tr><td>抗拉强度</td><td>100MPa</td><td>导热系数</td><td>0.158W/(m·K)</td></tr><tr><td>弯曲强度</td><td>190MPa</td><td>密度</td><td>1.4( $t/m^{3}$ )</td></tr><tr><td>弯曲弹性模量</td><td> $0.54 \\times 10^{4}$ MPa</td><td>应用温度范围</td><td>-50~130°C</td></tr><tr><td>剪切强度</td><td>125MPa</td><td>闪点</td><td>410°C</td></tr><tr><td>巴氏硬度</td><td>40</td><td>吸水率</td><td>24h 0.32%</td></tr></table>"
+      },
+      {
+        "parent_id": "cce1a83e-cce9-545a-9964-4710cf1d3e39",
+        "doc_title": "钢结构设计手册",
+        "section_path": "4.1.8 对接焊缝和角焊缝的连接计算。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 2276,
+        "text": "<table><tr><td>项次</td><td>受力情况</td><td>计算内容</td><td>公式</td><td>说明</td></tr><tr><td>1</td><td><img src=\"images/f6f03c1a11f65ad0fe481fc27b610b40d8a8d377cdc0c2f131cfa3223aacb5e1.jpg\"/></td><td>拉应力或压应力</td><td> $\\sigma = \\frac{N}{tl_{\\mathrm{w}}} \\leqslant f_{\\mathrm{t}}^{\\mathrm{w}}$  或  $\\leqslant f_{\\mathrm{c}}^{\\mathrm{w}}$ (4-1)</td><td rowspan=\"8\"> $M、N、V$ ——弯矩,轴心力和剪力; $t$ ——连接件的较小厚度,在T形连接中为腹板厚度; $l_{\\mathrm{w}}$ ——焊缝计算长度,为设计长度减2t(有引弧板时可不减); $A_{\\mathrm{w}}$ 、 $W_{\\mathrm{w}}$ ——焊缝截面面积和截面模量; $S_{\\mathrm{w}}$ ——所求剪应力处以上的焊缝截面对中和轴的面积矩; $I_{\\mathrm{w}}$ ——焊缝截面对其中和轴的惯性矩; $W_{\\mathrm{w}1}$ 、 $S_{\\mathrm{w}1}$ ——1点处正应力所用的焊缝截面模量和面积矩; $f_{\\mathrm{t}}^{\\mathrm{w}}$ 、 $f_{\\mathrm{c}}^{\\mathrm{w}}$ 、 $f_{\\mathrm{v}}^{\\mathrm{w}}$ ——对接焊缝的抗拉、抗压和抗剪强度设计值,按表2-6采用</td></tr><tr><td rowspan=\"2\">2</td><td rowspan=\"2\"><img src=\"images/09f4ac6f4a6e83f524403f3799e5b112d40c83d7410be3de61d8e294f2e0fb0b.jpg\"/></td><td>拉应力或压应力</td><td> $\\sigma = \\frac{N \\sin \\theta}{tl_{\\mathrm{w}}} \\leqslant f_{\\mathrm{t}}^{\\mathrm{w}}$  或  $\\leqslant f_{\\mathrm{c}}^{\\mathrm{w}}$ (4-2)</td></tr><tr><td>剪应力</td><td> $\\tau = \\frac{N \\cos \\theta}{tl_{\\mathrm{w}}} \\leqslant f_{\\mathrm{v}}^{\\mathrm{w}}$ (4-3)</td></tr><tr><td rowspan=\"2\">3</td><td rowspan=\"2\"><img src=\"images/3bebcf1ec1d7c9c46362cc9b4b2248ea99701a67867b7779c0590c3537a1fa90.jpg\"/></td><td>正应力</td><td> $\\sigma = \\frac{6 M}{tl_{\\mathrm{w}}} \\leqslant f_{\\mathrm{t}}^{\\mathrm{w}}$  或  $f_{\\mathrm{c}}^{\\mathrm{w}}$ (4-4)</td></tr><tr><td>剪应力</td><td> $\\tau = \\frac{1.5 V}{tl_{\\mathrm{w}}} \\leqslant f_{\\mathrm{v}}^{\\mathrm{w}}$ (4-5)</td></tr><tr><td rowspan=\"3\">4</td><td rowspan=\"3\"><img src=\"images/b9aed761ed18b00c5fae020a8a10defa0acdc9c5cd2b2fc545f4a0b36c439e02.jpg\"/></td><td>正应力</td><td> $\\sigma = \\frac{N}{A} + \\frac{M}{W_{\\mathrm{w}}} \\leqslant f_{\\mathrm{t}}^{\\mathrm{w}}$  或  $f_{\\mathrm{c}}^{\\mathrm{w}}$ (4-6)</td></tr><tr><td>剪应力</td><td> $\\tau = \\frac{VS_{\\mathrm{w}}}{I_{\\mathrm{w}} t} \\leqslant f_{\\mathrm{v}}^{\\mathrm{w}}$ (4-7)</td></tr><tr><td>折算应力</td><td> $\\sqrt{\\sigma_{1}^{2} + 3 \\times \\tau_{1}^{2}}$ = $\\sqrt{\\left(\\frac{N}{A_{\\mathrm{w}}} + \\frac{M}{W_{\\mathrm{w}1}}\\right)^{2} + 3\\left(\\frac{VS_{\\mathrm{w}1}}{I_{\\mathrm{w}} t}\\right)^{2}}$  $\\leqslant 1.1 f_{\\mathrm{t}}^{\\mathrm{w}}$ (4-8)</td></tr></table>"
+      },
+      {
+        "parent_id": "9ea5162a-bf57-5995-b26f-caf3029f03e1",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "9.3.3.2 KH 300-2 型履带式起重机（见表 9-13、表 9-14）",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 2184,
+        "text": "<table><tr><td rowspan=\"2\">工作半径(m)</td><td colspan=\"15\">吊臂长度(m)</td></tr><tr><td>11.0</td><td>17.85</td><td>17.75</td><td>17.65</td><td>17.55</td><td>17.45</td><td>17.35</td><td>17.25</td><td>17.15</td><td>17.05</td><td>16.95</td><td>16.85</td><td>16.75</td><td>14.70</td><td>12.85</td><td></td></tr><tr><td>12.0</td><td>15.9</td><td>15.8</td><td>15.7</td><td>15.6</td><td>15.5</td><td>15.4</td><td>15.3</td><td>15.2</td><td>15.1</td><td>15.0</td><td>14.9</td><td>14.8</td><td>14.7</td><td>12.85</td><td>11.90</td></tr><tr><td>14.0</td><td>14.5(12.9m)</td><td>12.85</td><td>12.75</td><td>12.65</td><td>12.55</td><td>12.45</td><td>12.35</td><td>12.25</td><td>12.15</td><td>12.05</td><td>11.95</td><td>11.85</td><td>11.70</td><td>11.65</td><td>11.00</td></tr><tr><td>16.0</td><td></td><td>11.5(15.5m)</td><td>10.65</td><td>10.55</td><td>10.45</td><td>10.35</td><td>10.25</td><td>10.15</td><td>10.05</td><td>9.95</td><td>9.85</td><td>9.75</td><td>9.65</td><td>9.55</td><td>9.45</td></tr><tr><td>18.0</td><td></td><td></td><td>9.1</td><td>9.0</td><td>8.9</td><td>8.8</td><td>8.7</td><td>8.6</td><td>8.5</td><td>8.4</td><td>8.3</td><td>8.2</td><td>8.1</td><td>8.0</td><td>7.9</td></tr><tr><td>20.0</td><td></td><td></td><td>9.0(18m)</td><td>7.75</td><td>7.65</td><td>7.55</td><td>7.45</td><td>7.35</td><td>7.25</td><td>7.15</td><td>7.05</td><td>6.95</td><td>6.85</td><td>6.75</td><td>6.65</td></tr><tr><td>22.0</td><td></td><td></td><td></td><td>7.5(20m)</td><td>6.7</td><td>6.6</td><td>6.5</td><td>6.4</td><td>6.3</td><td>6.2</td><td>6.1</td><td>6.0</td><td>5.9</td><td>5.8</td><td>5.65</td></tr><tr><td>24.0</td><td></td><td></td><td></td><td></td><td>6.2(25.3m)</td><td>5.7</td><td>5.6</td><td>5.5</td><td>5.4</td><td>5.3</td><td>5.2</td><td>5.1</td><td>5.0</td><td>4.9</td><td>4.8</td></tr><tr><td>26.0</td><td></td><td></td><td></td><td></td><td></td><td>5.1(25.9m)</td><td>5.0</td><td>4.9</td><td>4.8</td><td>4.7</td><td>4.6</td><td>4.5</td><td>4.4</td><td>4.3</td><td>4.2</td></tr><tr><td>28.0</td><td></td><td></td><td></td><td></td><td></td><td></td><td>4.45</td><td>4.35</td><td>4.25</td><td>4.15</td><td>4.05</td><td>3.95</td><td>3.85</td><td>3.75</td><td>3.65</td></tr></table>"
+      },
+      {
+        "parent_id": "31436fdb-10e7-5fa4-ad65-eb61f5ce555d",
+        "doc_title": "钢结构设计手册",
+        "section_path": "19 型钢受弯构件整体稳定系数 $\\varphi_{b}^{\\prime}$",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 2129,
+        "text": "<table><tr><td>序号</td><td>类别</td><td>H(mm)</td><td>B(mm)</td><td colspan=\"2\"> $l_1$ (m) $t_1$  $t_2$ (mm)</td><td>2</td><td>2.5</td><td>3</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td><td>6</td><td>6.5</td><td>7</td><td>7.5</td><td>8</td><td>8.5</td><td>9</td><td>9.5</td><td>10</td></tr><tr><td>88</td><td>171</td><td>89</td><td>4</td><td>6</td><td>0.961</td><td>0.912</td><td>0.859</td><td>0.802</td><td>0.742</td><td>0.678</td><td>0.611</td><td>0.547</td><td>0.494</td><td>0.451</td><td>0.415</td><td>0.385</td><td>0.358</td><td>0.335</td><td>0.315</td><td>0.298</td><td>0.282</td></tr><tr><td>89</td><td>167</td><td>173</td><td>5</td><td>7</td><td>1.000</td><td>1.000</td><td>1.000</td><td>0.988</td><td>0.967</td><td>0.945</td><td>0.922</td><td>0.898</td><td>0.873</td><td>0.847</td><td>0.820</td><td>0.792</td><td>0.763</td><td>0.736</td><td>0.712</td><td>0.688</td><td>0.665</td></tr><tr><td>90</td><td>172</td><td>175</td><td>6.5</td><td>9.5</td><td>1.000</td><td>1.000</td><td>1.000</td><td>0.999</td><td>0.982</td><td>0.963</td><td>0.944</td><td>0.924</td><td>0.904</td><td>0.883</td><td>0.866</td><td>0.849</td><td>0.831</td><td>0.814</td><td>0.797</td><td>0.780</td><td>0.763</td></tr><tr><td>91</td><td>193</td><td>98</td><td>3.2</td><td>4.5</td><td>0.966</td><td>0.914</td><td>0.855</td><td>0.790</td><td>0.720</td><td>0.647</td><td>0.565</td><td>0.488</td><td>0.427</td><td>0.379</td><td>0.339</td><td>0.306</td><td>0.278</td><td>0.255</td><td>0.238</td><td>0.224</td><td>0.211</td></tr><tr><td>92</td><td>196</td><td>99</td><td>4</td><td>6</td><td>0.975</td><td>0.930</td><td>0.880</td><td>0.826</td><td>0.768</td><td>0.708</td><td>0.646</td><td>0.576</td><td>0.506</td><td>0.450</td><td>0.412</td><td>0.380</td><td>0.353</td><td>0.330</td><td>0.309</td><td>0.291</td><td>0.275</td></tr><tr><td>93</td><td>188</td><td>149</td><td>4.5</td><td>6</td><td>1.000</td><td>1.000</td><td>0.980</td><td>0.951</td><td>0.920</td><td>0.887</td><td>0.853</td><td>0.817</td><td>0.779</td><td>0.741</td><td>0.701</td><td>0.659</td><td>0.617</td><td>0.568</td><td>0.521</td><td>0.482</td><td>0.454</td></tr></table>"
+      },
+      {
+        "parent_id": "b44fbcca-7f29-56fb-bc2b-40a4bc6dc52c",
+        "doc_title": "钢结构设计手册",
+        "section_path": "16.7 冷弯薄壁卷边槽钢的规格及截面特性",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 2172,
+        "text": "<table><tr><td rowspan=\"2\" colspan=\"4\">尺寸(mm)</td><td rowspan=\"3\">截面面积(cm2)</td><td rowspan=\"3\">每米长质量(kg/m)</td><td rowspan=\"3\"> $x_0$ (cm)</td><td colspan=\"3\"> $x-x$ </td><td colspan=\"4\"> $y-y$ </td><td> $y_1-y_1$ </td><td rowspan=\"3\"> $e_0$ (cm)</td><td rowspan=\"3\"> $I_t$ (cm4)</td><td rowspan=\"3\"> $I_w$ (cm6)</td><td rowspan=\"3\"> $k$ (cm-1)</td><td rowspan=\"3\"> $W_{w1}$ (cm4)</td><td rowspan=\"3\"> $W_{w2}$ (cm4)</td></tr><tr><td>160</td><td>60</td><td>20</td><td>2.2</td><td>6.64</td><td>5.21</td><td>1.850</td><td>257.57</td><td>6.23</td><td>32.20</td><td>32.45</td><td>2.21</td><td>17.53</td><td>7.82</td><td>55.19</td><td>4.50</td><td>0.1071</td><td>1717.8</td><td>0.0049</td><td>83.82</td><td>77.55</td></tr><tr><td>160</td><td>60</td><td>20</td><td>2.5</td><td>7.48</td><td>5.87</td><td>1.850</td><td>288.13</td><td>6.21</td><td>36.02</td><td>35.96</td><td>2.19</td><td>19.47</td><td>8.66</td><td>61.49</td><td>4.45</td><td>0.1559</td><td>1887.7</td><td>0.0056</td><td>93.87</td><td>86.63</td></tr><tr><td>160</td><td>60</td><td>20</td><td>3.0</td><td>8.78</td><td>6.89</td><td>1.740</td><td>335.77</td><td>6.16</td><td>42.60</td><td>44.08</td><td>2.16</td><td>22.45</td><td>9.94</td><td>—</td><td>4.46</td><td>0.2772</td><td>2080.7</td><td>—</td><td>—</td><td>—</td></tr><tr><td>160</td><td>70</td><td>20</td><td>3.0</td><td>9.45</td><td>7.42</td><td>2.224</td><td>373.64</td><td>6.29</td><td>46.71</td><td>60.42</td><td>2.53</td><td>27.17</td><td>12.65</td><td>107.20</td><td>5.25</td><td>0.2836</td><td>3070.5</td><td>0.0060</td><td>135.49</td><td>109.92</td></tr><tr><td>180</td><td>70</td><td>20</td><td>2.0</td><td>6.87</td><td>5.39</td><td>2.110</td><td>343.93</td><td>7.08</td><td>38.21</td><td>45.18</td><td>2.57</td><td>21.37</td><td>9.25</td><td>75.97</td><td>5.17</td><td>0.0916</td><td>2934.3</td><td>0.0035</td><td>109.50</td><td>95.22</td></tr><tr><td>180</td><td>70</td><td>20</td><td>2.2</td><td>7.52</td><td>5.90</td><td>2.110</td><td>374.90</td><td>7.06</td><td>41.66</td><td>48.97</td><td>2.55</td><td>23.19</td><td>10.02</td><td>82.19</td><td>5.14</td><td>0.1213</td><td>3165.6</td><td>0.0038</td><td>119.44</td><td>103.58</td></tr></table>"
+      },
+      {
+        "parent_id": "f21c57e7-1083-5d42-b3b7-8d3aecd52c6f",
+        "doc_title": "钢结构设计手册",
+        "section_path": "16.3 热轧普通工字钢的规格及截面特性",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 2313,
+        "text": "<table><tr><td rowspan=\"3\">型号</td><td colspan=\"6\">截面尺寸(mm)</td><td rowspan=\"3\">截面面积 $(cm^2)$ </td><td rowspan=\"3\">理论重量(kg/m)</td><td colspan=\"4\">惯性矩</td><td colspan=\"2\">惯性半径</td><td colspan=\"2\">截面模量</td></tr><tr><td rowspan=\"2\">h</td><td rowspan=\"2\">b</td><td rowspan=\"2\">d</td><td rowspan=\"2\">t</td><td rowspan=\"2\">r</td><td rowspan=\"2\"> $r_1$ </td><td colspan=\"3\"> $(cm^4)$ </td><td> $(cm^6)$ </td><td colspan=\"2\">(cm)</td><td colspan=\"2\"> $(cm^3)$ </td></tr><tr><td> $I_x$ </td><td> $I_y$ </td><td> $I_t$ </td><td> $I_w$ </td><td> $i_x$ </td><td> $I_y$ </td><td> $W_x$ </td><td> $W_y$ </td></tr><tr><td>50a</td><td rowspan=\"3\">500</td><td>158</td><td>12.0</td><td rowspan=\"3\">20.0</td><td rowspan=\"3\">14.0</td><td rowspan=\"3\">7.0</td><td>119.304</td><td>93.654</td><td>46500</td><td>1120</td><td>122.20</td><td>560000</td><td>19.7</td><td>3.07</td><td>1860</td><td>142</td></tr><tr><td>50b</td><td>160</td><td>14.0</td><td>129.304</td><td>101.504</td><td>48600</td><td>1170</td><td>140.55</td><td>585000</td><td>19.4</td><td>3.01</td><td>1940</td><td>146</td></tr><tr><td>50c</td><td>162</td><td>16.0</td><td>139.304</td><td>109.354</td><td>50600</td><td>1220</td><td>164.51</td><td>610000</td><td>19.0</td><td>2.96</td><td>2080</td><td>151</td></tr><tr><td>55a</td><td rowspan=\"3\">550</td><td>166</td><td>12.5</td><td rowspan=\"6\">21.0</td><td rowspan=\"6\">14.5</td><td rowspan=\"6\">7.3</td><td>134.185</td><td>105.335</td><td>62900</td><td>1370</td><td>149.41</td><td>828850</td><td>21.6</td><td>3.19</td><td>2290</td><td>164</td></tr><tr><td>55b</td><td>168</td><td>14.5</td><td>145.185</td><td>113.970</td><td>65600</td><td>1420</td><td>171.14</td><td>859100</td><td>21.2</td><td>3.14</td><td>2390</td><td>170</td></tr><tr><td>55c</td><td>170</td><td>16.5</td><td>156.185</td><td>122.605</td><td>68400</td><td>1480</td><td>199.25</td><td>895400</td><td>20.9</td><td>3.08</td><td>2490</td><td>175</td></tr><tr><td>56a</td><td rowspan=\"3\">560</td><td>166</td><td>12.5</td><td>135.435</td><td>106.316</td><td>65600</td><td>1370</td><td>150.06</td><td>859264</td><td>22.0</td><td>3.18</td><td>2340</td><td>165</td></tr><tr><td>56b</td><td>168</td><td>14.5</td><td>146.635</td><td>115.108</td><td>68500</td><td>1490</td><td>172.16</td><td>934528</td><td>21.6</td><td>3.16</td><td>2450</td><td>174</td></tr></table>"
+      },
+      {
+        "parent_id": "c9fb0a2a-7d26-5cd9-b0f1-bd7991f18eaf",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "5.2.3.6 $CO_{2}$ 气体保护焊及自保护焊材料",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 2287,
+        "text": "<table><tr><td rowspan=\"3\">产地</td><td rowspan=\"3\">牌号</td><td colspan=\"7\">熔敷金属化学成分(%)</td><td colspan=\"7\">熔敷金属力学性能</td><td rowspan=\"3\">说明</td></tr><tr><td rowspan=\"2\">C</td><td rowspan=\"2\">Mn</td><td rowspan=\"2\">Si</td><td rowspan=\"2\">S</td><td rowspan=\"2\">P</td><td rowspan=\"2\">Ni</td><td rowspan=\"2\">Al</td><td rowspan=\"2\"> $\\sigma_{b}$ (MPa)</td><td rowspan=\"2\"> $\\sigma_{s}$ (MPa)</td><td rowspan=\"2\"> $\\delta_{5}$ (%)</td><td colspan=\"4\">冲击吸收功(J)</td></tr><tr><td>20°C</td><td>0°C</td><td>-20°C</td><td>-30°C</td></tr><tr><td rowspan=\"3\">日本神钢</td><td>OW-56A</td><td>0.19</td><td>0.87</td><td>0.15</td><td>0.012</td><td>0.013</td><td></td><td></td><td>570</td><td>410</td><td>28</td><td>29</td><td></td><td></td><td></td><td></td></tr><tr><td>OW-56</td><td>0.08</td><td>0.94</td><td>0.09</td><td>0.004</td><td>0.015</td><td></td><td></td><td>530</td><td>420</td><td>28</td><td>78</td><td></td><td></td><td></td><td></td></tr><tr><td>OWS-50</td><td>0.04</td><td>1.26</td><td>0.25</td><td>0.010</td><td>0.015</td><td>0.81</td><td>0.83</td><td>545</td><td>423</td><td>32</td><td colspan=\"2\">135</td><td>97</td><td>53</td><td></td></tr><tr><td rowspan=\"4\">日铁</td><td>SAN-53</td><td>0.11</td><td>0.78</td><td>0.07</td><td>0.004</td><td>0.013</td><td></td><td></td><td>560</td><td>410</td><td>29</td><td></td><td>43</td><td></td><td></td><td>抗气孔性好,交、直流两用,适用于中、薄板结构</td></tr><tr><td>SAN-54</td><td>0.07</td><td>0.77</td><td>0.08</td><td>0.004</td><td>0.013</td><td></td><td></td><td>560</td><td>460</td><td>28</td><td></td><td>98</td><td></td><td></td><td>抗裂性好,交、直流两用适用于中、厚板重要结构</td></tr><tr><td>SAN-53P</td><td>0.16</td><td>1.18</td><td>0.08</td><td>0.005</td><td>0.012</td><td></td><td></td><td>560</td><td>430</td><td>28</td><td></td><td>42</td><td></td><td></td><td>抗气孔性好,交、直流两用,适用于中、薄板结构</td></tr><tr><td>SAN-55A</td><td>0.16</td><td>0.68</td><td>0.05</td><td>0.004</td><td>0.012</td><td></td><td></td><td>540</td><td>440</td><td>33</td><td></td><td>110</td><td></td><td></td><td>抗裂性好,直流反接,适用于中、厚板重要结构</td></tr><tr><td rowspan=\"2\">北京钢廉焊材有限公司</td><td rowspan=\"2\">GL-YJ507(Z)</td><td>≤0.10</td><td>≤1.6</td><td>≤0.60</td><td>≤0.03</td><td>≤0.03</td><td></td><td></td><td>≥500</td><td>≥410</td><td>≥22</td><td></td><td></td><td>≥47</td><td>-40°C</td><td>氟钙型,直流反接,低温冲击韧性极好</td></tr></table>"
+      },
+      {
+        "parent_id": "f8a1cb6b-56dc-5f9c-8b3f-87111247ee36",
+        "doc_title": "钢结构设计手册",
+        "section_path": "18 构件轴心受压承载力设计值 (N)",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 2186,
+        "text": "<table><tr><td rowspan=\"4\">对称轴简图</td><td rowspan=\"4\">计算长度</td><td colspan=\"4\">2L90×56×</td><td colspan=\"4\">2L100×63×</td><td colspan=\"4\">2L100×80×</td><td colspan=\"4\">2L110×70×</td><td colspan=\"4\">2L125×80×</td></tr><tr><td>5</td><td>6</td><td>7</td><td>8</td><td>6</td><td>7</td><td>8</td><td>10</td><td>6</td><td>7</td><td>8</td><td>10</td><td>6</td><td>7</td><td>8</td><td>10</td><td>7</td><td>8</td><td>10</td><td>12</td></tr><tr><td colspan=\"20\">面积A( $cm^2$ )</td></tr><tr><td>14.42</td><td>17.11</td><td>19.76</td><td>22.37</td><td>19.23</td><td>22.22</td><td>25.07</td><td>30.93</td><td>21.27</td><td>24.60</td><td>27.89</td><td>34.33</td><td>21.27</td><td>24.60</td><td>27.89</td><td>34.33</td><td>28.19</td><td>31.98</td><td>39.42</td><td>46.70</td></tr><tr><td rowspan=\"41\"><img src=\"images/42a0d37a7528bd01575851e46b5b193dbf388de54a60d033a467e25f96fd1907.jpg\"/></td><td>2.0</td><td>235</td><td>301</td><td>363</td><td>416</td><td>326</td><td>398</td><td>465</td><td>589</td><td>361</td><td>440</td><td>517</td><td>650</td><td>346</td><td>428</td><td>506</td><td>655</td><td>465</td><td>559</td><td>735</td><td>901</td></tr><tr><td>2.1</td><td>235</td><td>301</td><td>362</td><td>412</td><td>326</td><td>398</td><td>465</td><td>584</td><td>360</td><td>440</td><td>516</td><td>643</td><td>345</td><td>428</td><td>506</td><td>655</td><td>465</td><td>558</td><td>734</td><td>901</td></tr><tr><td>2.2</td><td>235</td><td>300</td><td>358</td><td>407</td><td>325</td><td>397</td><td>464</td><td>578</td><td>360</td><td>439</td><td>514</td><td>637</td><td>345</td><td>427</td><td>505</td><td>653</td><td>465</td><td>558</td><td>733</td><td>900</td></tr><tr><td>2.3</td><td>234</td><td>300</td><td>353</td><td>402</td><td>325</td><td>397</td><td>461</td><td>572</td><td>359</td><td>439</td><td>508</td><td>630</td><td>345</td><td>427</td><td>505</td><td>648</td><td>464</td><td>557</td><td>733</td><td>899</td></tr><tr><td>2.4</td><td>234</td><td>299</td><td>349</td><td>397</td><td>325</td><td>396</td><td>456</td><td>566</td><td>358</td><td>438</td><td>502</td><td>623</td><td>344</td><td>426</td><td>504</td><td>642</td><td>464</td><td>557</td><td>732</td><td>895</td></tr></table>"
+      },
+      {
+        "parent_id": "da3cdd1e-d44c-58e0-addf-8472319bd5d3",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "5.7.1.2 无损检测方法的选用",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1250,
+        "text": "<table><tr><td>比较项目</td><td>超声波探伤法</td><td>射线探伤法</td></tr><tr><td>缺陷性质的判别</td><td> $\\bigtriangleup$ </td><td> $\\bigcirc$ </td></tr><tr><td>缺陷长度的测定精度</td><td> $\\bigtriangleup$ </td><td> $\\bigcirc$ </td></tr><tr><td>缺陷高度的测定精度</td><td> $\\bigtriangleup$ </td><td> $\\times$ </td></tr><tr><td>缺陷在板厚方向位置的确定</td><td> $\\bigcirc$ </td><td> $\\bigtriangleup$ </td></tr><tr><td>对接头形式的适应性</td><td> $\\bigcirc$ </td><td> $\\bigtriangleup$ </td></tr><tr><td>裂纹、未熔合等面状缺陷的检测能力</td><td> $\\bigcirc$ </td><td> $\\bigwedge$ </td></tr><tr><td>体积性缺陷的检测能力</td><td> $\\bigtriangleup$ </td><td> $\\bigcirc$ </td></tr><tr><td>被检工件最大厚度的检测能力</td><td> $\\bigcirc$ </td><td> $\\bigtriangleup$ </td></tr><tr><td>被检工件最小厚度的检测能力</td><td> $\\bigtriangleup$ </td><td> $\\bigcirc$ </td></tr><tr><td>探伤装置的机动性</td><td> $\\bigcirc$ </td><td> $\\bigtriangleup$ </td></tr><tr><td>检测速度</td><td> $\\bigcirc$ </td><td> $\\bigtriangleup$ </td></tr><tr><td>检测结果的客观性</td><td> $\\bigtriangleup$ </td><td> $\\bigcirc$ </td></tr><tr><td>检测成本</td><td> $\\bigcirc$ </td><td> $\\bigtriangleup$ </td></tr><tr><td>安全管理</td><td> $\\bigcirc$ </td><td> $\\times$ </td></tr><tr><td>操作者须掌握的专业知识难度</td><td> $\\times$ </td><td> $\\bigtriangleup$ </td></tr><tr><td>对工程的影响</td><td> $\\bigcirc$ </td><td> $\\bigtriangleup$ </td></tr></table>"
+      },
+      {
+        "parent_id": "86a520ec-4879-5e5c-b584-5c01eeeecd37",
+        "doc_title": "钢结构设计手册",
+        "section_path": "20.1.4 两个热轧等边角钢短边相连时的直角焊缝计算长度选用表（Q235钢，E43××型焊条）（表20-4）。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 2353,
+        "text": "<table><tr><td rowspan=\"4\">作用轴心力N(kN)</td><td colspan=\"20\">角焊缝的计算长度 $l_{\\mathrm{w}}$ (mm)</td></tr><tr><td>220</td><td>160</td><td>86</td><td>128</td><td>69</td><td>106</td><td>57</td><td>80</td><td>64</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>250</td><td>181</td><td>98</td><td>145</td><td>78</td><td>121</td><td>65</td><td>91</td><td>64</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>280</td><td>203</td><td>109</td><td>163</td><td>88</td><td>135</td><td>73</td><td>102</td><td>64</td><td>81</td><td>80</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>300</td><td>218</td><td>117</td><td>174</td><td>94</td><td>145</td><td>78</td><td>109</td><td>64</td><td>87</td><td>80</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>320</td><td>232</td><td>125</td><td>186</td><td>100</td><td>155</td><td>83</td><td>116</td><td>64</td><td>93</td><td>80</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>350</td><td></td><td></td><td>203</td><td>109</td><td>169</td><td>91</td><td>127</td><td>68</td><td>102</td><td>80</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>380</td><td></td><td></td><td>221</td><td>119</td><td>184</td><td>99</td><td>138</td><td>74</td><td>110</td><td>80</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>400</td><td></td><td></td><td>232</td><td>125</td><td>193</td><td>104</td><td>145</td><td>78</td><td>116</td><td>80</td><td>97</td><td>96</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>450</td><td></td><td></td><td>261</td><td>141</td><td>218</td><td>117</td><td>163</td><td>88</td><td>131</td><td>80</td><td>109</td><td>96</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>500</td><td></td><td></td><td>290</td><td>156</td><td>242</td><td>130</td><td>181</td><td>98</td><td>145</td><td>80</td><td>121</td><td>96</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>"
+      },
+      {
+        "parent_id": "dbfe286a-15a9-55c4-99a0-243e2295eb7b",
+        "doc_title": "钢结构设计手册",
+        "section_path": "18 构件轴心受压承载力设计值 (N)",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 2226,
+        "text": "<table><tr><td rowspan=\"4\">对称轴简图</td><td rowspan=\"4\">计算长度</td><td colspan=\"2\">2L56×36×</td><td colspan=\"4\">2L63×40×</td><td colspan=\"4\">2L70×45×</td><td colspan=\"4\">2L75×50×</td><td colspan=\"4\">2L80×50×</td></tr><tr><td>6.2</td><td>24.0</td><td>30.0</td><td>31.0</td><td>41.0</td><td>49.2</td><td>57.5</td><td>42.5</td><td>54.0</td><td>64.8</td><td>75.8</td><td>64.7</td><td>77.9</td><td>103</td><td>129</td><td>76.9</td><td>92.9</td><td>108</td><td>124</td></tr><tr><td>6.4</td><td>22.6</td><td>28.3</td><td>29.2</td><td>38.7</td><td>46.5</td><td>54.3</td><td>40.2</td><td>51.1</td><td>61.3</td><td>71.6</td><td>61.2</td><td>73.8</td><td>97.1</td><td>122</td><td>72.9</td><td>88.1</td><td>103</td><td>117</td></tr><tr><td>6.6</td><td>21.4</td><td>26.7</td><td>27.6</td><td>36.6</td><td>44.0</td><td>51.3</td><td>38.0</td><td>48.4</td><td>58.0</td><td>67.8</td><td>58.0</td><td>69.9</td><td>92.0</td><td>115</td><td>69.2</td><td>83.6</td><td>97.4</td><td>111</td></tr><tr><td>6.8</td><td>20.2</td><td>25.3</td><td>26.2</td><td>34.7</td><td>41.6</td><td>48.6</td><td>36.1</td><td>45.9</td><td>55.0</td><td>64.3</td><td>55.1</td><td>66.3</td><td>87.3</td><td>109</td><td>65.7</td><td>79.4</td><td>92.5</td><td>106</td></tr><tr><td>7.0</td><td>19.2</td><td>24.0</td><td>24.8</td><td>32.9</td><td>39.5</td><td>46.1</td><td>34.2</td><td>43.5</td><td>52.2</td><td>61.0</td><td>52.3</td><td>63.0</td><td>82.9</td><td>104</td><td>62.5</td><td>75.5</td><td>87.9</td><td>101</td></tr><tr><td>7.2</td><td>—</td><td>—</td><td>23.6</td><td>31.2</td><td>37.5</td><td>43.8</td><td>32.5</td><td>41.4</td><td>49.6</td><td>58.0</td><td>49.7</td><td>59.9</td><td>78.8</td><td>98.7</td><td>59.5</td><td>71.8</td><td>83.7</td><td>95.7</td></tr><tr><td>7.4</td><td>—</td><td>—</td><td>22.4</td><td>29.7</td><td>35.7</td><td>41.6</td><td>31.0</td><td>39.4</td><td>47.2</td><td>55.2</td><td>47.3</td><td>57.0</td><td>75.0</td><td>94.0</td><td>56.7</td><td>68.4</td><td>79.7</td><td>91.2</td></tr><tr><td>7.6</td><td>—</td><td>—</td><td>—</td><td>28.3</td><td>33.9</td><td>39.6</td><td>29.5</td><td>37.5</td><td>45.0</td><td>52.6</td><td>45.1</td><td>54.3</td><td>71.5</td><td>89.6</td><td>54.0</td><td>65.3</td><td>76.0</td><td>87.0</td></tr></table>"
+      },
+      {
+        "parent_id": "198a1105-c15f-5dde-b6b2-18785ffb4946",
+        "doc_title": "钢结构设计手册",
+        "section_path": "1 柱截面计算。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 2250,
+        "text": "<table><tr><td rowspan=\"2\">柱类别</td><td rowspan=\"2\">柱截面图示</td><td rowspan=\"2\">柱高(m)</td><td colspan=\"2\">无吊车房屋</td><td colspan=\"2\">轻型厂房 $Q \\leqslant 20t$ </td><td colspan=\"2\">中型厂房 $30t \\leqslant Q \\leqslant 75t$ </td><td colspan=\"2\">重型厂房 $100t \\leqslant Q \\leqslant 150t$ </td><td colspan=\"2\">重型厂房 $175t \\leqslant Q \\leqslant 250t$ </td><td colspan=\"2\">特重型厂房 $Q >250t$ </td></tr><tr><td> $\\alpha$ </td><td> $\\beta$ </td><td> $\\alpha$ </td><td> $\\beta$ </td><td> $\\alpha$ </td><td> $\\beta$ </td><td> $\\alpha$ </td><td> $\\beta$ </td><td> $\\alpha$ </td><td> $\\beta$ </td><td> $\\alpha$ </td><td> $\\beta$ </td></tr><tr><td rowspan=\"3\">阶形(包括单阶和双阶)柱之下段柱</td><td rowspan=\"3\"></td><td> $H \\leqslant 18$ </td><td></td><td></td><td> $\\frac{1}{12} \\sim \\frac{1}{16}$ </td><td>0.40~0.55</td><td> $\\frac{1}{10} \\sim \\frac{1}{15}$  $\\left( \\frac{1}{11} \\sim \\frac{1}{15} \\right)$ </td><td>0.35~0.50</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td> $18 < H \\leqslant 26$ </td><td></td><td></td><td></td><td></td><td> $\\frac{1}{11} \\sim \\frac{1}{15}$ </td><td>0.25~0.45</td><td> $\\frac{1}{10} \\sim \\frac{1}{14}$  $\\left( \\frac{1}{11} \\sim \\frac{1}{15} \\right)$ </td><td>0.25~0.50(0.30~0.50)</td><td> $\\frac{1}{8.5} \\sim \\frac{1}{12}$  $\\left( \\frac{1}{9} \\sim \\frac{1}{14} \\right)$ </td><td>0.25~0.50(0.30~0.50)</td><td> $\\frac{1}{8} \\sim \\frac{1}{12}$ </td><td>0.30~0.60</td></tr><tr><td> $H >26$ </td><td></td><td></td><td></td><td></td><td> $\\frac{1}{11} \\sim \\frac{1}{16}$ </td><td>0.25~0.45</td><td> $\\frac{1}{11} \\sim \\frac{1}{15}$  $\\left( \\frac{1}{12} \\sim \\frac{1}{16} \\right)$ </td><td>0.25~0.50</td><td> $\\frac{1}{10} \\sim \\frac{1}{13}$  $\\left( \\frac{1}{11} \\sim \\frac{1}{14.5} \\right)$ </td><td>0.25~0.50</td><td> $\\frac{1}{9} \\sim \\frac{1}{12}$  $\\left( \\frac{1}{11} \\sim \\frac{1}{13.5} \\right)$ </td><td>0.25~0.55(0.30~0.55)</td></tr><tr><td rowspan=\"2\">双阶柱之中段柱</td><td rowspan=\"2\" colspan=\"4\">此栏中: $h_1$ ——双阶柱的上段柱的截面高度; $b_1$ , $b_3$ ——双阶柱的上段和下段柱的截面宽度</td><td colspan=\"2\">轻型厂房 $Q \\leqslant 20t$ </td><td colspan=\"2\">中型厂房 $30t \\leqslant Q \\leqslant 75t$ </td><td colspan=\"2\">重型厂房 $100t \\leqslant Q \\leqslant 150t$ </td><td colspan=\"2\">重型厂房 $175t \\leqslant Q \\leqslant 250t \\$ </td><td colspan=\"2\">特重型厂房 $Q >250t$ </td></tr></table>"
+      },
+      {
+        "parent_id": "26eb707b-2163-558c-9f15-844b8faf70ac",
+        "doc_title": "钢结构设计手册",
+        "section_path": "19 型钢受弯构件整体稳定系数 $\\varphi_{b}^{\\prime}$",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 595,
+        "text": "<table><tr><td>序号</td><td>h</td><td>b</td><td>a</td><td> $l_1$  $t$ </td><td>2.0</td><td>2.5</td><td>3.0</td><td>3.5</td><td>4.0</td><td>4.5</td><td>5.0</td><td>5.5</td><td>6.0</td><td>6.5</td><td>7.0</td><td>7.5</td><td>8.0</td><td>8.5</td><td>9.0</td><td>9.5</td><td>10.0</td></tr><tr><td>31</td><td>300</td><td>80</td><td>25</td><td>3.0</td><td>0.977</td><td>0.915</td><td>0.840</td><td>0.753</td><td>0.628</td><td>0.503</td><td>0.414</td><td>0.347</td><td>0.297</td><td>0.258</td><td>0.227</td><td>0.201</td><td>0.181</td><td>0.163</td><td>0.149</td><td>0.137</td><td>0.126</td></tr></table>"
+      },
+      {
+        "parent_id": "ef207a24-3c3a-5815-8e62-dcdd0087b8a3",
+        "doc_title": "钢结构设计手册",
+        "section_path": "22.3.1 等截面柱，见表 22-3。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1643,
+        "text": "<table><tr><td>序号</td><td>变形或荷载图形</td><td>柱顶支座反力</td><td>序号</td><td>变形或荷载图形</td><td>柱顶支座反力</td></tr><tr><td>1</td><td><img src=\"images/6ac16bea2faf00e60698f1f82a452af8234fcadddf841e6aa4dcbfde6596f3d6.jpg\"/></td><td> $R_B = \\frac{3EI}{H^2}$ </td><td>6</td><td><img src=\"images/b8195011718c05caed26d3cf6969dc724b0a93c30f05a3830e3680e8aad8031a.jpg\"/></td><td> $R_B = -\\frac{1}{8}\\alpha (8 - 6\\alpha + \\alpha^2) \\cdot \\omega H$ </td></tr><tr><td>2</td><td><img src=\"images/c2a258ecad5665775612e817699d7bd3ef71009adad5b363daf75c9a52782a61.jpg\"/></td><td> $R_B = -\\frac{3EI}{H^2}$ </td><td>7</td><td><img src=\"images/0252fd6aa84ac3c244065b7d1061912f1926b20264eef3bfcabfda871d2ed61d.jpg\"/></td><td> $R_B = -\\frac{1}{8}(1 - \\alpha)^2 (3 + \\alpha) \\cdot \\omega H$ </td></tr><tr><td>3</td><td><img src=\"images/499a3b159a45fe685a397db82544f4457e3afa34c35788d0820ef7f753ea487d.jpg\"/></td><td> $R_B = -\\frac{3M}{2H}$ </td><td rowspan=\"2\">8</td><td rowspan=\"2\"><img src=\"images/14d066dbdaa95e534fbcbc440aa2e0a470822859b2b9faf808d9d3dfaced76c5.jpg\"/></td><td rowspan=\"2\"> $R_B = -\\frac{3}{8} \\cdot \\omega H$ </td></tr><tr><td>4</td><td><img src=\"images/6922c896221b11bb51fa79c0547dd2864c7f8efe9f1174f901f9843685ec0005.jpg\"/></td><td> $R_B = -\\frac{3}{2} (1 - \\alpha^2) \\frac{M}{H}$ </td></tr><tr><td>5</td><td><img src=\"images/881fffe162199a3ee13bcdb8fd2f57ae8e595e09a9279d01d31458ebfe19934d.jpg\"/></td><td> $R_B = -\\frac{1}{2} (1 - \\alpha)^2 (2 + \\alpha) T$ </td><td>9</td><td><img src=\"images/d901b66ef7e128bdbacae96f61e6a5f358f9bd250df87524cdd9f200fa66d946.jpg\"/></td><td> $R_B = -\\frac{1}{40}(1 - \\alpha)^2 (4 + \\alpha) \\cdot \\omega H$ </td></tr></table>"
+      },
+      {
+        "parent_id": "8f11012b-231f-56d3-8305-d3c54a674602",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "2.3.2.3 日本建筑钢材概况",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 517,
+        "text": "<table><tr><td rowspan=\"2\" colspan=\"2\">钢的牌号</td><td colspan=\"2\">SMA490AW, SMA490BW, SMA490CW</td><td colspan=\"2\">SMA490AP, SMA490BP, SMA490CP</td></tr><tr><td> $C_{eq}$ (%)</td><td> $P_{cm}$ (%)</td><td> $C_{eq}$ (%)</td><td> $P_{cm}$ (%)</td></tr><tr><td rowspan=\"3\">适用厚度(mm)</td><td>≤50</td><td>≤0.41</td><td>≤0.24</td><td>≤0.40</td><td>≤0.24</td></tr><tr><td>50~100</td><td>≤0.43</td><td>≤0.26</td><td>≤0.42</td><td>≤0.26</td></tr><tr><td>&gt;100</td><td colspan=\"2\">双方协议</td><td colspan=\"2\">双方协议</td></tr></table>"
+      },
+      {
+        "parent_id": "c0ed4f45-e079-50ad-a267-20b1d5f5cd28",
+        "doc_title": "钢结构设计手册",
+        "section_path": "18 构件轴心受压承载力设计值 (N)",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 2203,
+        "text": "<table><tr><td rowspan=\"3\">对应轴简图</td><td rowspan=\"3\">计算长度</td><td>I32c</td><td>I36a</td><td>I36b</td><td>I36c</td><td>I40a</td><td>I40b</td><td>I40c</td><td>I45a</td><td>I45b</td><td>I45c</td><td>I50a</td><td>I50b</td><td>I50c</td><td>I55a</td><td>I55b</td><td>I55c</td><td>I56a</td><td>I56b</td><td>I56c</td><td>I63a</td><td>I63b</td><td>I63c</td></tr><tr><td>3.7</td><td>1654</td><td>1596</td><td>1744</td><td>1893</td><td>1721</td><td>1880</td><td>2037</td><td>2056</td><td>2236</td><td>2415</td><td>2405</td><td>2605</td><td>2804</td><td>2713</td><td>2933</td><td>3154</td><td>2739</td><td>2964</td><td>3189</td><td>3136</td><td>3391</td><td>3645</td></tr><tr><td>3.8</td><td>1652</td><td>1594</td><td>1742</td><td>1890</td><td>1719</td><td>1877</td><td>2034</td><td>2054</td><td>2233</td><td>2412</td><td>2403</td><td>2602</td><td>2801</td><td>2710</td><td>2931</td><td>3152</td><td>2737</td><td>2962</td><td>3187</td><td>3134</td><td>3389</td><td>3643</td></tr><tr><td>3.9</td><td>1649</td><td>1592</td><td>1740</td><td>1887</td><td>1717</td><td>1875</td><td>2032</td><td>2052</td><td>2231</td><td>2410</td><td>2400</td><td>2599</td><td>2798</td><td>2708</td><td>2929</td><td>3149</td><td>2735</td><td>2960</td><td>3184</td><td>3132</td><td>3387</td><td>3640</td></tr><tr><td>4.0</td><td>1646</td><td>1590</td><td>1737</td><td>1884</td><td>1715</td><td>1873</td><td>2029</td><td>2050</td><td>2229</td><td>2407</td><td>2397</td><td>2597</td><td>2796</td><td>2706</td><td>2926</td><td>3146</td><td>2733</td><td>2957</td><td>3181</td><td>3130</td><td>3384</td><td>3638</td></tr><tr><td>4.2</td><td>1640</td><td>1585</td><td>1732</td><td>1879</td><td>1711</td><td>1868</td><td>2024</td><td>2046</td><td>2224</td><td>2402</td><td>2393</td><td>2592</td><td>2790</td><td>2701</td><td>2921</td><td>3140</td><td>2728</td><td>2952</td><td>3176</td><td>3126</td><td>3380</td><td>3633</td></tr><tr><td>4.4</td><td>1634</td><td>1581</td><td>1727</td><td>1873</td><td>1707</td><td>1864</td><td>2019</td><td>2042</td><td>2219</td><td>2396</td><td>2389</td><td>2587</td><td>2785</td><td>2696</td><td>2915</td><td>3134</td><td>2723</td><td>2946</td><td>3170</td><td>3122</td><td>3375</td><td>3627</td></tr></table>"
+      },
+      {
+        "parent_id": "6fed2aac-7b7a-5339-a8b6-94b4a22548d8",
+        "doc_title": "钢结构设计手册",
+        "section_path": "4.1.9 角钢与钢板、圆钢与钢板、圆钢与圆钢之间的角焊缝连接计算。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 416,
+        "text": "<table><tr><td>项次</td><td>连接形式</td><td>公式</td><td>说明</td></tr><tr><td>4</td><td><img src=\"images/65f77ca403712e8c0e54e6cdedb8ecfa2f1bc515c2df128de52cdcdec2ed4416.jpg\"/></td><td> $l_{w1} = \\frac{k_1 N_3}{0.7 h_{\\text{fl}} (0.85 f_{\\text{f}}^{\\text{w}})}$ (4-24) $l_{w3} = \\frac{k_2 N_3}{0.7 h_{\\text{fl}} (0.85 f_{\\text{f}}^{\\text{w}})}$ (4-25)</td><td>单角钢杆件的单面连接,只宜用于内力较小的情况,式中的0.85为焊缝强度折减系数,见表2-10</td></tr></table>"
+      },
+      {
+        "parent_id": "7f8916c6-0b5f-5ea0-b0d1-b5ec43331472",
+        "doc_title": "钢结构设计手册",
+        "section_path": "3.1.6 焊接截面梁腹板考虑屈曲后的强度。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 629,
+        "text": "<table><tr><td>项次</td><td>公式</td><td>说明</td></tr><tr><td>5</td><td>当腹板在支座旁的区格利用屈曲后强度亦即 $\\lambda_{n,s} > 0.8$ 时,支座加劲肋除承受梁的支座反力外尚应承受拉力场的水平分力 $H$ ,按压弯构件计算强度和在腹板平面外的稳定。 $H = (V_u - \\tau_{cr} h_w t_w) \\sqrt{1 + (a/h_0)^2} \\quad (3-36)$  $H$ 的作用点在距腹板计算高度上边缘 $h_0/4$ 处。此压弯构件的截面和计算长度同一般支座加劲肋。当支座加劲肋采用图3-3的构造形式时,可按下述简化方法进行计算:加劲肋1作为承受支座反力 $R$ 的轴心压杆计算,封头肋板2的截面积不应小于 $A_c = \\frac{3h_0H}{16e \\cdot f} \\quad (3-37)$ </td><td> $\\rho$ —腹板受压区有效高度系数; $\\lambda_{n,s}$ —用于腹板受剪计算时的正则化长细比,按公式[3-17(d)、公式3-17(e)]计算。当组合梁仅配置支座加劲肋时,取公式(3-17)中的 $h_0/a=0$ ; $V_u$ —按公式(3-34)计算; $h_w$ —腹板高度; $\\tau_{cr}$ —按公式(3-17)计算; $F$ —作用于中间支承加劲肋上端的集中压力</td></tr></table>"
+      },
+      {
+        "parent_id": "c9ca6fb8-ffef-5c7a-9207-dd33a8cfa04d",
+        "doc_title": "钢结构设计手册",
+        "section_path": "①节点 “B” 计算（图 7-116）。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 237,
+        "text": "$$\n\\sigma_ {\\mathrm{f}} = \\frac {6 M}{2 \\times 0 . 7 h _ {\\mathrm{f} 2} l _ {\\mathrm{w}} ^ {2}} = \\frac {6 \\times 4 0 . 3 \\times 1 0 ^ {3} \\times 4 0}{2 \\times 0 . 7 \\times 5 \\times 2 3 5 ^ {2}} = 2 5. 0 \\mathrm{N} / \\mathrm{mm} ^ {2}\n$$"
+      },
+      {
+        "parent_id": "40d2d496-3d5a-5922-8d76-7affb53dce2d",
+        "doc_title": "钢结构设计手册",
+        "section_path": "19 型钢受弯构件整体稳定系数 $\\varphi_{b}^{\\prime}$",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 2126,
+        "text": "<table><tr><td>序号</td><td>H(mm)</td><td>B(mm)</td><td colspan=\"2\"> $l_1$ (m) $t_w$ (mm)  $t_f$ (mm)</td><td>2</td><td>2.5</td><td>3</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td><td>6</td><td>6.5</td><td>7</td><td>7.5</td><td>8</td><td>8.5</td><td>9</td><td>9.5</td><td>10</td></tr><tr><td>78</td><td>350</td><td>150</td><td>6</td><td>9</td><td>0.966</td><td>0.914</td><td>0.856</td><td>0.794</td><td>0.729</td><td>0.663</td><td>0.594</td><td>0.521</td><td>0.464</td><td>0.418</td><td>0.382</td><td>0.352</td><td>0.327</td><td>0.306</td><td>0.287</td><td>0.272</td><td>0.258</td></tr><tr><td>79</td><td>350</td><td>150</td><td>6</td><td>10</td><td>0.970</td><td>0.922</td><td>0.868</td><td>0.811</td><td>0.752</td><td>0.692</td><td>0.632</td><td>0.567</td><td>0.507</td><td>0.460</td><td>0.422</td><td>0.390</td><td>0.363</td><td>0.341</td><td>0.322</td><td>0.305</td><td>0.290</td></tr><tr><td>80</td><td>350</td><td>175</td><td>4.5</td><td>6</td><td>0.987</td><td>0.942</td><td>0.890</td><td>0.831</td><td>0.765</td><td>0.695</td><td>0.619</td><td>0.533</td><td>0.461</td><td>0.405</td><td>0.361</td><td>0.325</td><td>0.295</td><td>0.270</td><td>0.249</td><td>0.231</td><td>0.215</td></tr><tr><td>81</td><td>350</td><td>175</td><td>4.5</td><td>8</td><td>0.993</td><td>0.954</td><td>0.908</td><td>0.857</td><td>0.801</td><td>0.742</td><td>0.681</td><td>0.618</td><td>0.546</td><td>0.485</td><td>0.436</td><td>0.397</td><td>0.364</td><td>0.336</td><td>0.312</td><td>0.292</td><td>0.275</td></tr><tr><td>82</td><td>350</td><td>175</td><td>4.5</td><td>9</td><td>0.996</td><td>0.958</td><td>0.915</td><td>0.867</td><td>0.816</td><td>0.762</td><td>0.706</td><td>0.650</td><td>0.591</td><td>0.527</td><td>0.476</td><td>0.435</td><td>0.400</td><td>0.371</td><td>0.347</td><td>0.325</td><td>0.307</td></tr><tr><td>83</td><td>350</td><td>175</td><td>4.5</td><td>10</td><td>0.999</td><td>0.963</td><td>0.922</td><td>0.877</td><td>0.829</td><td>0.780</td><td>0.729</td><td>0.678</td><td>0.627</td><td>0.571</td><td>0.518</td><td>0.474</td><td>0.438</td><td>0.408</td><td>0.382</td><td>0.360</td><td>0.341</td></tr></table>"
+      },
+      {
+        "parent_id": "d6a39b0f-7290-5879-82a6-1a9d4748b036",
+        "doc_title": "钢结构设计手册",
+        "section_path": "2.3.4 焊缝的强度设计指标应按表2-6采用。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 2278,
+        "text": "<table><tr><td rowspan=\"3\">焊接方法和焊条型号</td><td colspan=\"2\">钢材牌号规格</td><td colspan=\"4\">对接焊缝强度设计值</td><td>角焊缝强度设计值</td><td rowspan=\"3\">对接焊缝抗拉强度 $f_{u}^{w}$ </td><td rowspan=\"3\">角焊缝抗拉强度 $f_{u}^{f}$ </td></tr><tr><td rowspan=\"2\">牌号</td><td rowspan=\"2\">厚度或直径(mm)</td><td rowspan=\"2\">抗压 $f_{c}^{w}$ </td><td colspan=\"2\">焊缝质量为下列等级时,抗拉 $f_{t}^{w}$ </td><td rowspan=\"2\">抗剪 $f_{v}^{w}$ </td><td rowspan=\"2\">抗拉、抗压和抗剪 $f_{f}^{w}$ </td></tr><tr><td>一级、二级</td><td>三级</td></tr><tr><td rowspan=\"5\">自动焊、半自动焊和E50、E55型焊条手工焊</td><td rowspan=\"5\">Q345</td><td>≤16</td><td>305</td><td>305</td><td>260</td><td>175</td><td rowspan=\"5\">200</td><td rowspan=\"9\">480(E50)540(E55)</td><td rowspan=\"9\">280(E50)315(E55)</td></tr><tr><td>&gt;16~40</td><td>295</td><td>295</td><td>250</td><td>170</td></tr><tr><td>&gt;40~63</td><td>290</td><td>290</td><td>245</td><td>165</td></tr><tr><td>&gt;63~80</td><td>280</td><td>280</td><td>240</td><td>160</td></tr><tr><td>&gt;80~100</td><td>270</td><td>270</td><td>230</td><td>155</td></tr><tr><td rowspan=\"4\">自动焊、半自动焊和E50、E55型焊条手工焊</td><td rowspan=\"4\">Q390</td><td>≤16</td><td>345</td><td>345</td><td>295</td><td>200</td><td rowspan=\"4\">200(E50)220(E55)</td></tr><tr><td>&gt;16~40</td><td>330</td><td>330</td><td>280</td><td>190</td></tr><tr><td>&gt;40~63</td><td>310</td><td>310</td><td>265</td><td>180</td></tr><tr><td>&gt;63~100</td><td>295</td><td>295</td><td>250</td><td>170</td></tr><tr><td rowspan=\"4\">自动焊、半自动焊和E55、E60型焊条手工焊</td><td rowspan=\"4\">Q420</td><td>≤16</td><td>375</td><td>375</td><td>320</td><td>215</td><td rowspan=\"4\">220(E55)240(E60)</td><td rowspan=\"8\">540(E55)590(E60)</td><td rowspan=\"8\">315(E55)340(E60)</td></tr><tr><td>&gt;16~40</td><td>355</td><td>355</td><td>300</td><td>205</td></tr><tr><td>&gt;40~63</td><td>320</td><td>320</td><td>270</td><td>185</td></tr><tr><td>&gt;63~100</td><td>305</td><td>305</td><td>260</td><td>175</td></tr><tr><td rowspan=\"4\">自动焊、半自动焊和E55、E60型焊条手工焊</td><td rowspan=\"4\">Q460</td><td>≤16</td><td>410</td><td>410</td><td>350</td><td>235</td><td rowspan=\"4\">220(E55)240(E60)</td></tr><tr><td>&gt;16~40</td><td>390</td><td>390</td><td>330</td><td>225</td></tr><tr><td>&gt;40~63</td><td>355</td><td>355</td><td>300</td><td>205</td></tr><tr><td>&gt;63~100</td><td>340</td><td>340</td><td>290</td><td>195</td></tr></table>"
+      },
+      {
+        "parent_id": "d77675de-4589-559d-85aa-ce2eae99acab",
+        "doc_title": "钢结构设计手册",
+        "section_path": "22.2.1 刚接刚架计算公式见表 22-2。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 2013,
+        "text": "<table><tr><td>序号</td><td>荷载及内力简图</td><td>计算公式</td></tr><tr><td>1</td><td><img src=\"images/683476acde33ce69013ace2637774ba8cb3015b5304e4e8c28296e160a5aa1a1.jpg\"/></td><td> $V = V_{\\mathrm {A}} = V_{\\mathrm {E}} = \\frac{wl}{2}$  $H = H_{\\mathrm {A}} = -H_{\\mathrm {E}} = \\frac{wl^{2}}{8} \\cdot \\frac{k(4h + 5f) + f}{N}$  $M_{\\mathrm {A}} = M_{\\mathrm {E}} = \\frac{wl^{2}}{48} \\cdot \\frac{kh(8h + 15f) + f(6h - f)}{N}$  $M_{\\mathrm {B}} = M_{\\mathrm {D}} = \\frac{wl^{2}}{48} \\cdot \\frac{kh(16h + 15f) + f^{2}}{N}$  $M_{\\mathrm {C}} = -H(h + f) + M_{\\mathrm {A}} + \\frac{wl^{2}}{8}$ </td></tr><tr><td>2</td><td><img src=\"images/1ec27f74fd0c0d833f0e97cfd28778608b11dab178331c1ebfb47c80b246372e.jpg\"/></td><td> $V_{\\mathrm {A}} = \\frac{wl}{32} \\cdot \\frac{36k + 13}{3k + 1}, V_{\\mathrm {E}} = \\frac{wl}{32} \\cdot \\frac{12k + 3}{3k + 1}$  $H = H_{\\mathrm {A}} = -H_{\\mathrm {E}} = \\frac{wl^{2}}{16} \\cdot \\frac{k(4h + 5f) + f}{N}$  $M_{\\mathrm {A}} = \\frac{wl^{2}}{96}\\left[\\frac{kh(8h + 15f) + f(6h - f)}{N} - \\frac{3}{2(3k + 1)}\\right]$  $M_{\\mathrm {E}} = \\frac{wl^{2}}{96}\\left[\\frac{kh(8h + 15f) + f(6h - f)}{N} + \\frac{3}{2(3k + 1)}\\right]$  $M_{\\mathrm {B}} = -\\frac{wl^{2}}{96}\\left[\\frac{kh(16h + 15f) + f^{2}}{N} + \\frac{3}{2(3k + 1)}\\right]$  $M_{\\mathrm {D}} = -\\frac{wl^{2}}{96}\\left[\\frac{kh(16h + 15f) + f^{2}}{N} + \\frac{3}{2(3k + 1)}\\right]$  $M_{\\mathrm {C}} = -H(h + f) + M_{\\mathrm {E}} + V_{\\mathrm {E}} \\frac{1}{2}$ </td></tr><tr><td>3</td><td><img src=\"images/eb58692eb7db55de53ca4f24f3ed505738aa957282315043b51d7f2aeb776927.jpg\"/></td><td> $V_{\\mathrm {A}} = P - V_{\\mathrm {E}}, V_{\\mathrm {E}} = \\frac{P \\cdot a}{l^{2}} \\cdot \\frac{3kl^{2} + a(l + 2b)}{3k + 1}$  $H = H_{\\mathrm {A}} = -H_{\\mathrm {E}}$  $= \\frac{P \\cdot a}{l^{2}} \\cdot \\frac{3kl^{2}(h + f) - 4a^{2}f(k + 1) - 3al(kh - f)}{N}$  $M_{\\mathrm {A}} = \\frac{P \\cdot a}{2l^{2}}\\left[\\frac{2lh^{2}bk + 3hlf(2a + lk) - f^{2}l(l - 4a)}{N} + \\frac{-4a^{2}fh(k + 2) - 4a^{2}f^{2}}{N} - \\frac{b(b - a)}{3k + 1}\\right]$ </td></tr></table>"
+      },
+      {
+        "parent_id": "e5930e5a-f5e8-5b3c-b827-b410c5c9ccd0",
+        "doc_title": "钢结构设计手册",
+        "section_path": "17.2.2 焊接槽形钢的截面特征，见表 17-7。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1040,
+        "text": "<table><tr><td rowspan=\"2\" colspan=\"3\">尺寸(mm)</td><td rowspan=\"3\">截面面积A $(cm^2)$ </td><td rowspan=\"3\">每米重量(kg/m)</td><td colspan=\"8\">截面特性</td></tr><tr><td>18</td><td>211.1</td><td>165.7</td><td>5.09</td><td>102785</td><td>3426</td><td>22.07</td><td>7695</td><td>1511</td><td>455.1</td></tr><tr><td rowspan=\"5\">200×200×</td><td>14</td><td>209.3</td><td>164.3</td><td>4.37</td><td>90853</td><td>3028</td><td>20.84</td><td>6420</td><td>1468</td><td>364.2</td></tr><tr><td>16</td><td>224.0</td><td>175.9</td><td>4.62</td><td>99769</td><td>3326</td><td>21.10</td><td>7134</td><td>1544</td><td>410.5</td></tr><tr><td>18</td><td>238.6</td><td>187.3</td><td>4.85</td><td>108457</td><td>3615</td><td>21.32</td><td>7820</td><td>1614</td><td>455.9</td></tr><tr><td>20</td><td>253.0</td><td>198.6</td><td>5.05</td><td>116993</td><td>3900</td><td>21.50</td><td>8475</td><td>1680</td><td>499.9</td></tr><tr><td>24</td><td>281.3</td><td>220.6</td><td>5.41</td><td>133347</td><td>4445</td><td>21.77</td><td>9725</td><td>1798</td><td>586.2</td></tr></table>"
+      }
+    ],
+    "code_lookup": [
+      {
+        "parent_id": "bca0b4e1-ecf0-5a38-a492-15fb9b633649",
+        "doc_title": "钢结构设计手册",
+        "section_path": "4 结论。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1194,
+        "text": "# 4 结论。  \n（1）计算表明柱间支撑为纵向主要抗震构件（见表10-16），柱本身在纵向抗震计算中作用很小，可忽略不计。\n（2）不论无檩和有檩混凝土预制屋面板厂房，由于有天窗的板开洞，内天沟的存在致使板在中列柱处截断，构造上又不能形成整体，更重要的是屋架端部竖向支撑的存在（高2m左右），使屋面与柱顶不紧密连接，而失去其刚度和整体作用。故纵向地震作用不能按抗侧力构件等效刚度的比例分配，只能按抗侧力构件从属面积上重力荷载代表值的比例分配。\n（3）不配筋的围护墙由于本身和连接等原因，不能参与纵向抗震计算。按《砌体结构设计规范》GB 50003—2011规定计算得 $\\frac{e_{0}}{y}=2.78\\gg0.6$ ，可见窗间墙的抗震承载力远远不足。\n（4）按本书建议方法算得的柱间支撑斜杆截面强度应力比远大于1（见表10-17），故应加大柱间支撑截面，使其强度应力比小于1。例如，中柱列下柱支撑斜杆截面应改为 $2\\mathrm{L}180\\times 110\\times 14$ 。\n（5）实际工程中，多数厂房长度（66～84m）大于60m，若下柱柱间支撑仍只设一道，侧围护墙的虚构抗震作用更大，其柱间支撑更不能满足要求。\n(6) 上述建议，希望设计人员高度重视，不能盲目套用规范。  \n表 10-17 柱间支撑斜杆截面强度应力比  \n<table><tr><td rowspan=\"2\">序号</td><td rowspan=\"2\">计算理论</td><td colspan=\"2\">上柱柱间支撑</td><td colspan=\"2\">下柱柱间支撑</td></tr><tr><td>边柱列</td><td>中柱列</td><td>边柱列</td><td>中柱列</td></tr><tr><td>1</td><td>GB 50011—2010(2016年版)</td><td>0.23</td><td>0.36</td><td>0.49</td><td>0.90</td></tr><tr><td>2</td><td>本书建议</td><td>0.96</td><td>1.63</td><td>1.58</td><td>3.13</td></tr><tr><td>3</td><td> $\\frac{\\text{序号2}}{\\text{序号1}}$ (%)</td><td>417</td><td>453</td><td>322</td><td>348</td></tr></table>  \n注：截面强度应力比 $\\frac{\\sigma}{\\sigma_{\\mathrm{f}}} = \\frac{\\sigma}{\\underline{0.75f}} = \\frac{\\sigma}{f}$ ，其中 $\\gamma_{\\mathrm{RE}} = 0.75$ 。"
+      },
+      {
+        "parent_id": "8b7408a0-b28e-511d-9f63-4b066adfc34a",
+        "doc_title": "钢结构设计手册",
+        "section_path": "23.0.2 型钢、钢板的标准",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 948,
+        "text": "# 23.0.2 型钢、钢板的标准  \n1 GB 2585—2007  \n2 GB/T 182—1963  \n3 GB/T 183—1963  \n4 GB/T 702—2008  \n5 GB/T 706—2008  \n6 GB/T 708—2006  \n7 GB/T 709—2006  \n8 GB/T 1220—2007  \n9 GB/T 3277—1991  \n10 GB/T 6723—2008  \n11 GB/T 6725—2008  \n12 GB/T 6728—2002  \n13 GB/T 8162—2008  \n14 GB/T 11263—2010  \n15 GB/T 11251—2009  \n16 GB/T 12754—2006  \n17 GB/T 12755—2008  \n18 GB/T 13793—2008  \n19 GB/T 11264—2012  \n20 YB/T 4001.1—2007  \n21 YB 4104—2000  \n22 YB/T 5132—2007  \n23 JG 8—1999  \n24 JG 9—1999  \n25 JG 10—2009  \n每米 50 公斤钢轨型式尺寸  \n每米 43 公斤钢轨型式尺寸  \n每米 38 公斤钢轨型式尺寸  \n热轧钢棒尺寸、外形、重量及允许偏差  \n热轧型钢  \n冷轧钢板和钢带的尺寸、外形、重量及允许偏差  \n热轧钢板和钢带的尺寸、外形、重量及允许偏差  \n不锈钢棒  \n花纹钢板  \n通用冷弯开口型钢尺寸、外形、重量及允许偏差  \n冷弯型钢  \n结构用冷弯空心型钢尺寸、外形、重量及允许偏差  \n结构用无缝钢管  \n热轧 H 型钢和剖分 T 型钢  \n合金结构钢热轧厚钢板  \n彩色涂层钢板及钢带  \n建筑用压型钢板  \n直缝电焊钢管  \n轻轨  \n钢格栅板  \n高层建筑结构用钢板  \n合金结构钢薄钢板  \n钢桁架质量标准  \n钢桁架检验及验收标准  \n钢网架螺栓球节点  \n26 JG 11—2009\n27 JG/T 137—2007\n28 JG 144—2002\n29 JG/T 203—2007\n30 JG/T 178—2005\n31 GB/T 5313—2010  \n23.0.3 紧固件的标准  \n"
+      },
+      {
+        "parent_id": "52e50087-add7-55b2-a457-d36972136fd0",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "6.2.1.2 普通螺栓的规格",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1668,
+        "text": "<table><tr><td colspan=\"2\">螺纹规格d</td><td>M5</td><td>M6</td><td>M8</td><td>M10</td><td>M12</td><td>M(14)</td><td>M16</td><td>M(18)</td><td>M20</td><td>M(22)</td><td>M24</td><td>M(27)</td><td>M30</td><td>M36</td><td>M42</td><td>M48</td><td>M56</td><td>M64</td></tr><tr><td colspan=\"2\">l范围</td><td>25~50</td><td>30~60</td><td>35~80</td><td>40~100</td><td>45~120</td><td>60~140</td><td>55~160</td><td>80~180</td><td>65~200</td><td>90~220</td><td>80~240</td><td>100~260</td><td>90~300</td><td>110~300</td><td>160~420</td><td>180~480</td><td>220~500</td><td>260~500</td></tr><tr><td colspan=\"2\">l范围(全螺纹)</td><td>10~40</td><td>12~50</td><td>16~65</td><td>20~80</td><td>25~100</td><td>30~140</td><td>35~100</td><td>35~180</td><td>40~100</td><td>45~220</td><td>50~100</td><td>55~280</td><td>60~100</td><td>70~100</td><td>80~420</td><td>100~480</td><td>110~500</td><td>120~500</td></tr><tr><td colspan=\"2\">100mm长的重量(kg)≈</td><td></td><td></td><td></td><td>0.072</td><td>0.103</td><td>0.141</td><td>0.185</td><td>0.242</td><td>0.304</td><td>0.369</td><td>0.459</td><td>0.609</td><td>0.765</td><td>1.166</td><td>1.680</td><td>1.857</td><td>2.646</td><td>3.561</td></tr><tr><td colspan=\"2\">l系列</td><td colspan=\"18\">10,12,16,20,25,30,35,40,45,50,(55),60,(65),70,80,90,100,110,120,130,140,150,160,180,200,220,240,260,280,300,320,340,360,380,400,420,440,460,480,500</td></tr><tr><td rowspan=\"2\">技术条件</td><td>GB 5780-86</td><td colspan=\"3\">螺纹公差8g</td><td rowspan=\"2\" colspan=\"2\">材料钢</td><td rowspan=\"2\" colspan=\"7\">机械性能等级: $d \\leqslant 39$ 时为4.6、4.8, $d >89$ 时按协议</td><td rowspan=\"2\" colspan=\"6\">表面处理:1不经处理;2镀锌钝化</td></tr><tr><td>GB 5781-86</td><td colspan=\"3\">螺纹公差6g</td></tr></table>"
+      },
+      {
+        "parent_id": "26b7b8d1-7571-5ecb-b7ec-11162e17fd0c",
+        "doc_title": "钢结构基础 上册",
+        "section_path": "2.2.3 冲击韧性",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1159,
+        "text": "# 2.2.3 冲击韧性  \n与抵抗冲击作用有关的钢材的性能是韧性。韧性是钢材断裂时吸收机械能能力的量度。吸收较多能量才断裂的钢材，是韧性好的钢材。钢材在一次拉伸静载作用下断裂时所吸收的能量，用单位体积吸收的能量来表示，其值等于应力-应变曲线下的面积。塑性好的钢材，其应力-应变曲线下的面积大，所以韧性值大。然而，实际工作中，不用上述方法来衡量钢材的韧性，而用冲击韧性衡量钢材抗脆断的性能，因为实际结构中脆性断裂并不发生在单向受拉的地方，面总是发生在有缺口高峰应力的地方，在缺口高峰应力的地方常呈三向受拉的应力状态。因此，最有代表性的是钢材的缺口冲击韧性，简称冲击韧性或冲击功。  \n冲击韧性的测量，可用不同的方法进行。我国过去多用梅氏（Mesnager）方法进行。该法规定用跨中带U型缺口的方形截面小试件在规定试验机上进行(图2-4a及b)。试件在摆锤冲击下折断后，断口处单位面积上的功即为冲击韧性值，用 $a_{k}$ 表示，单位为 $J/cm^{2}$ 。  \n现行国家标准《碳素结构钢》(GB700—88) 规定采用国际上通用的夏比试验法（Charpy V-notch test），试件和梅氏试件的区别仅仅在于带 V 型缺口，由于缺口比较尖锐（图 2-4c），缺口根部的高峰应力及其附近的应力状态能更好地描绘实际结构的缺陷。夏比缺口韧性用 $A_{kv}$ 或 $C_v$ 表示，其值为试件折断所需的功，单位为 J。因为试件都用同一标准尺寸，不用缺口处单位面积的功，可以使测量工作简化。  \n![](images/39be640e0fbbd14254134d98c02c116e1e2ad3bd955a91a679d02ac2887ac35a.jpg)  \n<details>\n<summary>text_image</summary>  \n10mm\n27.5mm\n27.5mm\n10mm\n40mm\n摆锤冲击\n</details>  \n(a)  \n![](images/b657174ba06048b9aa4a5f7128cf288e9a76e4912cada3e9efd936ac3c85c021.jpg)  \n<details>\n<summary>text_image</summary>  \nR = 1mm\n2mm\n2mm\n</details>  \n(b)  \n![](images/d653d378f2c27ec37262f15d8ce6939861b5bb6b3e34032ddf4682b0e980736d.jpg)  \n<details>\n<summary>text_image</summary>  \nR = 0.25mm\n2mm\n45°\n</details>  \n(c)\n图 2-4 冲击试验"
+      },
+      {
+        "parent_id": "fe9f508e-96c8-5ec7-b11b-8e53df1b6f08",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "6.2.1.2 普通螺栓的规格",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 207,
+        "text": "# 6.2.1.2 普通螺栓的规格  \n普通螺栓按照形式可分为六角头螺栓、双头螺栓、沉头螺栓等；按制作精度可分为A、B、C级三个等级，A、B级为精制螺栓，C级为粗制螺栓，钢结构用连接螺栓，除特殊注明外，一般即为普通粗制C级螺栓。  \n钢结构常用普通螺栓技术规格有：  \n（1）六角头螺栓—C级（GB 5780）和六角头螺栓—全螺纹—C级（GB 5781）的技术规格见表6-2。  \n表 6-1 普通螺栓材性表  \n"
+      },
+      {
+        "parent_id": "e6efab59-de64-5436-9c8e-c14cc10dfd28",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "8.1.7.1 钢结构涂装防腐涂料的选用与检验取样",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 352,
+        "text": "# 8.1.7.1 钢结构涂装防腐涂料的选用与检验取样  \n钢结构涂装防腐涂料，宜选用醇酸树脂、氯化橡胶、氯磺化聚乙烯、环氧树脂、聚氨酯、有机硅等品种。  \n选用涂料时，首先应选已有国家或行业标准的品种，其次选用已有企业标准的品种，无标准的产品不得选用。  \n涂料进场应有产品出厂合格证，并应取样复验，符合产品质量标准后，方可使用。取样方法，应符合现行国家标准 GB 3186 的规定，取样数目和取样量，按下列规定执行：  \n(1) 取样数目。涂料使用前，应按交货验收的桶数，对同一生产厂生产的相同包装的产品进行随机取样，取样数目应大于 $\\sqrt{\\frac{n}{2}}$ （ $n$ — 交货产品桶数）。\n(2) 取样量。取样应同时取两份，每份 0.25kg，其中一份做检验，另一份密封贮存备用。"
+      },
+      {
+        "parent_id": "e4bc4e83-8bf6-5536-8a32-2871120e5274",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "2.1.3.1 高耐候结构钢",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 433,
+        "text": "# 2.1.3.1 高耐候结构钢  \n按照即将实施的国家标准 GB/T 4171（取代 GB/T 4171—1984）的规定，这类钢材适用于耐大气腐蚀的建筑结构，产品通常在交货状态下使用，但作为焊接结构用材时，板厚应不大于 16mm。  \n这类钢的耐候性能比焊接结构用耐候钢好，故称作高耐候性结构钢。高耐候性结构钢按化学成分分为：铜磷钢和铜磷铬镍钢两类。其牌号表示方法是由分别代表“屈服点”和“高耐候”的拼音字母Q和GNH以及屈服点的数字组成，含Cr、Ni的高耐候钢在牌号后加代号“L”。例如牌号Q345GNHL表示屈服点为345MPa、含有铬镍的高耐候钢。  \n高耐候钢共分 Q295GNH、Q295GNHL、Q345GNH、Q345GNHL、Q390GNH 五种牌号，其化学成分与力学性能应分别符合表 2-9、表 2-10 和表 2-11 的规定。与上文提及的一样，成品钢材的化学成分允许偏差应符合表 2-4 规定。  \n表 2-9 高耐候结构钢的化学成分  \n"
+      },
+      {
+        "parent_id": "40f1072d-4c77-5717-b055-f88fe6bc2d86",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "7.2.8 彩色钢板的宽度",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 602,
+        "text": "# 7.2.8 彩色钢板的宽度  \n国标《彩色涂层钢板及钢带》（GB/T 12754—91）规定的彩色钢板的宽度为700\\~1550mm。宝钢企标规定为900\\~1550mm，常用宽度为1000mm和1200mm。国标规定的宽度公差见表7-13。  \n表 7-13 GB/T 12754—91 规定的宽度公差  \n<table><tr><td rowspan=\"2\">公称宽度</td><td colspan=\"2\">宽度允许偏差</td></tr><tr><td>高级精度 A</td><td>普通精度 B</td></tr><tr><td> $\\leqslant 1200$ </td><td>+20</td><td>+6</td></tr><tr><td>&gt;1200</td><td>+20</td><td>+6</td></tr></table>  \n日本国的标准宽度为 762、914、1000 和 1219mm，是公制和英制共用的。其宽度允许偏差为 +0.7。  \n彩色钢板的标准宽度是确定经济合理的成型设备的基础。非标宽度尽管可以供应，但是会出现原材料价上扬和供货周期过长的现象。因此购置彩钢建筑制品成型设备时应充分考虑原材料宽度的合理选择。  \n在彩钢建筑制品设备选型和设计时，应充分考虑宽度的允许偏差尺寸，以保证产品的质量。我国的 A、B 两级规定可满足夹芯板和压型板的生产要求。"
+      },
+      {
+        "parent_id": "b95cb6f9-0353-5da2-99f9-c80335b5ef27",
+        "doc_title": "钢结构设计手册",
+        "section_path": "3.5.4 疲劳计算的构件和连接分类。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1072,
+        "text": "<table><tr><td>项次</td><td>构造细节</td><td>说明</td><td>类别</td></tr><tr><td>1</td><td><img src=\"images/3b30d0a8982a6cfffc598c9a22256540c91a947d01e446d3e84570e7facc16cf.jpg\"/></td><td>横向对接焊缝附近的母材,轧制梁对接焊缝附近的母材符合现行国家标准《钢结构工程施工质量验收规范》GB50205的一级焊缝,且经加工、磨平符合现行国家标准《钢结构工程施工质量验收规范》GB 50205的一级焊缝</td><td>Z2Z4</td></tr><tr><td>2</td><td><img src=\"images/8cad5e573480bc274bdbfd537a6e0f9d5b1d640a4a0cdab064d35052abeea024.jpg\"/></td><td>不同厚度(或宽度)横向对接焊缝附近的母材符合现行国家标准《钢结构工程施工质量验收规范》GB 50205的一级焊缝,且经加工、磨平符合现行国家标准《钢结构工程施工质量验收规范》GB 50205的一级焊缝</td><td>Z2Z4</td></tr><tr><td>3</td><td><img src=\"images/1d1ecd11598c8f50300732b151008e5bfdd1387abc387f6353eed185de2e8ba3.jpg\"/></td><td>有工艺孔的轧制梁对接焊缝附近的母材,焊缝加工成平滑过渡并符合一级焊缝标准</td><td>Z6</td></tr><tr><td>4</td><td><img src=\"images/1d4e9f3583a8825d6c9a0a87a706559f4777fe73066f285515a8792d2fe4bd4d.jpg\"/></td><td>带垫板的横向对接焊缝附近的母材垫板端部超出母板距离 $d$  $d \\geqslant 10mm$  $d < 10mm$ </td><td>Z8Z11</td></tr><tr><td>5</td><td><img src=\"images/cd1421df419aa6d3daa7893bea792a556718f42831abae9ab5630a38252d8fdb.jpg\"/></td><td>节点板搭接的端面角焊缝的母材</td><td>Z7</td></tr></table>"
+      },
+      {
+        "parent_id": "4a843598-7fb9-503f-a53b-bc12fb5b6aa4",
+        "doc_title": "钢结构设计手册",
+        "section_path": "2 板件宽厚比。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 242,
+        "text": "# 2 板件宽厚比。  \n（1）重屋盖厂房。按《建筑抗震设计规范（2016年版)》GB 50011—2010表8.3.2规定取用。\n(2) 轻屋盖厂房。 $b_{1}/t_{1}=15\\sqrt{235/f_{y}}$ ， $h_{0}/t_{w}$ 按表9-3。\n（3）翼缘外伸宽度 $b_{1} / t_{1}$ 不满足时可取 $b_{1} / t_{1}$ 符合规定的 $b_{1}$ 进行承载力验算；腹板宽厚比不满足要求时可按表9-3或表3-8取腹板的有效截面进行承载力验算。"
+      },
+      {
+        "parent_id": "5b7e239b-4833-5664-858e-c42dd2948986",
+        "doc_title": "钢结构设计手册",
+        "section_path": "11.6 墙架构件设计系列",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 522,
+        "text": "  \n注：1 墙体为挂板，与墙梁用自攻钉连接，用于窗顶墙梁时应经验算后确定是否加强。\n2 计算中已考虑风吸力下墙梁内侧的稳定，故单层墙板均应在墙里侧再增设拉条，再按图11-5在墙底处加斜拉条。当采用双层墙板时，墙梁暗藏，拉条位于墙梁腹板中心部位，取消墙底处斜拉条。\n3 按《建筑结构荷载规范》GB 50009—2012，封闭式建筑。取 +1.2，-1.2，统一计入墙梁负风面积的风荷载折减系数 0.85。当基本风压 $W_{0}$ 不等于 $0.5 ~kN/m^{2}$ 、房屋高度 H < 20m 时也可换算基本风压、檩距选用。例如 $W_{0} = 0.4 ~kN/m^{2}$ ，H = 10m，地面粗糙度为 A 类，墙梁间距 a 由 1.5m 改为 1.2m 时，则换算：\n$W_{0}=\\frac{\\mu_{z}(20)}{\\mu_{z}(10)}\\times0.4=\\frac{1.23}{1.28}\\times0.4\\times\\frac{1.5}{1.2}=0.48<0.5kN/m^{2}$ ，仍可按 $W_{0}=0.50kN/m^{2}$ ，a=1.2m选用，以此类推。  \n表 11-3 墙架柱（抗风柱）构件选用表  \n"
+      },
+      {
+        "parent_id": "1bcd95a5-3ab3-5e23-bc7e-d9e83db2169b",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "9.7.2.2 严格控制基准轴线位置、标高及垂直偏差，并应及时纠正",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 350,
+        "text": "# 9.7.2.2 严格控制基准轴线位置、标高及垂直偏差，并应及时纠正  \n(1)网架安装前应对建筑物的定位轴线(即基准轴线)、支座轴线和支承面标高,预埋螺栓(锚栓)位置等进行检查,作出检查记录,办理交接验收手续;并应符合下列规定:\n1）建筑物的定位轴线（即网架安装的基准轴线）要求用精确的角度交汇法放线定位，并用长度交汇法进行复测，其允许偏差不超过 L/10000（L 为短边长度，mm）。\n2）网架安装轴线标志（包括安装辅助轴线标志）和标高基准点标志应准确、齐全、醒目、牢固，并要经常进行复测，以防变动。\n3）网架结构支承面、预埋螺栓（锚栓）的允许偏差应符合《钢结构工程施工质量验收规范》（GB 50205）及表9-64的规定。  \n表 9-64 支承面、预埋螺栓（锚栓）的允许偏差（mm）  \n"
+      }
+    ],
+    "factual": [
+      {
+        "parent_id": "da65f603-b3fd-5198-b943-61fe8620154a",
+        "doc_title": "钢结构设计手册",
+        "section_path": "4.1.6 角焊缝的截面形式。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 307,
+        "text": "![](images/348045c5b234fd9d714834ab2e4ed1fda956c55d08b55cebb1f60c795701eb56.jpg)\n(e) J形坡口  \n![](images/7ff6949212d0527f652f9acf243fb411cf29c73eae25c641301ced4318ea54c8.jpg)  \n<details>\n<summary>text_image</summary>  \nα\ns\ns\n</details>  \n(f) V形坡口\n图4-5 部分焊透的对接焊缝和其与角焊缝的组合焊缝截面  \n图4-5中除图（c）为T形对接与角焊缝组合焊缝外余均为对接焊缝。"
+      },
+      {
+        "parent_id": "d28988a4-01c4-55d7-a4b0-fb7bfe52f161",
+        "doc_title": "钢结构基础 上册",
+        "section_path": "(5) 支座节点",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1062,
+        "text": "# (5) 支座节点  \n屋架与柱子的连接可以设计成铰接或刚接。支承于钢筋混凝土柱的屋架一般都按铰接设计（图7-127）。屋架与钢柱的连接可铰接也可刚接。三角形屋架端部高度小，需加隅撑才能与柱形成刚接（图7-128），否则只能与柱形成铰接（图7-127b）。梯形屋架和平行弦屋架的端部有足够的高度，既可与柱铰支（图7-127），也可通过两个节点与柱相连而形成刚接（图7-130）。铰接支座只需传递屋架竖向支座反力，而与柱刚接的屋架支座节点要能传递端部弯矩产生的水平力和竖向反力。  \n![](images/7c58a888db6d755b58fe412ff3d453650c4ce24023f5826200cd8a2b3035de2e.jpg)  \n<details>\n<summary>text_image</summary>  \nTechnical diagram of a mechanical assembly with labeled components and cross-sectional views\n</details>  \n(a)  \n![](images/33fa5f24212db403f8f015b08bcc483beec42f7db5f33163c7661ceebdfdaae3.jpg)  \n<details>\n<summary>natural_image</summary>  \nTechnical line drawing of a mechanical assembly with dimension lines (no text or symbols)\n</details>  \n(b)\n图 7-127 屋架铰接支座\n(a) 梯形屋架；(b) 三角形屋架  \n![](images/bb8930cd392e2c21a23cacf9cc601c1be5adeefded3bc6e3262c7c572f9542a7.jpg)  \n<details>\n<summary>text_image</summary>  \n隔撑\n隔撑\n</details>  \n图 7-128 有隅撑的框架  \n图 7-129 是简支梯形屋架支座节点。在图 7-129 中，以屋架杆件合力（竖向）作用点作为底板中心，合力通过方形或矩形底板以分布力的形式传给混凝土等下部结构。为保证底板的刚度，也为传力和节点板出平面刚度的需要，应有肋板，肋板厚度的中线应与各杆件合力线重合。梯形屋架中，为了便于焊缝的施焊，下弦角钢的"
+      },
+      {
+        "parent_id": "f24aa344-e3f0-510a-be99-338aab5cc2a8",
+        "doc_title": "钢结构基础 上册",
+        "section_path": "5. 其他措施",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1165,
+        "text": "# 5. 其他措施  \n在钢结构制造安装过程中，应尽量避免使材料出现应变硬化，要及时通过扩钻和刨边消除因冲孔和裁剪（剪切和手工气割）而造成的局部硬化区，在低温地区尤需如此。注意正确选择和制订焊接工艺以减少不利残余应力，包括必要时通过热处理方法消除重要构件中的残余应力；提倡规范文明施工，不在构件上随意起弧和砸击以避免构件表面的意外损伤。  \n![](images/27fb23c16ab82ace837441a8f2bde69b0dd133b086cdab698f7d33769dce3a91.jpg)  \n<details>\n<summary>text_image</summary>  \n主材\n止裂元件\n主材\n1\n1-1\n(a)\n</details>  \n![](images/f990969cca70285e6238ccfdd5dfbd0d68a6b10002d1cc1b87433445bbaf3ccc.jpg)  \n<details>\n<summary>text_image</summary>  \n止裂元件\n主材\n主材\n(b)\n</details>  \n图 8-5 止裂元件的使用\n(a) 板内止裂元件；(b) 板外止裂元件  \n![](images/23a70c8821b78ca8b34ea681f0809a8c8b404c20011a3f76ee0795f52d24c8ee.jpg)  \n<details>\n<summary>natural_image</summary>  \nPure geometric diagram showing a right angle with a shaded region and perpendicular lines, labeled (a) (no text or symbols)\n</details>  \n![](images/5c7eb33b4013d1417e5fc9da3778fa1f85a07eec18a4cb842fe161776c43bb1b.jpg)  \n<details>\n<summary>natural_image</summary>  \nPure electrical circuit lines without any symbols\n</details>  \n![](images/74bed43ce5761d86e2d14f30887f1e88464602e670a1c4a271241b713e5fd14f.jpg)  \n<details>\n<summary>natural_image</summary>  \nPure electrical circuit lines without any symbols\n</details>"
+      },
+      {
+        "parent_id": "1a35ed2b-512b-5efe-b48a-6f80a3c63940",
+        "doc_title": "钢结构设计手册",
+        "section_path": "11.4.4 墙架柱与砌体墙、墙梁的连接，分别见图 11-19 和图 11-20。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1194,
+        "text": "# 11.4.4 墙架柱与砌体墙、墙梁的连接，分别见图 11-19 和图 11-20。  \n1 砌体自承重墙与抗风柱或厂房柱的连接，应能使墙体在水平方向与柱共同变形，但在竖直方向应保证墙有自由沉降的可能性。因此，宜采用柔性连接（图 11-19）。连接件沿柱高度的距离为 $1200 \\sim 1500\\mathrm{mm}$ 。  \n![](images/c6d3288aade04768e740e06b376ea32ab05453a068c8b18fec384610fa8c538d.jpg)  \n<details>\n<summary>text_image</summary>  \n1\n1\n</details>  \n![](images/485390d373822a41b2f1fa36b332ae13c3817658c4ea7cd37ac846d360b5ec3d.jpg)  \n<details>\n<summary>text_image</summary>  \n2\n2\n</details>  \n![](images/aa82151adc5997915463828b20d9102d63657900e0c729ab32e7e2a687709e14.jpg)  \n<details>\n<summary>text_image</summary>  \nφ10圆钢\n1—1\n⑥\n</details>  \n(a) 用圆钢连接  \n![](images/c204983311e327628315e78ccf80a1e4e83cdc86b05f0490ab89cf7d99713e61.jpg)  \n<details>\n<summary>text_image</summary>  \n-60×6扁钢\n2-2\n</details>  \n(b) 用扁钢连接\n图11-19 砌体自承重墙与抗风柱的连接  \n2 砌体自承重墙内的抗风墙梁（此墙梁不承受墙体自重）与柱的连接宜采用柔性连接，以保证墙体的自由沉降，如图11-20所示。  \n![](images/ebb50de779d67ba2c09876408add84e5538653c9ab30ab397fd97733bdf366d0.jpg)  \n<details>\n<summary>text_image</summary>  \n1\n1\n</details>  \n![](images/2c60fefb0245c5d7672c125e8c4b9ffdf047381bdfa2efadb51aefe236c3619b.jpg)  \n<details>\n<summary>text_image</summary>  \n1-1\n6\n</details>  \n图11-20 砌体墙中的抗风横梁与柱连接  \n11.4.5 墙架柱与横梁的连接，见图 11-21。"
+      },
+      {
+        "parent_id": "98ad640e-ed6b-539f-8f07-756233ba5a1f",
+        "doc_title": "钢结构设计手册",
+        "section_path": "3.5.3 防脆断构造。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 756,
+        "text": "# 3.5.3 防脆断构造。  \n1 钢结构连接构造和加工工艺的选择应减少结构的应力集中和焊接约束应力，焊接构件宜采用较薄的板件组成。\n2 减少焊缝的数量和降低焊缝尺寸，避免构件焊缝过分集中或多条焊缝交汇。\n3 在工作温度 $\\leqslant30^{\\circ}C$ 的地区，焊接构件宜采用实腹式，避免采用手工焊接的格构式构件。\n4 在工作温度 $\\leqslant20^{\\circ}C$ 的地区，焊接连接的构造应符合下列要求。  \n（1）在桁架节点板上，腹杆与弦杆相邻焊缝焊趾间净距不宜小于2.5t，t为节点板厚度。\n（2）节点板与构件主材的焊接连接处宜做成半径 r 不小于 60mm 的圆弧并予以打磨，使之平缓过渡。\n（3）在构件拼接连接部位，应使拼接件自由段的长度不小于 $5t$ ， $t$ 为拼接件厚度，见图3-15。  \n![](images/fe224f8e2516139aa94991b45af09454e392cda22e3a56748d982a3b8124ff54.jpg)  \n<details>\n<summary>text_image</summary>  \n≥5t\n</details>  \n图3-15 盖板拼接处的构造  \n5 在工作温度 $\\leqslant 20^{\\circ}\\mathrm{C}$ 的地区，结构设计及施工应符合下列要求。  \n（1）承重构件和节点的连接宜采用螺栓连接，施工临时安装连接应避免采用焊缝连接。\n（2）受拉构件钢材的边缘宜为轧制边或自动气割边；对厚度大于10mm的钢材采用手工气割或剪切边时，应沿全长刨边。\n(3) 板件制孔应采用钻成孔或先冲后扩钻孔。\n（4）受拉构件或受弯构件的拉应力区，不宜采用角焊缝。\n(5) 对焊缝的质量等级不得低于二级。"
+      },
+      {
+        "parent_id": "204a9ad8-44d8-55ec-8864-d3ffce0aac56",
+        "doc_title": "钢结构设计手册",
+        "section_path": "10.2.5 柱人孔的计算和构造。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1191,
+        "text": "# 10.2.5 柱人孔的计算和构造。  \n1 柱人孔的计算可按下列规定进行。  \n（1）人孔的计算草图和构造见图10-23，通常将人孔两侧的分肢视为单向压弯构件，可按第10.2.3条1款中的（1）规定计算每个分肢的强度和在排架平面内和平面外的稳定性。此时，每个分肢的计算长度，不论在排架平面内还是在排架平面外，均取人孔的净空高度 $l$ 。  \n![](images/e851dcc8de1121bd11b9e9305571aca8aba0ce617e87b0ce8c52116308ec0e83.jpg)  \n<details>\n<summary>text_image</summary>  \n节点板\n水平缀条\n(a)\n</details>  \n![](images/210c124405997932bfa7880e91922acd7d8e27998d1be839f8abd8ac2b932137.jpg)  \n<details>\n<summary>text_image</summary>  \n附加缀条\n水平缀条\n(b)\n</details>  \n![](images/625f13c5f62ebfe3d7fdb55bb8133eb96cfc750702ea00a11ce0c27955146310.jpg)  \n<details>\n<summary>text_image</summary>  \n水平缀条\n(c)\n</details>  \n图10-22 缀条与柱肢的连接\n![](images/c7c3132e69cb144e55a0d4e16f4804f360647c315b22c35ffebf04d18c2191d4.jpg)  \n<details>\n<summary>text_image</summary>  \n1\n2\n3\nl=1800\n-1\n-2\n-3\n吊车梁顶面\na\n≥175 ≥175\n≥400\ny₀\n1 - 1\n2 - 2\n与吊车梁制动\n桁架（梁）连接\nb\n3 - 3\n与吊车梁上翼\n缘连接\n(a)\n</details>  \n![](images/354f5af7829f61adb7f189b0a3fcf27c8fd65c7a452d7321872f40b36379d163.jpg)  \n<details>\n<summary>text_image</summary>  \n4\n5\n6\nl=1800~2000\n-4\n-5\n-6\n吊车梁顶面\na\n4 - 4\n5 - 5\n与吊车梁制动\n桁架（梁）连接\nb\n6 - 6\n与吊车梁上翼\n缘连接\n(b)\n</details>  \n![](images/b3fb4d87ea47687b86fb3db7947d6b43f5f0ad851682cb7e460dac5ddce96821.jpg)  \n<details>"
+      },
+      {
+        "parent_id": "e929e404-1db6-5e74-804b-943730ae9d23",
+        "doc_title": "钢结构基础 上册",
+        "section_path": "2.4.3 快速加荷的效应",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 651,
+        "text": "\n</details>  \n图 2-16 加荷速率对断裂韧性的影响  \n按应变速率 $\\epsilon = \\mathrm{d}\\epsilon /\\mathrm{d}t$ 把加荷速率分为三级，即  \n缓慢加荷 $\\varepsilon = 10^{-5} s^{-1}$  \n中速加荷 $\\varepsilon = 10^{-3} s^{-1}$  \n动力加荷 $\\varepsilon = 10s^{-1}$  \n一般房屋结构中带有动力性质的荷载，其应变速率都不高，如厂房中吊车梁应变速率大多在 $10^{-4}\\mathrm{s}^{-1}$ 左右，最多不超过 $10^{-3}\\mathrm{s}^{-1}$ 。金属材料的应变率敏感性界限大约在 $10^{-3} \\sim 10^{3}\\mathrm{s}^{-1}$ 之间。当应变率低于 $10^{-3}\\mathrm{s}^{-1}$ 时属于准静态情况，应变率效应可略去不计。图2-16给出加荷速率对断裂韧性的影响曲线。由图可见，中速加荷时韧性比缓慢加荷下降不多，而比动力加荷提高很多。欧洲标准委员会的钢结构设计规范把加荷速率分为二级，其中 $R1$ 为静力及缓慢加荷，适合于承受自重、楼面荷载、车辆荷载、风及波浪荷载以及提升荷载的结构； $R2$ 级为冲击荷载，适用于高应变速率如爆炸和冲撞荷载。这就是说，除遭强烈地震作用袭击外，建筑结构通常列为静态的结构，即在考虑荷载的动力系数后按静态结构对待，不过承受多次循环荷载时需要进行疲劳验算。"
+      },
+      {
+        "parent_id": "01eb9469-3023-5aae-a53a-1d6742929fb3",
+        "doc_title": "钢结构设计手册",
+        "section_path": "5 结论。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 460,
+        "text": "# 5 结论。  \n（1）柱间支撑顶部的水平力（图 10-77）应均匀作用于两侧柱顶，各为 $F/2$ 。\n(2) 吊车梁可以代替下柱柱间支撑顶部的水平系杆，但必须：\n1）按图10-74的 $F / 3$ 和 $F / 2$ 分别验算一般开间和柱间支撑开间吊车梁与柱牛腿的连接强度。\n2）如将 F 作用于一侧，图 10-74 中的 F/3、F/2（含支撑水平杆），将分别增大 1 倍，不合理。\n3）当牛腿外挑较长时，必须验算牛腿平面外构件和连接的抗弯强度。  \n（3）边柱仅一侧有吊车梁牛腿，纵向力偏心距较大，必须在柱牛腿的另一侧柱边附近设置一根通长的水平刚性系杆。但对带水平制动梁的钢吊车梁和带走道板的钢吊车梁可不重复设置。\n（4）不论边柱或中柱一侧的吊车纵向水平力 $T$ ，只能由紧挨水平力一侧的单榀下柱支撑承受。\n（5）必须验算柱间支撑柱在纵向地震作用下产生的竖向拉力对基础的上拔力和下压力，以保证基础的正常工作。\n（6）交叉斜杆的柱间支撑，斜杆宜按拉杆设计，不考虑另一杆受压和卸载，水平杆不考虑受弯较经济合理。"
+      },
+      {
+        "parent_id": "09518374-f49d-5371-861f-6ae364a5fb4b",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "6.3.2.2 大六角头高强度螺栓连接施工",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1188,
+        "text": "螺栓在储存和使用过程中扭矩系数易发生变化，所以在工地安装前一般都要进行扭矩系数复检，复检合格后根据复验结果确定施工扭矩，并以此安排施工。  \n扭矩系数试验用的螺栓、螺母、垫圈试样，应从同批螺栓副中随机抽取，按批量大小一般取5\\~10套（由于经过扭矩系数试验的螺栓仍可用于工程，所以如果条件许可，样本多取一些更能反映该批螺栓的扭矩系数)，试验状态应与螺栓使用状态相同，试样不允许重复使用。扭矩系数复验应在国家认可的有资质的检测单位进行，试验所用的轴力计和扭矩扳手应经计量认证。  \n在采用扭矩法终拧前，应首先进行初拧，对螺栓多的大接头，还需进行复拧。初拧的目的就是使连接接触面密贴，螺栓“吃上劲”，一般常用规格螺栓（M20、M22、M24）的初拧扭矩在200\\~300N·m，螺栓轴力达到10\\~50kN即可，在实际操作中，可以让一个操作工使用普通扳手用自己的手力拧紧即可。  \n初拧、复拧及终拧的次序，一般地讲都是从中间向两边或四周对称进行，初拧和终拧的螺栓都应做不同的标记，避免漏拧、超拧等不安全隐患，同时也便于检查人员检查紧固质量。  \n(3) 转角法施工。因扭矩系数的离散性，特别是螺栓制造质量或施工管理不善，扭矩系数超过标准值（平均值和变异系数），在这种情况下采用扭矩法施工，即用扭矩值控制螺栓轴力的方法就会出现较大的误差，欠拧或超拧问题突出。为解决这一问题，引入转角法施工，即利用螺母旋转角度以控制螺杆弹性伸长量来控制螺栓轴向力的方法。  \n试验结果表明,螺栓在初拧以后,螺母的旋转角度与螺栓轴向力成对应关系,当螺栓受拉处于弹性范围内,两者呈线性关系,因此根据这一线性关系,在确定了螺栓的施工预拉力(一般为1.1倍设计预拉力)后,就很容易得到螺母的旋转角度,施工操作人员按照此旋转角度紧固施工,就可以满足设计上对螺栓预拉力的要求,这就是转角法施工的基本原理。  \n高强度螺栓转角法施工分初拧和终拧两步进行（必要时需增加复拧），初拧的要求比扭矩法施工要严，因为起初连接板间隙的影响，螺母的转角大都消耗于板缝，转角与螺栓轴力关系极不稳定，初拧的目的是为消除板缝影响，给终拧创造一个大体一致的基础。转角法施工在我国已有30多年的历史，但对初拧扭矩的大小没有标准，各个工程根据具体情况确定，一般地讲，对于常用螺栓（M20、M22、M24），初拧扭矩定在200\\~300N·m比较合适，原则上应该使连接板缝密贴为准。终拧是在初拧的基础上，再将螺母拧转一定的角度，使螺栓轴向力达到施工预拉力。图6-6为转角法施工示意。  \n![](images/f66f336052bb1460de93f5ddd304a2bdd9c924c78f6c939fd59f4f04de6d3f8d.jpg)  \n<details>\n<summary>text_image</summary>  \n划线"
+      },
+      {
+        "parent_id": "4a672da7-ba08-5fa9-9605-8166fd336dce",
+        "doc_title": "钢结构基础 上册",
+        "section_path": "3. 实腹式压弯构件在弯矩作用平面内的承载能力",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 647,
+        "text": "  \n式中 $\\mu$ 为截面弹性核高度与截面高度之比（图4-40b，d），不过两种情况 $\\mu$ 值的算法不同：  \n当 $\\mu \\geqslant 1 - N_{\\mathrm{u}} / N_{\\mathrm{p}}$ 时， $\\mu = 1 - \\frac{M}{3M_{\\mathrm{y}}(1 - N_{\\mathrm{u}} / N_{\\mathrm{p}})}$ (4-79)  \n当 $\\mu \\leqslant 1 - N_{\\mathrm{u}} / N_{\\mathrm{p}}$ 时， $\\mu = \\sqrt{1 - \\left(\\frac{N_{\\mathrm{u}}}{N_{\\mathrm{p}}}\\right)^2 - \\frac{2}{3} \\times \\frac{M}{M_y}}$ (4-80)  \n公式（4-76）和（4-77）的右端都含有 $N_{\\mathrm{u}}$ ，因此即使是像矩形这样简单的截面，构件在失稳时的 $N$ 和 $M$ 的相关关系已经颇为复杂，截面为H形或其他组合截面时，这一关系将更加复杂。近似法的一个重要缺点是很难具体分析残余应力对压弯构件承载力的影响。  \n数值积分法不假定杆件挠曲线的形式，而是在计算的过程中确定。计算时把杆沿轴线划分为足够多的小段，并以每段中点的曲率代表该段的曲率。为了确定截面上各点的应力并计及残余应力的影响，需要把杆件的截面分成众多的单元。在每一小段的中央截面上，每一单元的应变为  \n"
+      },
+      {
+        "parent_id": "674884fe-e72e-5527-bd57-c977bf8f9186",
+        "doc_title": "钢结构设计手册",
+        "section_path": "8.10.2 吊车梁上翼缘与柱的连接。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 858,
+        "text": "  \n式中 $R_{H}$ ——由吊车横向水平荷载设计值在柱一侧产生的最大反力， $R_{H}=\\frac{H}{P}R_{max}$ ；对于 A1～A5 工作级别的吊车，H 按公式（8-1a\\~d）计算，对于 A6～A8 工作级别的吊车，H 取 $H_{k}$ ，按公式（8-2）计算；  \nb、t——连接板的宽度、厚度；  \n$n_{v}$ ——每个铆钉或销钉受剪面的数目；  \n$d_{0}$ ——铆钉孔直径；  \n$\\varphi$ ——轴心受压构件的稳定系数；  \n$f_{v}^{r}$ ——铆钉的抗剪强度设计值；  \n$f_{v}^{b}$ 、 $f_{c}^{b}$ ——螺栓的抗剪和承压强度设计值。  \n8.10.3 吊车梁腹板与柱的连接。  \n当吊车起重量较大，梁端高度大于1.5m时，A6～A8工作级别的吊车梁在与柱的连接处，应在梁端腹板高度中部增设与柱连接的垂直横隔，见图8-55。隔板尺寸、螺栓直径和数量可根据吊车纵向水平荷载和山墙传来的风荷载或地震作用按受拉计算。  \n当吊车梁采用平板支座，且支座板搁置于支承结构时，为了传递纵向水平力，在相邻吊车梁的腹板应设置纵向连接板，见图8-56。此时，宜采用高强度螺栓或铆钉，并按受剪和承压计算。  \n![](images/59272c254263c797d0723b403c9b24c1c9ade1884f7c02abb90d5ec3e95e6670.jpg)  \n<details>\n<summary>text_image</summary>  \n垂直隔板\n</details>  \n图8-55 吊车梁腹板与柱的连接  \n![](images/9db02c887ab60f73b599529eb9e516fd275b885971fbf2f49f002498bb3a3167.jpg)  \n<details>\n<summary>text_image</summary>  \n纵向连接板\n</details>  \n图8-56 相邻吊车梁腹板的连接"
+      },
+      {
+        "parent_id": "5d657dd3-45f3-5de6-b40c-3bd9ca23e26d",
+        "doc_title": "钢结构设计手册",
+        "section_path": "2 柱间支撑的计算。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 403,
+        "text": "  \n![](images/83c70943e27454cf1374d0106bd375fa3ea63b87b1b5ff64189eac3eef9d4eee.jpg)  \n<details>\n<summary>text_image</summary>  \nH+W₁\nT+W₂\nh₁\nh₂\nh\nl₁\nl₂\nl\n</details>  \n![](images/858cf3f7e0742b5adf868310848f50bdb74c7ecf6a54b22f17fbd04c98ecdf9d.jpg)  \n<details>\n<summary>text_image</summary>  \nP=H+W₁+T+W₂\nl₁\nl₂\nV₂\nh₁\nh₂\nh\nH₁\nV₁\nl\n</details>  \n图10-48 空腹式门形支撑计算简图之一  \n2）对于图10-49所示的空腹式门形支撑，其支座反力可按下列公式计算：  \n"
+      },
+      {
+        "parent_id": "8579c4a2-93f1-5fe9-a3b0-715002c14059",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "9.1.1.2 安装方法",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 692,
+        "text": "# 9.1.1.2 安装方法  \n钢结构质量的好坏，除材料合格、制作精度高外，还要依靠合理的安装工艺：机械安装，土法安装和土、洋结合安装法三大类。  \n土法安装解决一般起重机所不能安装的特殊工程和重大建筑物。一般单层工业厂房钢结构工程，分两段进行安装：第一阶段用“分件流水法”安装钢柱→柱间支撑→吊车梁（或联系梁等）。第二阶段用“节间综合法”安装屋盖系统。  \n高层及超高层钢结构工程：根据结构平面选择适当位置先做样板间成稳定结构，采用“节间综合法”：钢柱→柱间支撑（或剪力墙）→钢梁（主、次梁、隅撑）由样板间向四周发展，采用“分件流水法”。  \n网架结构：一般都指平板型网架结构其安装方法根据网架受力和构造特点，在满足质量、安全、进度和经济效果的前提下，结合当地的施工技术条件综合确定。分别有：高空散装法；分条分块安装法；高空滑移法；逐条积累滑移法；整体吊装法；整体提升法和整体顶升法。  \n网壳结构：安装方法可沿用网架施工的多种方法，但可根据某种网壳的特点而选用特殊的安装方法，从而达到优质安全及经济合理的要求。  \n球面网壳：可采用“内扩法”——即可逐圈向内拼装，利用开口壳来支承壳体自重，这种方法视网壳尺寸大小，应经过验算确定是否用无支架拼装或小支架拼装法。也可采用“外扩法”——即在中心部位立一个提升装置，从内向外逐圈拼装，随提升随拼装，直至拼装完毕，也提升到设计位置。为防止网壳变形，吊点要经过计算而定其位置及点数。  \n悬索结构：根据结构形式分单向单层悬索屋盖、单向双层悬索屋盖、双层辐射状悬索屋盖、双向单层（索网）悬索屋盖，不同的悬索结构采取不同的钢索制作及张拉工艺。"
+      },
+      {
+        "parent_id": "09ca9a39-7c1e-5c5b-98a4-54a39865f1f6",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "2.2.2.3 热处理",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1080,
+        "text": "# 2.2.2.3 热处理  \n钢的热处理就是将钢在固态范围内施以不同的加热、保温和冷却，藉以改变其性能的一种工艺。根据加热和冷却方法的不同，热处理可分为很多种类，与建筑钢结构（包括其所用钢材）有关的大致有以下几种：  \n（1）退火处理：退火种类很多，大体上可分为重结晶退火和低温退火两类。重结晶退火是将钢加热到相变临界点以上30\\~50℃，保温一段时间，然后缓慢冷却（随炉冷却、坑冷、灰冷）到500℃以下后，在空气中冷却。退火是一种时间漫长的热处理工艺，其目的是细化晶粒、降低硬度、提高塑性、消除组织缺陷和改善力学性能等。低温退火是将钢加热到相变临界点以下（500\\~650℃），保温一段时间后缓冷到300\\~200℃以下出炉，钢在这个过程中无组织变化，消除内应力的处理即属低温退火。  \n(2) 正火处理: 将钢加热到临界点 $\\left(\\mathrm{AC}_{3}\\right)$ 以上 $30 \\sim 50^{\\circ} \\mathrm{C}$ , 保温一段时间, 进行完全奥氏体化, 然后在空气中冷却。正火与退火的加热条件相同, 只是冷却条件不同, 正火在空气中冷却速度要快于回火，故正火钢有较高的强度和硬度，甚至有较大的塑性和韧性，正火的目的是细化晶粒、消除缺陷、改善性能，故对于碳素结构钢、低合金结构钢均可以正火处理状态交货。  \n(3) 淬火处理: 将钢材加热到相变临界点以上 (一般为 $900^{\\circ} \\mathrm{C}$ 以上), 保温一段时间, 然后在水或油等冷却介质中快速冷却, 使奥氏体组织转变为马氏体, 得到高硬度、高强度, 但需要随后的回火处理, 以获得良好的综合力学性能。\n(4) 回火处理: 将淬火钢重新加热到相变临界点以下的预定温度, 保温预定时间, 然后冷却。这种操作称为回火处理, 其目的是减小淬火生成的内应力、促使金相组织获得充分的转变, 减小淬火钢的脆性。淬火钢回火后的力学性能, 取决于回火温度和时间, 可依据需要分别选择低温回火 (150 \\~ 200℃)、中温回火 (300 \\~ 500℃) 和高温回火 (500 \\~ 650℃)。钢材的淬火加高温回火的综合操作称为调质, 调质处理可让钢材获得强度、塑性和韧性都较好的综合性能。  \n对于高强度钢材，如现行国家标准《低合金高强度结构钢》中的 Q420、Q460 的 C、D、E 级钢，其交货状态中包括有淬火加回火的状态，《焊接结构用耐候钢》标准中 Q460NH 也可有淬火加回火状态交货。其他强度级别一般只是热轧、控轧或正火处理状态交货。"
+      },
+      {
+        "parent_id": "7ce1324d-569d-55ea-8dc6-2c79b0304d73",
+        "doc_title": "钢结构基础 上册",
+        "section_path": "7.5.5 合理的焊缝设计",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 252,
+        "text": "(d)\n图 7-61 合理的焊缝设计  \n(4) 应尽量避免三向焊缝相交，为此可使次要焊缝中断，主要焊缝连续通过 (图 7-61b)。\n(5) 要考虑钢板的分层问题。本章第二节已经提到过垂直于板面传递拉力是不合理的，图 7-61（c）中 $c_{2}$ 比 $c_{1}$ 好。  \n此外，为了保证焊接结构的质量，还应注意以下问题：  \n1. 要考虑施焊时，焊条是否易于到达。图 7-61（d）中 $d_{1}$ 的右侧焊缝很难焊好，而 $d_{2}$ 则较易焊好。\n2. 焊缝连接构造要尽可能避免仰焊。"
+      },
+      {
+        "parent_id": "954d0eab-b707-50b7-870a-0bf7498aeb3b",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "3.2.4.1 焊接连接",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 302,
+        "text": "# 3.2.4.1 焊接连接  \n焊接连接分为对接焊缝连接及角焊缝连接(质量等级按外观检察分为三级),前者又可分为熔透焊缝(质量等级为一、二级)与非熔透焊缝(质量等级按外观检察分为三级)。焊接所用材料应按设计图要求与钢材钢号相匹配,如手工焊条 E43 型(Q235 钢用)、E50 型(Q345 钢用)、E55 型(Q390 钢用)等,或自动焊所用的相应焊丝与焊剂。焊接连接的施工及质量分级应遵照《钢结构工程质量验收规范》(GB 50205)及《建筑钢结构焊接规范》(JGJ 81)的规定。  \n(1) 对接焊缝的强度计算。可按表 3-3 所列公式计算。  \n表 3-3 对接焊缝连接的强度计算公式  \n"
+      },
+      {
+        "parent_id": "f2f8a88a-8a18-5d54-b56b-671305ec12d5",
+        "doc_title": "钢结构设计手册",
+        "section_path": "3 柱纵向温度应力可按下列规定计算：",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 316,
+        "text": "  \n式中 $N_{1}$ 、 $N_{2}$ ——由温度变化而引起吊车梁或其他纵向构件的内力和支撑斜杆的内力；  \n$\\delta_{1}$ ——吊车梁或其他纵向构件在轴心内 $N_{1}$ 作用下的弹性变形；  \n$\\delta_{2}$ ——支撑斜杆在 $N_{2}$ 作用下所产生的水平位移；  \n$A_{1}$ ——吊车梁或其他纵向构件的截面面积；  \n$A_{2}$ 、 $l_{2}$ ——下段柱柱间支撑斜杆的截面积和长度；  \n$\\theta$ ——支撑斜杆的倾角；  \n$L'_{n}$ ——不动点至所计算柱间距离。  \n(2) 将公式（10-91）与公式（10-84）两者相等，可求得 $N_{2}$ 为：  \n"
+      },
+      {
+        "parent_id": "ae24e66d-2229-5217-a680-a4862eacae05",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "2.2.2.2 冶炼、轧制过程",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 937,
+        "text": "# 2.2.2.2 冶炼、轧制过程  \n建筑结构钢主要由氧气转炉和平炉来冶炼，电炉由于生产成本高，适用于冶炼质量高要求的钢号。从化学成分波动的范围及其平均值结果来看，平炉钢和氧气转炉钢是很接近的，可以认为这两种方法冶炼的钢，在化学成分和各项性能上基本相同，所以国家标准中都明确规定“除非需方有特殊要求，冶炼方法一般由供方选择。”  \n钢在冶炼过程中生成有氧化铁及其固溶体等杂质，均会增加钢的热脆性，使钢的轧制性能变坏，在冶炼快结束时，钢水中含氧量较高（约在0.02%\\~0.07%之间），浇铸前需对钢水进行脱氧，使之与氧化铁反应生成氧化物后随钢渣排出。由于所用脱氧方法、脱氧剂的种类和数量不同，最终脱氧效果也差别很大，形成有镇静钢、半镇静钢和沸腾钢的区别。沸腾钢一般用锰脱氧，在钢水中加入锰铁时，由于锰是弱脱氧剂，脱氧不充分，铜水中氧化铁和碳作用形成一氧化碳和氧、氮等气体从钢中逸出，钢水剧烈沸腾故称为沸腾钢。沸腾钢铸锭时，氧、氮等气体来不及逸出而被包围在钢锭中，使钢材构造和晶粒不匀，含有较多的氧化物夹杂，其化学元素偏析程度亦较大，增加了钢材的时效敏感性和冷脆性。镇静钢一般用硅为脱氧剂，对质量要求高的钢，尚可在用硅脱氧后再用铝或钛进行补充脱氧。硅的脱氧能力较强，铝和钛则更强，硅的脱氧能力是锰的5.2倍，而铝的脱氧能力是锰的90倍，当在钢水中投入锰和适量的硅作脱氧剂，钢水中氧化铁绝大部分被还原，很少能再和碳化合析出一氧化碳气体，同时脱氧还原过程放出大量热量，使钢锭冷却缓慢，钢中有害气体容易逸出，浇铸时钢水表面平静，称之为镇静钢。镇静钢组织致密，气泡少，偏析程度小，含非金属夹杂物亦较少。镇静钢具有较高的冲击韧性、较小的时效敏感性和冷脆性。脱氧程度介于沸腾钢和镇静钢之间的钢称为半镇静钢。它是用较少的硅进行脱氧，脱氧剂的用量约为镇静钢的1/2\\~1/3。半镇静钢的性能大大地优于沸腾钢，其强度和塑性完全符合标准要求，纵向轧制钢材的均匀性不次于镇静钢。但影响半镇静钢材质的因素比较复杂，需要有相当成熟的操作经验。当对钢材的夹杂限制很严时，还可采用如真空处理一类的炉外精炼的方法。真空处理是将钢水处于真空环境中，其所含氧、氢、氮等均能很快逸出，而且还不像脱氧剂那样形成渣。"
+      },
+      {
+        "parent_id": "29d5f091-1a22-5030-b4ff-f02c1bd811c9",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "9.2.5 钢结构构件的运输",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 830,
+        "text": "# 9.2.5 钢结构构件的运输  \n（1）为避免在运输、装车、卸车和起吊过程中造成自重变形而影响安装，一些钢结构构件要设置局部加固的临时支撑，以确保安装。待总体钢结构安装完毕，然后拆除临时加固撑件。\n(2) 根据钢结构构件的形状、重量及运输条件、现场安装条件，有些钢结构构件可采取总体制造、拆成单元运输或分段制造、分段运输。\n(3) 国内钢结构产品，一般是陆路车辆运输或者铁路包车皮运输，现场的施工条件绝大多数是露天作业。场地坑坑洼洼，积水甚多，除无施工条件外，都要在制造厂内完成，但为了节省运输费用和运输条件的限制，现场拼装也往往不可避免。  \n1）柱子构件长，常采用拖车运输。一般柱子采用两点支承，当柱子较长，两点支承不能满足受力要求时，可采用三点支承。\n2）钢屋架可以用半挂车平放运输，但要求支点必须放在节点处，而且要垫平、加固好。钢屋架还可以整榀或半榀挂在专用架上运输。\n3）在一般情况下，框架钢结构产品的运输多用活络拖斗车，实腹类或容器类多用大平板车辆。\n4）现场拼装是散件运输，使用一般货运车，车辆的底盘长度可以比构件长度短1m，散件运输一般不需装夹，只要能满足在运输过程中不产生过大的残余变形即可。\n5）对于成型大件的运输，可根据产品不同而选用不同车型。由于制造厂对大件运输能力有限，有些大件则由专业化大件运输公司承担，车型也由该大件公司确定。\n6) 对于特大件钢结构产品，在加工制造以前就要与运输有关的各个方面取得联系，  \n并得到认可，其中包括与公路、桥梁、电力，以及地下管道如煤气、自来水、下水道等等的诸方面的联系，还要查看运输路线、转弯道、施工现场等有无障碍物。  \n(4) 为国外制作的钢结构产品以及国内部分沿海地区产品，则利用船运输。  \n1）国内船只规格参差不齐，一般又不进货仓而放在甲板上，装卸能力又差，钢结构产品有时也只能散装，捆扎多数不用装夹。\n2）国外船运要根据离岸码头和到岸港口的装卸能力，确定钢结构产品运输的外形尺寸。"
+      },
+      {
+        "parent_id": "6e4a6e0a-2ddf-53c0-8521-3b00d53c2c06",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "3.2.4.2 螺栓连接",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 965,
+        "text": "  \n式中 $n_{i}$ 传力的摩擦面数目； $\\mu$ —抗滑移系数；P—高强度螺栓的预拉力。  \n2. 单角钢单面连接的高强度螺栓，其承载力设计值应按表中的数值乘以0.85。  \n(4) 螺栓连接的设计及构造要求。  \n①普通螺栓连接一般采用C级螺栓，其螺栓连接的制孔应采用钻成孔。②普通螺栓连接不宜用于重要的抗剪连接，同时连接构造应尽量使螺纹不进入剪切面。③每一杆件在节点上或拼接连接一侧的永久性螺栓数目不宜少于2个，对组合结构的小截面杆件（如输电塔架等），其端部连接可采用1个螺栓。④普通C级螺栓的孔径 $d_{0}$ 一般应比螺栓公称直径d大1.5mm，当 $d\\geqslant30mm$ 时可大2.0mm，摩擦型连接高强螺栓孔径比螺栓直径d大1.5\\~2.0mm；承压型连接孔径较栓径d大1.0\\~1.5mm。⑤对有防松要求的普通螺栓连接，应采  \n用弹簧垫圈或双螺帽以防止螺帽松动。⑥螺栓排列的间距应符合表3-14要求。⑦在下列情况的连接中，螺栓的数量应予增加：一个构件借助填板或其他中间板件与另一构件连接时的螺栓数量，应按计算增加 $10\\%$ 。搭接或用拼接板的单面连接，螺栓数量应按计算增加 $10\\%$ 。在构件的端部连接中，当增加辅助短角钢连接型钢的外伸肢以减少连接长度时，在短角钢两肢中的任一肢上，所用的螺栓数应按计算增加 $50\\%$ 。⑧高强度螺栓连接范围内板面摩擦面处理方法及抗滑移系数 $\\mu$ 值应在施工详图中说明。⑨在抗弯或抗弯剪的法兰板或端板连接中，其法兰板或端板的厚度不宜小于连接螺栓的直径。⑩当板件的节点处或拼接接头的一端，高强度螺栓沿受力方向的连接长度 $L_{1}$ 大于 $15d_{0}$ （ $d_0$ 为栓孔直径）并小于等于 $60d_{0}$ 时，应将高强度螺栓的承载力乘以折减系数（ $1.1 - \\frac{L_1}{150d_0}$ )，当 $L_{1} > 60d_{0}$ 时，可取定值折减系数0.7。⑪在同一构件中的连接螺栓宜采用同一种直径；在同一工程项目中，螺栓直径种类不宜过多。⑫对高强度螺栓临近焊缝的节点连接，当采用先拧后焊的工序（如栓-焊并用节点连接）时，其高强度螺栓的承载力应降低 $10\\%$ 考虑。  \n表 3-14 螺栓排列间距要求  \n"
+      },
+      {
+        "parent_id": "a37d38fe-dd0a-573c-92d7-88d57ea87618",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "9.7.7.3 顶升过程",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1062,
+        "text": "5）提升下横梁推出 b 垫，将下小梁吊升到上级牛腿上。自提油，下横梁，千斤顶支承在已升高一个步距的下小梁上。这个一步距的正常顶升已经完成了。  \n(2) 初始顶升程序。网架拼装时, 是支承在搁置于第一级牛腿的上小梁上。第一级牛腿离柱靴顶面 $40 \\mathrm{~cm}$ , 上小梁支承处高度 $42 \\mathrm{~cm}$ , 因此十字梁底面与柱靴顶面间隙 $82 \\mathrm{~cm}$ 。初始顶升时, 千斤顶通过下横梁支承在柱靴下。由于钢柱包脚混凝土尚未浇注, 所以 b 垫仍按正常顶升程序的方式放置。但柱靴顶板要采取措施加固, 以防受力后局部失稳。  \n初始顶升程序与正常顶升程序基本相同。唯柱靴顶板比下小梁宽，b垫推入后，不能像正常顶升程序那样，可以整个垫在千斤顶下面。千斤顶下方尚有一半是空的。为了保证传力可靠，在柱靴顶面内侧，另一半空隙处，放置与b垫一个台阶等高的c垫。在十字梁顶起80cm后，就将下梁吊在第一级牛腿上。自提油缸回油，下横梁、千斤顶支承在下小梁上，初始顶升程序就完成了。  \n(3) 最终就位程序。最后一步距顶升，要将十字梁四端在正常顶升时两两轮流受力的状态，过渡到同时均匀受力的就位状态。为此，钢柱最后一级牛腿的顶标高要严格控制。为了过渡需要，另有两根备用小梁，规格与上、下小梁相同。  \n开始时用正常程序，顶升 70cm，将 a、b 垫全部推入。然后千斤顶顶升 15cm，推出 a 垫，将上小梁吊升到最后一级牛腿上，在上小梁与十字梁之间垫入 e 垫。千斤顶回油，十字梁搁置在 e 垫上。  \n拆除自提油缸与十字梁的连结，自提油缸进油，到活塞杆回缩到外露5cm为止，再用钢丝绳将之连结起来，自提吊缸稍提，推出b垫的一个台阶上。让它回油，下横梁连同千斤顶落下17.5cm，支承在b垫的第三个台阶上。再次拆除其余连结，油缸再次进油，到活塞杆回缩到外露2.5cm为止。又将之连接起来。稍提下横梁，推出b垫的第二、第三两个台阶，并在下小梁上设置d垫。自提油缸回油下横梁下降25cm，支承在b垫的第一台阶及d垫上。这样，下横梁连同千斤顶，总共下降了42.5cm。在十字梁与千斤顶之间，千斤顶顶头到最后一级牛腿顶面部都有了足够的空间来安装备用小梁。  \n将备用小梁吊装在最后一级牛腿上。千斤顶出顶，连同备用小梁和十字梁一起升起5cm，抽出上小梁顶面的e垫。千斤顶回油，上小梁方向的十字梁端支承在上小梁上，下小梁方向的备用梁支承在最后一级牛腿上。检查各支承处的接触情况，至此顶升就位工作就完成。"
+      },
+      {
+        "parent_id": "4631d31c-0984-537a-a9b5-63ca91ae3f73",
+        "doc_title": "钢结构设计手册",
+        "section_path": "5 节点设计。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 364,
+        "text": "\n| Mid-Right Line Chart (Technical Description) with annotations: “几何尺寸及内力图” (Geometric dimension and internal line chart). The chart displays a single numerical data series with values labeled as integers (e.g., “M = ±3.79kN·m”). The legend is implicit in the diagram type, but the labels are explicitly provided in the code.\n</details>  \n图7-199 天窗架（GCJ-2）施工详图  \n"
+      },
+      {
+        "parent_id": "8522b709-54ac-5c07-8029-0ea9911fed51",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "5.6.2.1 一般规定",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 821,
+        "text": "# 5.6.2.1 一般规定  \n（1）焊接工艺评定的目的。焊接工艺评定是制定工艺规程技术文件的依据，是证明钢结构工程所采用的焊接工艺能满足结构使用性能要求的见证性技术文件，也是提供给监督管理部门进行开工审批，施工过程监理，竣工验收的必备文件。凡属于以下情况之一者，应进行焊接工艺评定：\n1）国内首次生产的钢材（包括钢材牌号与标准相符，但微合金强化元素的类别不同，以及供货状态不同）、焊材或进口钢材应用于重大、特殊钢结构工程时；\n2）设计规定的钢材类别、焊材、焊接方法、接头形式、焊接位置、焊后热处理制度以及施工单位所采用的焊接工艺参数、预、后热措施等各种参数之组合条件为该工程施工企业首次采用。  \n(2) 焊接工艺评定的过程。焊接工艺评定过程应由焊接结构制作、安装企业根据所承担建造钢结构的设计节点形式、钢材类型、规格、采用的焊接方法、焊接位置，制定焊接工艺评定方案，拟定相应的焊接工艺评定指导书，并根据相应规程的规定施焊试件、切取试样并由具有国家技术质量监督部门认证的检测单位进行检测试验。最后根据检测结果提出焊接工艺评定报告，并应在钢结构构件制作及施工安装焊接之前完成。  \n(3) 焊接工艺评定的方法。  \n1）焊接工艺评定的施焊参数，包括热输入、预热、后热制度等应根据被焊钢材的焊接性制订，并由该工程实施单位中技能熟练的焊接人员施焊。\n2）焊接工艺评定所用设备、仪表的型号、性能应与工程结构施焊相一致。钢材、栓钉、焊接材料必须符合相应标准，并具有产品出厂质保书。\n3）焊接工艺评定根据焊接方法、钢材、试件接头形式、施焊位置分类，见表5-140\\~表5-142及图5-105\\~图5-107的规定。\n4）焊接工艺评定试验合格后，由评定单位依据检验结果填写焊接工艺评定报告，连同焊接工艺评定指导书、评定记录表、评定试样检验结果表，汇总上报工程质量监督、验收部门。有关报告及表格格式见附录5-1。  \n表 5-140 常用钢材分类  \n"
+      },
+      {
+        "parent_id": "d9ceb79f-8f51-51aa-8f0b-a2898180cbbe",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "9.5.2 钢柱拼装",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1168,
+        "text": "# 9.5.2 钢柱拼装  \n（1）钢柱拼装：用于需要多节柱拼装在一起安装，比如曼谷帝国大厦，地下6层，逆打工法柱，需在地面将2节或3节钢柱拼在一起，一次吊装就位。  \n还有为便于保证钢柱拼接质量，减少高空作业，在地面卧拼，起重机起重能力能满足一次起吊。  \n![](images/62965054b1748d25e21334254e1ad8fd991ea630105ea9b74fa4973aac019120.jpg)  \n<details>\n<summary>text_image</summary>  \n拼接螺栓\n拼接角钢\n屋架上弦\n拼接螺栓\n(a)\n</details>  \n![](images/49410f2cd5df635ae6c45f9c6db56a64d9bc4d6689dafdd87fd75f27d98e661b.jpg)  \n<details>\n<summary>text_image</summary>  \n钻孔后切去\n铲成斜面或弧面\n切去部分\n拼接角钢冷弯后焊成\n(b)\n</details>  \n![](images/2d3e3fcaaabadaaa398ef359ce97d18718a5734665ed149647b6e9c685b61f91.jpg)  \n<details>\n<summary>text_image</summary>  \n拼接角钢\n拼接螺栓\n上弦杆\n(c)\n</details>  \n![](images/c9faaa56b87ab099ce5ac8c8064f858957101457518caa3b4c7003af2332fe0a.jpg)  \n<details>\n<summary>text_image</summary>  \n天窗架\n连接螺栓\n拼接角钢\n天窗架\n支座板\n屋架上弦\n连接螺栓\n(d)\n</details>  \n![](images/168b6c5fb5e3af4ddb6ec76dcf4da15b1f503460d9b948bab015bffb8790f477.jpg)  \n<details>\n<summary>text_image</summary>  \n天窗架\n连接螺栓\n屋架上弦\n拼接螺栓\n(e)\n</details>  \n![](images/a643a5a79d9e5b6c7d77ba0b428541987067b58bbf12243297c66b4cfea5ec55.jpg)  \n<details>\n<summary>text_image</summary>  \n天窗架\n连接螺栓\n拼接角钢\n连接螺栓\n屋架上弦\n拼接螺栓\n(f)\n</details>  \n图9-49 屋脊节点的拼接示例  \n(2) 根据钢柱断面不同，采取相应的钢平台及胎具。"
+      },
+      {
+        "parent_id": "91ec6b10-ed86-50ae-9f85-a5a67e540d16",
+        "doc_title": "钢结构基础 上册",
+        "section_path": "1. 高强度螺栓的抗拉连接性能",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 745,
+        "text": "# 1. 高强度螺栓的抗拉连接性能  \n图 7-81 所示连接，螺栓分别受拉、受剪或同时受剪受拉。下面针对图 7-81（a）进行分析。高强度螺栓在外力作用前，已经有很高的预拉力 P，它和构件与 T 形件翼缘接触面的挤压力 C 相平衡，即 C = P，如图 7-82 所示。  \n对于刚度很大的 T 形件翼缘，受力后变形小。在外力 $N_{1}$ 作用后，使螺栓拉力由 $P$ 增加至 $P_{f}$ ，而板件间的挤压力却由 $C$ 减为 $C_{f}$ ，于是有 $P_{f} = N_{t} + C_{f}$ （图7-82）。若螺栓和被连构件保持弹性性能，板叠厚度为 $\\delta$ ，则外力和它们的变形关系为  \n![](images/22b94b67841fbe51c1443530fcef007264d396405045005ec4ee9c937f779c6b.jpg)\n图 7-81 高强度螺栓承受拉力的连接  \n![](images/56d90ae52aec02c4e4a3f841ab46b31486253de5f35436fb924d56342140b560.jpg)  \n<details>\n<summary>text_image</summary>  \nP\n2C\nT形件\nP\n</details>  \n(a)  \n![](images/88758a5e979caa6afece4e45c042b068ae1cdabdde0c08f0266e356ae228f85f.jpg)  \n<details>\n<summary>text_image</summary>  \nP₁\n2C₁\nT形件\n2N₁\nP₂\n</details>  \n(b)\n图 7-82 高强度螺栓受拉  \n"
+      },
+      {
+        "parent_id": "9e0a746f-67b9-588d-aa69-d8108a627b9d",
+        "doc_title": "钢结构设计手册",
+        "section_path": "(6) 节点板计算。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1180,
+        "text": "式中 $b_{e}$ ——板件的有效宽度（图 7-62）。  \n![](images/dcead019eebc35fafcb718226303b2908e94fe65c68d418a4a6e2ecede2583b0.jpg)  \n<details>\n<summary>text_image</summary>  \nN\nα₂\nl₂\nα₃\nα₁\nl₁\nl₃\n</details>  \n图7-61 板件的拉、剪撕裂  \n![](images/dab39ef7a02fa6863bf69c7c7fd5f7d6d412122c70260670573d4b0e3b28ce04.jpg)  \n<details>\n<summary>text_image</summary>  \nN\nθ\nθ\nbₑ\n</details>  \n图7-62 板件的有效宽度  \n图中 $\\theta$ 为应力扩散角，可取 $30^{\\circ}$ 。  \n3）节点板在斜腹杆压力作用下的稳定性可用下列方法进行计算。  \n①对有竖腹杆相连的节点板，当 $c/t \\leqslant 15\\varepsilon_{k}$ （ $\\varepsilon_{k} = \\sqrt{235/f_{y}}$ ）时（c 为受压腹杆连接肢端面中点沿腹杆轴线方向至弦杆的净距离，见图 7-63），可不计算稳定。否则应按以下进行稳定计算。在任何情况下，c/t 不得大于 $22\\varepsilon_{k}$ 。\n②对无竖腹杆相连的节点板，当 $c / t \\leqslant 10\\varepsilon_{\\mathrm{k}}$ 时，节点板的稳定承载力可取为 $0.8b_{\\mathrm{e}}tf$ 。当 $c / t > 10\\varepsilon_{\\mathrm{k}}$ 时，应按以下进行稳定计算，但在任何情况下， $c / t$ 不得大于 $17.5\\varepsilon_{\\mathrm{k}}$ 。\n③节点板在斜腹杆压力作用下稳定计算的基本假定为：  \na. 图 7-63 中 B-A-C-D 为节点板失稳时的屈折线，其中 $\\overline{\\mathrm{BA}}$ 平行于弦杆， $\\overline{\\mathrm{CD}} \\perp \\overline{\\mathrm{BA}}$ ；  \nb. 在斜腹杆轴向 N 压力的作用下，BA 区（FBGHA 板件），AC 区（AIJC 板件）和 CD 区（CKMP 板件）同时受压，当其中某一区先失稳后，其他区即相继失稳，为此要分别计算各区的稳定。  \n![](images/2cc87edecd1716ff68c345a6b011f90fcd1dce8b82f07da9ae0e14aeedba949d.jpg)  \n<details>"
+      },
+      {
+        "parent_id": "e824b762-8edc-562c-b620-d2922bdf81cc",
+        "doc_title": "钢结构基础 上册",
+        "section_path": "3. 实腹式压弯构件在弯矩作用平面内的承载能力",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1139,
+        "text": "# 3. 实腹式压弯构件在弯矩作用平面内的承载能力  \n由于实腹式压弯构件在弯矩作用平面内失稳时已经出现了塑性，弹性平衡微分方程（4-69）不再适用。图4-39(a)所示的同时承受轴线压力 $N$ 和端弯矩 $M$ 的杆，在平面内失稳时塑性区的分布有图4-39(b)和(c)两种可能情况：只在弯曲受压的一侧出现塑性和在两侧同时出现塑性。很明显，在出现塑性的范围内，弯曲刚度不仅不再保持为弹性变形时的常值 $EI$ ，并且随塑性在杆截面上发展的深度而变化，这种变化使用于计算弹性压弯构件的解析方法不再适用。  \n![](images/0a6a7cb37d98254de59b760111fdb90188c6908c089766bc7c231816e7bdf8ac.jpg)  \n<details>\n<summary>text_image</summary>  \nM\nN\nr\nl/2\n7/7\nM\nN\n</details>  \n(a)  \n![](images/17780ef1f7255725634608a87ccd515daf0a751d9129e685a450768520041e34.jpg)  \n<details>\n<summary>natural_image</summary>  \nTwo curved mechanical or structural diagrams with directional arrows indicating rotation or deformation (no text or symbols)\n</details>  \n(b).\n(c)\n图 4-39 矩形截面压弯构件面内失稳时的塑性区  \n计算实腹式压弯构件平面内稳定承载力通常有两种方法，即近似方法和数值积分法。近似方法的主要简化手段是给定杆件在 $M$ 和 $N$ 作用下的挠曲线函数。从图4-38的两条曲线比较，已经了解到正弦曲线和弹性压弯构件的精确挠曲线之间的差别不大。经验表明，对于弹塑性的压弯杆，也可以把挠曲线近似地取为正弦曲线的半个波段，即 $y = v\\sin (\\pi x / l)$ 。已知挠曲线函数后，构件任一截面的弯矩 $M + Ny$ 都可以和中央挠度 $v$ 联系起来，这样从中央截面的平衡条件就能找出压力 $N$ 和挠度 $v$ 的关系，并由极值条件 $\\mathrm{d}N / \\mathrm{d}v = 0$ 得出构件的承载力 $N_{\\mathrm{u}}$ 。以矩形截面的杆为例，假定材料为理想的弹塑性体，在构件的一侧出现塑性区（图4-40b）和两侧同时出现塑性区（图4-40d）时， $N_{\\mathrm{u}}$ 可分别由以下两式计算"
+      },
+      {
+        "parent_id": "35f67c08-0056-5532-9a38-9904de605e69",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "5.3.5.2 焊后消除残余应力的方法",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 739,
+        "text": "  \n注：A—焊缝厚度超过50mm后，每增加25mm厚度增加15min。  \n4） $400^{\\circ}C$ 以下的冷却速率不应大于 $275\\times25/\\delta$ ，且最大不超过 $275^{\\circ}C/h$ 。  \n5）加热构件的温差：在加热、冷却过程中，每4.5m长度内不应超过130℃，保温过程中，构件加热部分各处温差不应超过85℃。  \n6）如由于条件限制而保温温度不能满足要求时，保温温度降低50℃，则保温时间应增加至4h；保温温度降低80℃，则保温时间应增至10h；保温温度降低100℃，则保温时间应增至20h。  \n（2）局部退火消除应力方法。对于接头形式较简单的构件，可以采取用加热器局部加热接头两侧一定范围的方法消除应力，局部加热的方法只能部分消除应力，但便于实施。加热器的种类有电阻加热器、感应加热器、红外加热器。为提高消除应力的效果，应有适当的加热宽度。加热板对构件焊缝两侧的覆盖范围为：当板厚小于50mm时，每侧应不小于300mm，板厚等于、大于50mm时，应增至每侧400mm。加热器以外的构件两侧，还应用保温材料适当覆盖。加热过程应使用微机自动温控装置，温控曲线可参照整体退火的规定。  \n（3）其他消除应力方法。其他的残余应力消除方法还有过载拉伸法、表面低温处理法、爆炸法、振动法，前三种适用于容器。  \n各种消除应力方法中以整体退火处理的效果为最好，同时有改善金属组织性能的作用，在构件和容器的消除应力中应用较为广泛。其他消除应力方法均对材料的塑性、韧性有不利影响。振动法一般应用于要求尺寸精度稳定的构件消除应力，在刚性固定状态下焊接的构件，如在焊后卸开夹具之前进行振动时效处理，则刚性卡具拆除后构件的变形可以得到一定的控制。"
+      },
+      {
+        "parent_id": "e02aa4c9-89f7-5f17-b647-beb7dbb0e914",
+        "doc_title": "钢结构设计手册",
+        "section_path": "2 上柱柱间支撑的形式",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 375,
+        "text": "  \n当 $\\lambda \\geqslant 200$ 时方法 2 比方法 1 的 [F] 大 3 倍左右，即拉杆承载力远大于压杆承载力所致。在两根腹杆交点处形成不平衡的竖向力，为些采用方法 2 时，对人字形支撑上弦杆应该进行附加抗弯强度验算。通过等肢双角钢典型截面验算已大大超过钢材的强度设计值 f。表明方法 2 实际上是不合理的。为此，一般建议采用方法 1。  \n人字形支撑用钢量多，腹杆的抗水平承载力低，故仅在上柱较短的情况下采用，国家建筑标准图《柱间支撑》05G336只提供柱距 $6\\mathrm{m}$ ，上柱长度 $H_{s} \\leqslant 2.4\\mathrm{m}$ 的人字形支撑构件图。  \n当人字形支撑的水平承载力由上弦杆控制时，应按《钢结构设计标准》50017—2017公式（5.7.1）确定其平面外的计算长度：  \n"
+      },
+      {
+        "parent_id": "9a14e8fc-2051-53ae-8946-213a9ca21cf2",
+        "doc_title": "钢结构设计手册",
+        "section_path": "2）抗震计算。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 707,
+        "text": "  \n注：1 本图仅表示ZC1。\nZC1a按以上尺寸a、b绘制。  \n2 未注明的孔边距为40 mm。  \n图9-43 上柱支撑ZC1详图  \n![](images/1d40fafe73a57800f6be30c258886f4e9f58c2f6b8035635ad6240d86902d602.jpg)  \n<details>\n<summary>text_image</summary>  \n1\n5050\n117\n③\n⑥\n25\n200\n45\n25\n②\n4375\n90\n120\n95\n①\n6900\n4375\n90 110 90\n50\n50\n92\n40 90 145\n7340\n④\n5050\n92\n③\n160 75 40\n5050 135 90\n</details>  \n![](images/f568088438fdfd655cf9995fdbd5be97842de02ca95b8c0aae4477e9362970a0.jpg)  \n<details>\n<summary>text_image</summary>  \nZC2\n⑤\n⑥\n①\n④\n508 4140 570 4140 507\n9865\n</details>  \n![](images/ad8639c1651fb2fb0dd90ddaa7fbe0c2a68f653fc21a137c8587aabe9db0c5f6.jpg)  \n<details>\n<summary>text_image</summary>  \n1—1\n⑤\n④ ② ⑥ 135 ⑥ ② ③\n475 4140 250 250 4140 475\n9865\n2—2\n</details>  \n"
+      },
+      {
+        "parent_id": "3dd9ecbd-db40-584c-bf8e-b9061a76bbde",
+        "doc_title": "钢结构设计手册",
+        "section_path": "10 焊缝计算。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1072,
+        "text": "  \n（3）按公式（8-60）计算的支座加劲肋与腹板的连接焊缝为：  \n设 $h_{f}=8mm,\\quad h_{f}=\\frac{R_{max}}{0.7n\\cdot l_{w}f_{f}^{w}}=\\frac{1865.16\\times10^{3}}{0.7\\times4\\times(1810-2\\times20-2\\times8)\\times200}=1.9mm$ ，采用 $h_{f}=8mm$ 。  \n11 制动梁计算。  \n平台检修荷载或人行走道板均布荷载取 $2.0 \\, kN/m^{2}$ ，制动板自重（未考虑加劲肋）： $78.5 \\times 0.008 = 0.628 \\, kN/m^{2}$ ，边梁自重： $0.314 \\, kN/m$ 。  \n(1) 制动板强度。  \n取 1m 板宽计算，计算跨度 l=1.4-0.06=1.34m。  \n荷载设计值： $q = (1.2 \\times 0.625 + 1.4 \\times 2.0) \\times 1.0 = 3.554\\mathrm{kN / m}$  \n弯矩设计值： $M=\\frac{1}{8}ql^{2}=\\frac{1}{8}\\times3.554\\times1.34^{2}=0.798kN\\cdot m$  \n截面模量： $W=\\frac{1}{6}bh^{2}=\\frac{1}{6}\\times1000\\times8^{2}=10666.67\\ mm^{3}$  \n强度： $\\sigma = \\frac{M}{W} = \\frac{0.798\\times 10^{6}}{10666.67} = 74.8\\mathrm{N / mm^2} < 310\\mathrm{N / mm^2}$  \n(2) 边梁强度。  \n假设柱宽为 $400\\mathrm{mm}$ ，则边梁的计算跨度 $l_{1} = 12 - 0.4 = 11.6\\mathrm{m}$ 。  \n荷载设计值： $q = 1.2\\times (0.625\\times 1.4 / 2 + 0.314) + 1.4\\times 2.0\\times 1.4 / 2 = 2.862\\mathrm{kN / m}$  \n弯矩设计值： $M_{x_{1}}=\\frac{1}{8}ql_{1}^{2}=\\frac{1}{8}\\times2.862\\times11.6^{2}=48.139kN\\cdot m$  \n制动梁（包括吊车梁上翼缘）对 $y_{1}$ 轴的净截面模量：  \n"
+      },
+      {
+        "parent_id": "971d9f24-db3b-59c0-9350-fadd12e6d539",
+        "doc_title": "钢结构设计手册",
+        "section_path": "(2) 下弦杆截面选择。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 262,
+        "text": "  \n选用截面 $\\downarrow45\\times5$  \n截面面积： $A = A_{n} = 8.58cm^{2}$  \n回转半径： $i_{\\mathrm{y}} = 1.72\\mathrm{cm}$  \n长细比： $\\lambda_{\\mathrm{y}} = \\frac{l_0}{i_{\\mathrm{y}}} = \\frac{265.5}{1.72} = 154.4 <   [\\lambda ] = 200$  \n将以上计算结果汇总列表（表7-17）。  \n表 7-17 GWJ18 杆件截面选用表  \n"
+      },
+      {
+        "parent_id": "bc971b2b-5e8f-589a-aee1-f10209790943",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "4.3.4.1 量具",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1094,
+        "text": "# 4.3.4.1 量具  \n量具的种类很多，按其性质可分为直接量具（尺类）和间接量具（卡钳等）。现将钢结构制造中常用的一般量具分述如下：  \n![](images/96cdab0f48ef248d79c679c963660f09103b0746e7c66065240740006b7ce9f6.jpg)  \n<details>\n<summary>text_image</summary>  \nIllustration of two metal rulers with visible measurement markings and numerical markings\n</details>  \n图4-7 四折木尺  \n（1）木折尺。常用的木折尺有两种：四折木尺和八折木尺。四折木尺长度为500mm，八折木尺长度为1000mm。木折尺是用经过特殊处理后的木料制成的，其正、反两面都有刻度，可直接量出工作物的大小，能折叠，携带方便，一般用于常温下工件尺寸的测量。图4-7所示为四折木尺。  \n(2) 钢尺。钢尺一般有公制和英制两种尺寸刻度，常用的长度有 150mm（6in）、300mm（12in）、600mm（24in）、900mm（36in）等。图 4-8 是长度 150mm 的钢尺。  \n![](images/90c8991065f7b370e8e9bb64c46e353eb6f2ade128f7c3acc46065fc24990cb7.jpg)  \n<details>\n<summary>text_image</summary>  \n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15\n1 2 3 4 5 6\n</details>  \n图4-8 钢尺  \n(3) 钢卷尺。钢卷尺常用的规格有：长度为 $1\\mathrm{m}$ 、 $2\\mathrm{m}$ 的小钢卷尺（图4-9），长度为 $5\\mathrm{m}$ 、 $10\\mathrm{m}$ 、 $15\\mathrm{m}$ 、 $20\\mathrm{m}$ 、 $30\\mathrm{m}$ 的大钢卷尺（图4-10）多种规格。用钢卷尺能量到的正确度误差为 $0.5\\mathrm{mm}$ 。\n(4) 角尺。角尺由长、短两直尺，互成直角制作成“「”形钢尺（图 4-11）。一般角尺没有刻度，它主要用来测量两个平面是否垂直和作划短垂线之用。  \n(5) 划线规及地规。划线规主要是在钢板上或在样板上画圆弧之用。制造划线规时，它的两只尖脚需要淬火，这样才能保持经久耐用。图4-12所示为划线规。"
+      },
+      {
+        "parent_id": "e792f21b-7c1d-5037-a1ec-64e77886205a",
+        "doc_title": "钢结构设计手册",
+        "section_path": "15.2.1 有侧移框架等截面柱的长度系数 $\\mu$ ，见表 15-2。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 529,
+        "text": "  \n式中， $K_{1}$ 、 $K_{2}$ 分别为相交于柱上端、柱下端的横梁线刚度之和与柱线刚度之和的比值。当横梁远端为铰接时，应将横梁线刚度乘以0.5；当横梁远端为嵌固时，则应乘以2/3。  \n2 当横梁与柱铰接时，取横梁线刚度为零。  \n3 对底层框架柱；当柱与基础铰接时，取 $K_{2}=0$ （对平板支座可取 $K_{2}=0.1$ ）；当柱与基础刚接时，取 $K_{2}=10$ 。  \n4 当与柱刚性连接的横梁所受轴心压力 $N_{\\mathrm{b}}$ 较大时，横梁线刚度应乘以折减系数 $\\alpha_{\\mathrm{N}}$  \n横梁远端与柱刚接时： $\\alpha_{\\mathrm{N}} = 1 - N_{\\mathrm{b}} / (4N_{\\mathrm{Eb}})$  \n横梁远端铰支时： $\\alpha_{\\mathrm{N}} = 1 - N_{\\mathrm{b}} / N_{\\mathrm{Eb}}$  \n横梁远端嵌固时： $\\alpha_{\\mathrm{N}} = 1 - N_{\\mathrm{b}} / (2N_{\\mathrm{Eb}})$  \n$N_{Eb}$ 的计算式见表 15-1 注 4。"
+      },
+      {
+        "parent_id": "c333353f-54cc-5a75-867e-dc7e0f9e8216",
+        "doc_title": "钢结构设计手册",
+        "section_path": "(1) 墙板、砌体墙的墙架布置。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1197,
+        "text": "# (1) 墙板、砌体墙的墙架布置。  \n1）边列柱柱距大于 $12\\mathrm{m}$ 的厂房，当设有单层吊车时，其墙架布置如图11-2所示。  \n![](images/ccd4eee7520097e20b05e6ff26f84a38ab44bd0091991b39f45b1d38133dc78d.jpg)\n图11-2 单层吊车厂房的墙架布置\n1—墙架柱；2—辅助桁架；3—托架；4—屋架；5—屋架下弦纵向水平支撑  \n图11-2（b）表示采用整根墙架柱到顶的方案。此时，将吊车梁制动结构及其辅助桁架移至墙架柱内侧，吊车梁制动结构的宽度尚应满足水平刚度要求，即吊车梁的制动结构由一台最大吊车横向水平荷载所产生的水平挠度不应超过其容许值（表2-12）。在采用整根墙架柱方案时，吊车梁系统和屋架纵向支撑可作为墙架柱的水平支撑点。  \n当采用整根墙架柱致使吊车梁制动结构宽度不能满足水平刚度要求时，则应采用图11-2（c）所示的将墙架柱分为上、下两段设置的方案。此时，下段柱支承在基础上，以吊车梁下弦水平桁架作为下段柱的上端水平支承点。而上段柱的支承形式有以下两种。  \n①柱上端吊挂在托架的中间腹杆上，柱下端以吊车梁制动结构作为水平支承点，其竖向荷载则全部由托架承受。\n②柱下端支承在辅助桁架上（图中弹簧板取消），柱上端以屋架纵向水平支撑作为水平支承点，其竖向荷载全部由辅助桁架承受。  \n![](images/835317f294fe34f37b01625734ad9dd6ee66bc18034e8b8972767d7ba22449d6.jpg)\n图11-3 双层吊车厂房的墙架布置\n1—墙架柱；2—辅助桁架；3—托架；\n4—屋架；5—屋架下弦纵向水平支撑  \n2）边列柱柱距大于 12m 的厂房，当设有双层吊车时，其墙架布置如图 11-3 所示。  \n图11-3（a）表示自上层吊车辅助桁架以下部分采用整根柱，自上层吊车辅助桁架以上部分设短钢柱的方案。此时，将下层吊车梁的制动结构及辅助桁架移至墙架柱内侧，同样吊车梁制动结构的宽度尚应满足水平刚度的要求。当下层吊车梁的制动结构内移致使其宽度不能满足水平刚度的要求时，则应采用图11-3（b）所示的将墙架柱分为上中下三段设置的方案。各段墙架柱的支承形式可参照图11-2（c）要求来确定。  \n3）采用墙板或砌体为围护结构时的墙架布置如图11-4所示。  \n![](images/c0f1df572012222d9d6e48466af4d20baafcba5e805b899cc75a4f9f9016e8c2.jpg)  \n<details>\n<summary>text_image</summary>  \n5\n609\n6\n610\n6\n1\n3\n4\n7\n5\n2\n1\n</details>  \n图11-4 采用墙板或砌体为围护墙体的墙架布置示例"
+      },
+      {
+        "parent_id": "94671df9-1639-51dd-b028-bd4289005c10",
+        "doc_title": "钢结构基础 上册",
+        "section_path": "5.2.5 框架平面内稳定的其他问题",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1193,
+        "text": "式中 $\\Sigma\\left(N_{f}/h_{f}\\right)$ ——各框架柱轴力和高度比值之和；  \n$\\Sigma(N_{1}/h_{1})$ ——各摇摆柱轴力和高度比值之和；  \n摇摆柱的计算长度取其几何长度，即 $\\mu = 1$ 。  \n框架（b）的两根边柱，则先按跨度为2l的单跨框架（l为斜梁长度）求得计算长度系数 $\\mu$ ，再乘以上述增大系数。  \n半刚性连接的框架目前国内还很少用，规范没有给出确定柱计算长度的方法。  \n![](images/67f32faf58076463846fab59d7e4bd3c4d21ef6bf5fe1cc7001aaf1070ab14a4.jpg)  \n<details>\n<summary>text_image</summary>  \nP\nh\n(a)\nP\nP\nP\n摇摆柱\nP\nl\nl\n摇摆柱\n(b)\n</details>  \n图 5-10 带有摇摆柱的框架  \n【例题 5-1】 图 5-11 表示一铰接柱脚的双跨等截面柱框架。要求确定边柱和中柱在框架平面内的计算长度。  \n【解】先计算框架中诸构件的截面惯性矩。  \n横梁： $I_{0}=1\\times80^{3}/12+2\\times35\\times1.6\\times40.8^{2}=229100cm^{4}$  \n边柱： $I=1\\times36^{3}/12+2\\times30\\times1.2\\times18.6^{2}=28800cm^{4}$  \n![](images/76ffe588a864a3f186f35ab77fe3c931400144d80ef6e3ff329971bc33907535.jpg)  \n<details>\n<summary>text_image</summary>  \nH = 8m\nI₀\n-16 × 350\n-10 × 800\n-10 × 360\n-12 × 300\nI₁\nI₂\n-10 × 460\n-16 × 300\nI₁\nL = 12m\nL = 12m\n</details>  \n图5-11 例题5-1  \n中柱： $I=1\\times46^{3}/12+2\\times30\\times1.6\\times23.8^{2}=62500cm^{4}$  \n再计算横梁的线刚度与边柱的线刚度比值， $K_{0}=\\frac{I_{0}H}{I_{1}l}=\\frac{229100\\times8}{28800\\times12}=5.3$ 图 5-11 是一个有侧移框架，柱的下端与柱铰接，上端与横梁刚接，查表 5-2 得边柱的计算长度系数： $\\mu=2.07-\\frac{(5.3-5)}{(10-5)}(2.07-2.03)=2.068$  \n用近似公式计算 $\\mu=2+\\sqrt{1+0.38/5.3}=2.07$"
+      },
+      {
+        "parent_id": "06aff5ef-e81c-5b5c-8299-7cdac8edade9",
+        "doc_title": "钢结构设计手册",
+        "section_path": "(2) 当檩条在永久荷载和风吸力组合下，下翼缘受压时：",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1122,
+        "text": "</details>  \n(a)  \n![](images/d42acde22b33bec766f92a3feece84dbe060fd232d6581a685dc19e33ea79fc0.jpg)  \n<details>\n<summary>natural_image</summary>  \nSimple line drawing of a rectangular shape with a diagonal stripe above it and a small cross symbol at the top (no text or labels)\n</details>  \n(b)  \n![](images/ea990f7009c10b88459305954842589a0a083baf8e9bff9030b31583a1f26e2d.jpg)  \n<details>\n<summary>natural_image</summary>  \nSimple line drawing of a rectangular frame with a small grid pattern above it and a central cross symbol (no text or labels)\n</details>  \n(c)  \n![](images/11fc7165434796f15420ec4a5f079c0c051c73db30c7ab85f0c60b42a7f4bd0c.jpg)  \n<details>\n<summary>natural_image</summary>  \nSimple line drawing of a right-angle bracket with a small circular symbol at the top (no text or labels)\n</details>  \n(d)\n图7-9 部分加劲板和非加劲板的应力分布示意图  \n当 $\\psi \\geqslant -1$ 时， $k = 0.567 - 0.213\\psi +0.071\\psi^2$ (7-22)  \n当 $\\psi < -1$ 时，以上各式的 $k$ 值按 $\\psi = -1$ 的值采用。  \n3）受压板件的板组约束系数 $k_{1}$ 应按下列公式计算：  \n当 $\\xi \\leqslant 1.1$ 时， $k_{1} = 1 / \\sqrt{\\xi}$ (7-23)  \n当 $\\xi > 1.1$ 时， $k_{1} = 0.11 + 0.93 / (\\xi - 0.05)^{2}$ (7-24)"
+      },
+      {
+        "parent_id": "859d9b47-6cd6-53dc-ba72-074e5b3e8108",
+        "doc_title": "钢结构设计手册",
+        "section_path": "4.1.8 对接焊缝和角焊缝的连接计算。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 315,
+        "text": "# 4.1.8 对接焊缝和角焊缝的连接计算。  \n1 完全焊透的对接焊缝和 T 形连接焊缝，应按表 4-4 所列公式计算强度。\n2 角焊缝的连接应按表4-5公式计算强度。\n3 部分焊透的对接焊缝 [图 4-5 (a)、(b)、(c)、(d)、(e)、(f)] 或 T 形接头与角焊缝组合焊缝 [图 4-5 (c)] 的强度，应按表 4-5 的角焊缝计算公式计算，但在垂直于焊缝长度方向的压力作用下取 $\\beta_{\\mathrm{f}} = 1.22$ ，其他受力情况下取 $\\beta_{\\mathrm{f}} = 1.0$ ，其计算厚度见表 4-6。  \n表 4-4 完全焊透的对接焊缝和 T 形连接焊缝的强度计算公式  \n"
+      },
+      {
+        "parent_id": "1e4d59a9-6114-5d5d-b767-efe0be93c1b7",
+        "doc_title": "钢结构设计手册",
+        "section_path": "8.5.2 内力计算。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 648,
+        "text": "  \n式中 $M_{1}$ ——将上弦杆视为具有刚性支座的连续梁，在节间竖向荷载作用下，在计算节间 n 点（图 8-22）的最大弯矩。此时，荷载作用位置与上弦杆产生最大轴心力时的位置相同；  \n![](images/aa4a1b5c6df9aff657718fc447e39e42f789ed940bd20794c2da529fb8635db3.jpg)  \n<details>\n<summary>text_image</summary>  \nP₁\nK\nP₁ P₂\nK\nP₂ (P₂≥P₁)\nA B C D E F G H J\na\nl\n</details>  \n图8-22 计算吊车桁架上弦杆局部弯矩的竖向荷载布置  \n$M_{2}$ ——在各节点偏心弯矩（由于腹杆与上弦杆在节点处偏心引起的）作用下，在计算节间 n 点产生的弯矩。此时，荷载作用位置与上弦杆产生最大轴心力时的位置相同。当桁架腹杆与上弦杆的重心线在节点处会交于一点时，则 $M_{2}=0$ ;  \n$M_{3}$ ——由于桁架下挠引起上弦杆变形，在计算节间 n 点产生的附加弯矩。  \n1）计算 $M_{1}$ 时，将作用有竖向荷载的节间视为单跨固定梁，并求得固端弯矩，然后采用弯矩分配法或一次弯矩分配法计算出每个节间的支座弯矩，叠加各杆端弯矩后，即可求得所计算节间 n 点的弯矩 $M_{1}$ 。  \n在上弦杆各节间长度及截面相同的情况下，采用一次弯矩分配法计算支座弯矩时，可按图8-23所示的方法进行计算和传递，即：  \n"
+      },
+      {
+        "parent_id": "d3bb9137-88fd-5fa5-975e-a5c0dc3f5ba8",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "2.2.2.1 化学成分",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 247,
+        "text": "# 2.2.2.1 化学成分  \n建筑钢结构用钢，不论是碳素结构钢或低合金结构钢，都是含碳量小于0.25%的铁碳合金，其中铁是最基本的元素，约占化学成分的98%或更高数值，但影响钢材材质的却是占含量仅为百分之几的其他元素，包括有碳、各种合金元素和杂质元素，它们对钢材材质的影响有正负两方面作用，既有增加强度功能，同时往往对钢材的塑性、韧性有不利影响，只有少量的合金元素，其负面效应甚微。钢中主要化学元素对建筑钢性能的影响见表2-17。  \n表 2-17 钢中主要化学元素对建筑钢性能的影响  \n"
+      },
+      {
+        "parent_id": "98850d5b-eb4e-5f03-b73f-f59dd04f586f",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "9.6.1.3 钢柱校正",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1175,
+        "text": "地脚螺栓螺母一般可用双螺母，也可在螺母拧紧后，将螺母与螺杆焊实。  \n(2) 高层及超高层钢结构钢柱校正。为使高层及超高层钢结构安装质量达到最优，主要控制钢柱的水平标高，十字轴线位置和垂直度。测量是安装的关键工序，在整个施工过程中，以测量为主。它与单层钢结构钢柱校正有相同点和不同点：  \n1）柱基标高调整，首层柱垂偏校正，与单层钢结构钢柱校正方法相同。不同点是高层及超高层钢结构，地下室部分钢柱都是劲性钢柱，钢柱的周围都布满了钢筋，调整标高，对线找垂直，都要适当地将钢筋梳理开，才能进行工作，工作起来较困难些。\n2）柱顶标高调整和其他节框架钢柱标高控制可以用两种方法：一是按相对标高安装，另一种按设计标高安装，通常按相对标高安装。钢柱吊装就位后，用大六角高强度螺栓固定连接（经摩擦面处理），即上下耳板，不加紧，通过起重机起吊，撬棍微调柱间间隙。量取上下柱顶预先标定标高值，符合要求后打入钢楔、点焊限制钢柱下落，考虑到焊缝收缩及压缩变形，标高偏差调整至5mm以内，如图9-64所示。柱子安装后在柱顶安置水平仪，测相对标高，取最合理值为零点，以零点为标准进行换算各柱顶线，安装中以线控制，将标高测量结果与下节柱顶预检长度对比进行综合处理。超过5mm对柱顶标高作调整，调整方法：是采用填塞一定厚度的低碳钢钢板，但须注意不宜一次调整过大，因为过大的调整会带来其他构件节点连结的复杂化和安装难度。\n3）第二节柱纵横十字线校正。为上下柱不出现错口，尽量做到上下柱十字线重合，如有偏差，在柱柱的连接耳板的不同侧面夹入垫板（垫板厚度0.5\\~1.0mm），拧紧大六角螺栓，钢柱的十字线偏差每次调整3mm以内，若偏差过大分2\\~3次调整。  \n注意：每一节柱子的定位轴线决不允许使用下一节柱子的定位轴线，应从地面控制轴线引到高空，以保证每节柱子安装正确无误，避免产生过大的积累偏差。  \n![](images/37c19324b607e7b5d57624acd2fa28e592abf688a461f3357bc34ba0411fbb0f.jpg)  \n<details>\n<summary>text_image</summary>  \n铁锤\n调扭转用垫板\n铁楔\n千斤顶\n说明：仪器架设点距离柱子1.5倍柱长的地方，但纵轴已有柱子，无法架设经纬仪，可将仪器架设在偏离大于或等于5°的轴线上。\n</details>  \n图9-64 无缆风绳校正示意  \n4）第二节钢柱垂偏校正：钢柱校正重点对钢柱有关尺寸预检，影响垂直因素的预先控制，如：安装误差：下层钢柱的柱顶垂直度偏差就是上节钢柱的底部轴线、位移量、焊接变形、日照温度、垂度校正及弹性等，综合安装误差之和，可采取预留垂偏值，预留值大于下节柱积累偏差值时，只预留累积偏差值，反之则预留可预留值，其方向与偏差方向相反。"
+      },
+      {
+        "parent_id": "2842d139-03db-57ca-9022-f1bae3bd5efe",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "5.6.2.1 一般规定",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1153,
+        "text": "![](images/5f4aeaee3753f0f6f403152c21dfa2258551395fb11589c86e0cfb71df7da50e.jpg)  \n(c) 焊接位置 5G\n![](images/72ecbd1e8128e3adab2688ce652abef24a09cabebf9b44a6cd8bdce0eb29cdf7.jpg)\n[管平放并固定(±15°)，焊接时不转动，焊缝平、立、仰焊]  \n![](images/aa10c80250b523fd29df01549c690f5c203c71c1e792fe754a5f71f1e9c6ac04.jpg)\n(d)焊接位置6G  \n![](images/347f6abbbdd0f7671be4bed77154ac2d58211416d441a97c58c976254ac32f77.jpg)  \n<details>\n<summary>text_image</summary>  \n障碍板(距坡口\n边缘:6mm)\n试验焊缝\n45°±5°\n</details>  \n(e)焊接位置6GR(T,Y或K形节点)\n[管倾斜固定 $(45^{\\circ}\\pm5^{\\circ})$ ]\n图5-106 管材对接接头焊接位置  \n![](images/bbdcd5c5415ae76a3fbed1987f1cf0db394f5c830dd698e2913948d35ee81fd0.jpg)  \n<details>\n<summary>natural_image</summary>  \nPure mechanical part diagram showing a circular shaft with two flanged ends (no text or symbols)\n</details>  \n(a) 管-球接头试样  \n![](images/7e5ca97e4f34238166e713b1d2b87b819884e026ceafcf2cde51d1a7a50448bb.jpg)  \n<details>\n<summary>natural_image</summary>  \nPure mechanical cross-section diagram without any text, numbers, or symbols\n</details>  \n(b) 管-管十字接头试样\n图5-107 管-球及管-管接头试样\n注：焊接位置规定参照管-管对接接头（图5-105）。  \n5）焊接工艺评定不合格时，应分析原因，制定新的评定试验方案后重新进行评定。\n(4) 焊接工艺评定合格的工程适用范围。  \n1）各类钢材的评定不能互相适用。"
+      },
+      {
+        "parent_id": "ad88223e-4c9a-5f61-a13b-80a5b62b191d",
+        "doc_title": "钢结构设计手册",
+        "section_path": "2. 连接节点。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1174,
+        "text": "(4) 常用支座节点有顶接式和插接式两种。  \n图7-74为顶接式支座节点的两种形式。图7-74（a）中屋架支座底板可直接搁置于柱顶，适用于跨度较小、下弦杆不加高的情况，构造简单，受力明确，节省材料。图7-74（b）为加高下弦与柱顶的连接，这种支座节点适应性较强，但耗钢量较多；图中加劲肋和垫板的厚度均不得小于 $8\\mathrm{mm}$ 。  \n![](images/d7666915d61334ccd1a20594fb050c4b0f9791d65c3bcb4a8e12b0732138f120.jpg)  \n图7-72 圆管屋架中间节点\n![](images/15d824c4e59401f5bed6a1cd946c9bd4194686c4db0785b875b446dde991eec7.jpg)\n图7-73 屋脊节点  \n![](images/f8a15b8ec88d85eccecd262a533905620d57686e6ad311cf5ebabee303cdd6b6.jpg)\n图7-74 顶接式屋架支座节点  \n图7-75为开口插接式支座节点，其中杆件的连接强度取决于节点板与弦杆间的连接焊缝。  \n屋架支座底板上锚固螺栓及垫板设置与角钢屋架相同。  \n（5）当材料长度不足或弦杆截面有改变，以及屋架分单元运输时弦杆经常要拼接。拼接点宜设在内力较小的节间；工地拼接点通常在节点。  \n1）受拉构件的拼接接头，一般采用内衬垫板或衬管的单面焊接（图7-76）。接头与杆件按等强度设计。\n2）受压构件的拼接接头，一般采用隔板焊接（图7-77）。杆件端部与隔板顶紧，隔板两侧杆件的纵轴线应位于同一直线上。  \n![](images/75384cb66d58943875a128fae744c79276097dc16c72c32c0dc7bd4e911c51af.jpg)  \n<details>\n<summary>natural_image</summary>  \nTechnical line drawing of a mechanical assembly with no visible text or symbols\n</details>  \n图7-75 插接式屋架支座节点  \n![](images/d4e61156eee033bab7bd4458bb2101601ddca6b3937ecf069060a7dc8dac75ac.jpg)  \n<details>\n<summary>text_image</summary>  \n垫板或衬管\n</details>  \n![](images/1c9eed59b88beb367996602bd757b344868bba2f8865e739b6d8327437d1c488.jpg)"
+      },
+      {
+        "parent_id": "c10bcab6-58f5-55c0-85d1-4be68adb1d59",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "7.7.1.2 屋面板横向的排板设计",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 539,
+        "text": "# 7.7.1.2 屋面板横向的排板设计  \n屋面板的板材有效覆盖宽度为屋面板排板的基本模数，屋面板的排板设计即是屋面总宽度与基本板宽的尺寸协调。  \n屋面总宽度的确定：屋面总宽度应为建筑物的首末柱轴线间的距离加屋面在首末柱处伸出的构造尺寸（该尺寸应在排板前按构造详图确定）。  \n鉴于现行的彩色钢板屋面板宽度尺寸大多数与柱距的尺寸不相协调，故屋面的总宽度往往不是屋面板的倍数关系，因此合理排列屋面板是很重要的。确定好屋面板的排板方式后，应在图纸上标出排板起始线，供板材安装时使用。正确的排板起始线设计可以简化施工，并可得到理想的视觉效果。  \n当屋面上设有采光屋面板时，采光屋面板的宽度尺寸应与彩板屋面板的宽度尺寸相协  \n调。这对于采光屋面板嵌在彩板屋面中间的布置方法尤为重要。  \n处理好首、末屋面板的构造关系可简化屋面的构造处理。一般应使首末屋面板的边部标志尺寸到首、末柱的尺寸相同，则山墙檐口的构造可作成一样。  \n在首、末屋面板的处理时不要忽略了屋面板的标志尺寸以外的板材宽度，以正确处理好山墙处屋面的构造关系。  \n当屋面采用采光板时，排板处理时应将采光瓦尽量布置在两柱轴线中间，当排板有困难时也可有规律地布置在偏离中间的位置。此时正确确定排板起始线有着重要作用。"
+      },
+      {
+        "parent_id": "791e4ba1-534a-5919-8f94-54667cb77597",
+        "doc_title": "钢结构设计手册",
+        "section_path": "4）支座节点“g”（图7-140）",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1197,
+        "text": "![](images/1096b269cd2d073d74b52ab5c1bd17f78988dab8ea44a8a5c995b95fdd029a5d.jpg)  \n<details>\n<summary>text_image</summary>  \n35 160\n④ 55\n173\n98\n120 120\n35 20\n173\n55\n④\n140\n80\n100\n120\n1235\n1860\n⑧\n⑥\n1350\n190\n①\n15\n⑤\n80\n43\n15\n⑧\n2298\n③\n③\n15\n②\n⑤\n80\n35 120\n80\n55\n15\n75\n⑦\n①\n35 20\n20\n⑦\n115\n55\n35 160\n115 1235 2700 1235 115\n5400\nCC1\n</details>  \n![](images/edaa78e4785b7be329b29ddcfa1c193868310895119a87d5bb85515d09633ea4.jpg)  \n<details>\n<summary>text_image</summary>  \n35 175\n4 55\n60 140 35\n80\n120\n④\n146\n175 175\n146\n35\n① 146\n200\n55\n80\n1.5\n②\n③\n④\n2585\n2585\n2585\n200\n3060\n3060\n3060\n⑦\n⑧\n⑨\n⑤\n⑥\n⑧\n②\n185\n120\n20\n20\n160 160\n120\n35\n① 20\n55\n80\n35 185\n80\n55\n35 160\n115\n2585\n2585\n115\n5400\nCC2 注：1 角焊缝焊脚尺寸为：肢背6m\n</details>  \n注：1 角焊缝焊脚尺寸为：肢背6mm，其余5mm。\n2 未注明长度的焊缝一律满焊。\n3 所有杆件均三面围焊。\n4 未注明的螺栓为M20、孔径为 $\\phi21.5$ 。\n5 端部竖向支撑已参考例题进行抗震验算，满足要求。  \n图7-146 CC1和CC2施工详图  \n![](images/9316439d5686b379ce616f382d9b35467b313f08d156a5efadd7c6f979b35f67.jpg)  \n<details>\n<summary>text_image</summary>  \n安装天窗架用螺栓孔\n370\n81\n41\n81\n81\n80\n140\n100\n⑰用L200×125×12\n切成\n3850\n385\n345\n80\n3850\n80 170 170 80\n12064\n1271 14980\n2415\n80 271\n①\n④5\n③\n⑦\n③\n⑥\n⑦\n⑧\n⑨\n⑩\n⑪\n⑫\n⑬\n⑭\n⑮\n⑯\n⑰\n⑱\n⑲\n⑳\n㉑\n㉒\n㉓\n㉔\n㉕\n㉖\n㉗\n㉘\n㉙\n㉚\n㉛\n㉜\n㉝\n㉞\n㉟\n㉳\n㉴\n㉵\n㉜\n㉝\n㉞\n㉟\n㉞\n㉟\n㉞\n㉞\n㉞\n㉞\n㉞\n㉞\n㉞\n㉞\n㉞\n㉞\n㉞\n㉞\n㉞\n㉞\n㉞"
+      },
+      {
+        "parent_id": "a7428a38-40ea-5531-80b9-63385d8f82ae",
+        "doc_title": "钢结构设计手册",
+        "section_path": "3.2.5 构件长细比计算。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 963,
+        "text": "  \n注：1 公式（3-73）\\~公式（3-77）为公式（3-72）的简化公式。\n2 无任何对称轴且又非极对称截面（单面连接的不等边角钢外）不宜用作轴心压杆。\n3 对单面连接的单角钢轴心受压杆件，按表 2-10 考虑折减系数 $\\alpha_{\\mathrm{v}}$ 后，可不考虑弯转效应。\n4 对槽形截面用于格构式构件的分肢，计算分肢绕对称轴（y 轴）的稳定性时，不必考虑扭转效应，直接用 $\\lambda_{y}$ 查出 $\\varphi_{y}$ 值。  \n![](images/0560aaf02bdf9f8f2ac85e53af27f82db66f4aaa46d34c49545506526305dd39.jpg)  \n<details>\n<summary>text_image</summary>  \ny\nb b\ny\n</details>  \n(a)  \n![](images/687f7b82182eed55c96f801b0871152e6a12bf46910ecc6d97a078975dc187c8.jpg)  \n<details>\n<summary>text_image</summary>  \ny\nb₂ b₂\nb₁\n</details>  \ny\n(b)  \n![](images/3d0b8bf6a909db4e9a7461a1709d7bc485e904266b4c69f04bdc76d1dce6e66f.jpg)  \n<details>\n<summary>text_image</summary>  \nb₁\ny\nb₂\n</details>  \ny\n(c)  \n![](images/6cd645d7d91b80152271c443329941a46b17014e8a0bc88918a3c2f98bd8ec21.jpg)  \n<details>\n<summary>text_image</summary>  \nb₂\nx\ny\ny\nx\n</details>  \n图3-10 不等边角钢\n图3-9 双角钢组合T形截面  \n2 格构式轴心受力构件的实轴长细比仍应按表3-16计算，但对虚轴（项次1和项次2、3）应取换算长细比。换算长细比应按表3-17计算。  \n表 3-17 格构式构件长细比计算  \n"
+      },
+      {
+        "parent_id": "82e94599-bd5a-5cc1-8210-83c9efe6693a",
+        "doc_title": "钢结构设计手册",
+        "section_path": "4.1.1 焊接质量等级。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 614,
+        "text": "# 4.1.1 焊接质量等级。  \n焊缝设计应根据结构的重要性、荷载特性、焊缝形式、工作环境以及应力状态等情况，按下述原则分别选用不同的焊缝质量等级。  \n1 在承受动荷载且需要进行疲劳验算的构件中，凡要求与母材等强连接的焊缝应予焊透，其质量等级为：\n（1）作用力垂直于焊缝长度方向的横向对接焊缝或 T 形对接与角接组合焊缝，受拉时应为一级，受压时应为二级；\n(2) 作用力平行于焊缝长度方向的纵向对接焊缝应为二级。\n2 重级工作制（A6～A8）和起重量 $Q \\geqslant 50\\mathrm{t}$ 的中级工作制（A4、A5）吊车梁的腹板与上翼缘之间以及吊车桁架上弦杆与节点板之间的T形接头焊缝均要求焊透，焊缝形式宜为对接与角接的组合焊缝，其质量等级不应低于二级。\n3 在工作环境温度低于或等于 $-20^{\\circ}C$ 地区，构件对接焊缝的质量等级不应低于二级。\n4 不需要疲劳计算的构件中，凡要求与母材等强的对接焊缝宜予焊透，其质量等级当受拉时应不低于二级，受压时宜为二级。\n5 部分焊透的对接焊缝，不要求焊透的 T 形接头采用的角焊缝或部分焊透的对接与角接组合焊缝，以及搭接连接采用的角焊缝，其质量等级为：  \n（1）对直接承受动荷载且需要验算疲劳的构件和起重机起重量等于或大于50t的中级工作制吊车梁以及梁柱、牛腿等重要节点，焊缝的质量等级应符合二级；  \n(2) 对其他结构，焊缝的外观质量等级可为三级。"
+      },
+      {
+        "parent_id": "f77132e4-639d-5029-a98f-cb1b1c8b2a68",
+        "doc_title": "钢结构设计手册",
+        "section_path": "4 CGTK 系列轨道固定件。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 922,
+        "text": "# 4 CGTK 系列轨道固定件。  \n（1）CGTK 系列轨道固定件主要用于起重量在 100t 以下的吊车、环境温度 $<70^{\\circ}C$ 且吊车梁较窄的轨道固定。轨道下铺设的橡胶垫板，可根据实际设计需求来决定是否采用。\n（2）材质：底座板、上盖板为 ZG290—510（Q345）或 ZG270—500（Q235）钢铸造，螺栓为 8.8 级（45 号钢）。\n(3) CGTK 系列轨道固定件，最大侧向力为 75KN。\n(4) 轨道固定件型号应与轨道型号一致。\n(5) 安装要素  \n1）底座板定位。沿吊车轨道方向按间距500mm布置底座板，垂直轨道方向按T型螺栓距轨道中心a值定位。  \n2）焊接底座板。  \n3）按下列顺序安装弹性卡板  \nT型螺栓就位 $\\rightarrow$ 上盖板 $\\rightarrow$ 平垫圈 $\\rightarrow$ 弹簧垫圈 $\\rightarrow$ 螺母 $\\rightarrow$ T型螺栓预紧 $\\rightarrow$ 调整上盖板，使前端靠住轨道 $\\rightarrow$ T型螺栓进行最终紧固。  \n(6) CGTK 型轨道固定件安装布置及参数参见图 8-65、图 8-66 和表 8-19。  \n![](images/f4d31993f2890aa33bd95fca2a1b7aeb20a2316807e8d6665831b0d90f3a0f7a.jpg)  \n<details>\n<summary>text_image</summary>  \n500 B 355 145 145 355\n70 130 160 130 70\n</details>  \n图8-65 CGTK型固定件平面图  \n![](images/7fed8fc0c1ed04e4791af970d7e9f20c3bea9e1d83fd628c8b4c0e8646f09426.jpg)  \n<details>\n<summary>text_image</summary>  \nH₁\nd\na\ns\ne\nb\nB\nC\nH\n</details>  \n图8-66 安装示意图  \n表 8-19 CGTK 轨道连接尺寸  \n"
+      },
+      {
+        "parent_id": "97059e33-b5db-55dc-b6f7-4a31ffad09dd",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "9.7.5.2 拔杆吊装",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1177,
+        "text": "![](images/788508d2e052f6efe9740dffe254b99be490d1d4e1ae01d7643d79afa7a1d96b.jpg)  \n<details>\n<summary>flowchart</summary>  \n```mermaid\ngraph TD\nA[\"Component ⑦\"] --> B[\"Link to Column\"]\nC[\"Component ⑧\"] --> B\nD[\"Component ⑨\"] --> B\nE[\"Component ⑩\"] --> B\nF[\"Component ⑪\"] --> B\nG[\"Component ⑫\"] --> B\nH[\"Component ⑬\"] --> B\nI[\"Component ⑭\"] --> B\nJ[\"Component ⑮\"] --> B\nK[\"Component ⑯\"] --> B\nL[\"Component ⑰\"] --> B\nM[\"Component ⑱\"] --> B\nN[\"Component ⑲\"] --> B\nO[\"Component ⑳\"] --> B\nP[\"Component ⑪\"] --> B\nQ[\"Component ⑫\"] --> B\nR[\"Component ⑬\"] --> B\nS[\"Component ⑭\"] --> B\nT[\"Component ⑮\"] --> B\nU[\"Component ⑯\"] --> B\nV[\"Component ⑰\"] --> B\nW[\"Component ⑱\"] --> B\nX[\"Component ⑲\"] --> B\nY[\"Component ⑳\"] --> B\nZ[\"Component ⑪\"] --> B\nAA[\"Component ⑫\"] --> B\nAB[\"Component ⑬\"] --> B\nAC[\"Component ⑭\"] --> B\nAD[\"Component ⑮\"] --> B\nAE[\"Component ⑨\"] --> B\n```\n</details>  \n![](images/71f0946b81bce33815a2c1e76f53dcad1908762a022f15150e6a3027909ea08c.jpg)  \n<details>\n<summary>flowchart</summary>  \n```mermaid\ngraph TD\nA[\"①\"] --> B[\"②\"]\nB --> C[\"③\"]\nC --> D[\"④\"]\nD --> E[\"⑤\"]\nE --> F[\"⑥\"]\nstyle A fill:#f9f,stroke:#333\nstyle B fill:#f9f,stroke:#333\nstyle C fill:#f9f,stroke:#333"
+      },
+      {
+        "parent_id": "2741decf-c377-533c-8ac8-4329fd708a59",
+        "doc_title": "钢结构设计手册",
+        "section_path": "2 正常使用极限状态。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 211,
+        "text": "# 2 正常使用极限状态。  \n当结构或构件达到正常使用的某项规定限值的状态时，该结构或构件即达到正常使用极限状态。当结构或构件出现下列状态之一时，即认为超过了正常使用极限状态：  \n(1) 影响正常使用或外观的变形。\n(2) 影响正常使用的局部损坏。\n(3) 影响正常使用的振动。\n(4) 影响正常使用的其他特定状态。  \n设计结构或构件时通常按承载能力极限状态设计以保证安全，再按正常使用极限状态进行校核以保证适用性。"
+      },
+      {
+        "parent_id": "84fbc10d-52d5-5ee7-82ef-e3a5e536d5c6",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "参考文献",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1183,
+        "text": "# 参考文献  \n1. 潘际銮主编．焊接手册第一卷．北京：机械工业出版社．1993.\n2. 田锡唐主编，焊接手册第三卷，北京：机械工业出版社，1993.\n3. 陈伯蠡. 金属焊接性基础. 北京: 机械工业出版社. 1982.\n4. 田锡唐主编．焊接结构．北京：机械工业出版社．1981.\n5. 张文钺主编．金属熔焊原理及工艺（上册）．北京：机械工业出版社．1979.\n6. 张文钺主编．焊接冶金学（基本原理）．北京：机械工业出版社．1993.\n7. 沈祖炎主编．钢结构制作安装手册．北京：中国建筑工业出版社．1998.\n8. 殷树言，张九海编著．气体保护焊工艺．哈尔滨：哈尔滨工业大学出版社\n9. 奥．布洛德盖特（顾慰祖译）．焊接变形的控制与矫正．钢结构．9及10．1994（4）及1995（1）．P253～P262及P43～P52\n10. 姜树良等著．电渣焊在箱型柱制造中的应用．钢结构．13．1998（2）．P37～P38\n11. 孙昌茂. 建筑钢结构箱型柱的大热输入焊接. 钢结构. 15. 2000 (1). P22\\~P23\n12. 张汉谦. 钢熔焊接头金属学. 北京: 机械工业出版社, 2000.\n13. 黄文哲主编，焊工手册（手工焊接与切割），北京、机械工业出版社，1999.\n14. 陈伯蠡．焊接工程缺欠分析与对策．北京：机械工业出版社．1997.\n15. 刘树屯，关忆卢等．首都机场306m跨飞机库屋盖钢结构设计施工中的一些问题．钢结构．11.\n1997 (4). P4\\~P8\n16. 苏平，段斌等．首都机场四机位库钢结构焊接工艺评定试验．钢结构．12．1997（3）．P17～P22\n17. 刘贤才，周文瑛．中国工商银行总行营业办公楼钢结构工程安装焊接施工技术．上海钢结构．1999增刊．P27～P31\n18. 刘贤才，王维迎．上海浦东国际金融大厦高层钢结构工程安装焊接施工技术．钢结构焊接技术论文集．9．2000．P26～P37\n19. 李儒林. 中国银行大厦箱型钢桁架的焊接. 钢结构焊接技术论文集. 9. 2000. P47\\~P54\n20. 陈增光等. 陕西信息大厦钢结构安装焊接变形控制. 钢结构焊接技术论文集. 9. 2000. P55-P59\n21. 杨德洪，康平．北京中华世纪坛钢结构焊接．钢结构焊接技术论文集．9．2000．P60～P65\n22. 张伟，王久明等．北京植物园展览温室钢管结构 T、K、Y 相贯节点焊接与质量控制．钢结构焊接技术论文集．9．2000．P66～P71\n23. 鲍广鉴，邵汉荣等．长春光大银行钢结构焊接施工．钢结构焊接技术论文集．9．2000．P72～P75\n24. 美国焊接协会. 钢结构焊接手册. AWSD1.1-98\n25. JISZ 3060-91 钢焊缝超声波探伤方法及探伤结果等级分类法"
+      },
+      {
+        "parent_id": "22f755f4-8e95-5702-a72f-63a33e9f4904",
+        "doc_title": "钢结构设计手册",
+        "section_path": "2 门式刚架斜梁有隅撑时的稳定性计算。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 637,
+        "text": "  \n$k_{b}$ ——取三倍隅撑间距范围内的梁段的应力比；  \nγ——楔率取三倍隅撑间距计算；  \n$J$ （或 $I_{\\mathrm{t}}$ ）、 $I_{y}$ 、 $I_{\\omega}$ ——计算部位截面的自由扭转常数；绕弱轴惯性矩（ $\\mathrm{mm}^4$ ），翘曲惯性矩（ $\\mathrm{mm}^6$ ）；  \na——檩条截面形心到梁上翼缘中心的距离（mm）；  \nh——大端截面上下翼缘中线的距离（mm）；  \nα——隅撑和檩条轴线的夹角（°）；  \n$\\beta$ ——隅撑与檩条的连接点离开主梁的距离与檩条跨度的比值；  \n$l_{p}$ ——檩条的跨度（mm）；  \n$I_{p}$ ——檩条截面绕强轴的惯性矩（mm $^{4}$ ）；  \n$A_{p}$ ——檩条的截面面积（mm $^{2}$ ）；  \n$A_{k}$ ——隅撑杆的截面面积（mm $^{2}$ ）；  \n$l_{k}$ ——隅撑杆的长度（mm）；  \n$l_{kk}$ ——隅撑的间距（mm）；  \n$e_{1}$ ——梁截面的剪切中心到檩条形心线的垂直距离（mm）；  \ne——隅撑下支撑点到檩条形心轴的垂直距离（mm）；  \n$I_{1}$ ——被隅撑支撑的翼缘的绕弱轴的惯性矩（mm $^{4}$ ）；  \n$I_{2}$ ——与檩条连接的翼缘的绕弱轴的惯性矩（mm $^{4}$ ）；  \nE、G——钢材的弹性模量和剪变模量（N/mm $^{2}$ ）。"
+      },
+      {
+        "parent_id": "22a0961c-615f-5728-9d05-fe45bf1a631b",
+        "doc_title": "钢结构设计手册",
+        "section_path": "①支座底板计算。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 913,
+        "text": "  \n④节点板的稳定性计算（图7-102）。  \n由图7-102可知，节点“2”中的节点板为无竖腹杆相连的节点板， $c = 32.7\\mathrm{mm}$ ， $t = 8\\mathrm{mm}$ ，根据本手册第7.2.5条的相关内容可得：  \n$c / t = 32.7 / 8 = 4.1 < 10\\varepsilon_{\\mathrm{k}} = 10\\sqrt{\\frac{235}{f_y}} = 10\\sqrt{\\frac{235}{235}} = 10$ ，此时节点板的稳定承载力可取 $0.8b_{\\mathrm{e}}tf = 0.8\\times 90\\times 8\\times 215 = 123.8\\mathrm{kN} > N = 14.96\\mathrm{kN}$ ，可见节点板的稳定性满足要求。  \n3）上弦节点“4”（图7-103）。  \n![](images/cc7cc53e405ab7d4013ccca9be69982db5747925b51fdc413d991c2e9da39625.jpg)  \n<details>\n<summary>text_image</summary>  \nN=187.11kN\n270\n270\n240\n240\n270\n240\n20\nN=183.54kN\n</details>  \n图7-103 上弦节点“4”  \n因上弦杆间内力差小，节点板尺寸大，故不需要再验算。  \n4）屋脊节点“7”（图7-104）。  \n![](images/d026b565431d37631596623944248e394bbea8bfc73455b23c9ee474dc3acb63.jpg)  \n<details>\n<summary>text_image</summary>  \nN=176.5kN\n240\n240\nN=176.5kN\n195\n</details>  \n图7-104 屋脊节点“7”  \n上弦杆节点荷载 P 假定由角钢肢背的塞焊缝承受，同上按构造要求考虑，即可满足，计算从略。  \n根据公式（7-43），上弦杆件与拼接角钢之间在接头一侧的焊缝长度为：  \n"
+      },
+      {
+        "parent_id": "e50f2792-8082-59bb-88f1-587956b675c6",
+        "doc_title": "钢结构设计手册",
+        "section_path": "3 檩条与屋架（刚架）的连接。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1180,
+        "text": "<details>\n<summary>text_image</summary>  \na\nΓ1\na\nL1\n</details>  \n![](images/a94d6f8585fb4e7d59c2c51fb5d996816a19452fffc34a37b8790cea911280a7.jpg)  \n<details>\n<summary>natural_image</summary>  \nPure technical line drawing of a structural component with no text or symbols\n</details>  \n图7-16 卷边C形檩条的搭接  \n(2) 桁架式檩条一般用螺栓直接与屋架上弦连接，见图 7-17。  \n![](images/45f9789aa6d55508d55be56e53d01936725290a046c94066ea4aed2e7b446276.jpg)  \n<details>\n<summary>text_image</summary>  \n用螺栓与屋架连接\nΓ¹\nL₁\n</details>  \n![](images/e4a0790861b2f17c7fa14226e01df580b7748ea6c4433a188040b43211674fce.jpg)\n图7-17 桁架式檩条端部连接  \n4 檩条的拉条和撑杆。  \n（1）拉条的设置：檩条的拉条设置与否主要和檩条的侧向刚度有关，对于侧向刚度较大的轻型 H 型钢和空间桁架式檩条有时不设拉条。对于侧向刚度较差的实腹式和平面桁架式檩条，为了减小檩条在安装和使用阶段的侧向变形和扭转，保证其整体稳定性，一般需在檩条间设置拉条，作为其侧向支承点。当檩条跨度 l < 4m 时，可按计算要求确定是否需要设置拉条；当屋面坡度 i>1/10 或檩条跨度 $l \\geqslant 4 ~m$ 时，应在檩条跨中受压翼缘侧设置一道拉条；当跨度 l>6 \\~m 时，宜在檩条跨度三分点处各设一道拉条。在檐口处还应设置斜拉条和撑杆。圆钢拉条的直径不宜小于 10 \\~mm，可根据荷载和檩距大小取 10 \\~mm 或 12 \\~mm。  \n（2）撑杆的设置：檩条撑杆的作用主要是限制檐檩和天窗缺口处边檩向上或向下两个方向的侧向弯曲。撑杆的长细比按压杆要求 $\\lambda \\leqslant 200$ ，可采用钢管、方管或角钢做成。目前也有采用钢管内设拉条的做法，它的构造简单。撑杆处应同时设置斜拉条。拉条和撑杆的截面应按计算确定，其布置见图7-18。  \n![](images/5fe4f3ade1896accd02edf38cc699b5fd08ec7113282c0cb71f7c39fc5a25d24.jpg)  \n<details>"
+      },
+      {
+        "parent_id": "b6e155f0-96f0-5ff4-989f-707e5e90b234",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "(3) 层状撕裂的防止措施。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 884,
+        "text": "<summary>text_image</summary>  \n(e)\n(f)\n</details>  \n图5-89 T形、十字形角接接头防止层状撕裂的设计原则注：箭头所指方向为抗层状撕裂的接头  \n3）采用合理的焊接工艺。①双面坡口时宜采用两侧对称多道次施焊，避免收缩应变集中。②宜采用适当小的热输入多层焊接，以减小收缩应变，但淬硬倾向强的钢材不宜采用过小的热输入。③宜采用塑性过渡层，即先用低强度焊条在坡口内母材板面上堆焊过渡层，然后再焊连接焊缝的方法，见图5-90。这一措施可使软夹层金属承受一部分拉伸塑性变形，以避免母材发生层状撕裂。④宜采用低强度匹配的焊接材料，使焊缝金属具有低屈服点、高延性，可使应变集中于焊缝，以防止母材发生层裂，见图5-91。⑤箱形柱角接接头，当板厚特大时（80mm及以上），侧板板边火焰切割面宜磨（或刨）去由热切割产生的硬化层，防止层状撕裂起源于板端表面的硬化组织，见图5-92。尤其当钢材的强度级别较高（Q345及以上）或侧板的坡口角度未超过板厚中心时更应如此。⑥宜采用低氢、超低氢焊条或气体保护焊方法。⑦宜采用或提高预热温度施焊，以降低冷却速度，改善接头区组织韧性，但采用的预热温度较高时易使收缩应变增大，在防止层状撕裂的措施中只能作为次要的方法。预热温度对层状撕裂产生的影响参见图5-93。⑧宜采用焊后消氢热处理加速氢的扩散，其效用与③相类似。  \n![](images/ea8065312959399029826157020d8a5b91d4009b6eb2ec8ebc5e40395b3185a6.jpg)  \n<details>\n<summary>text_image</summary>  \n低强度\n焊道\n</details>  \n图5-90 堆焊软夹层防止板材层状撕裂的工艺措施\n![](images/b957500ec28c3b1fe4bef59caef38fbf3df997e6f7fc6f38897ec04f54db62a4.jpg)  \n<details>\n<summary>scatter</summary>"
+      },
+      {
+        "parent_id": "ccc77f28-bb25-504b-8f82-da8b28bbf8f3",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "4.4.5.2 弯曲（煨弯）",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 471,
+        "text": "  \n![](images/d2d027466620ccc7ed0aaf8c7a182b1b04c3f13807328617651226af830c3c5a.jpg)  \n<details>\n<summary>text_image</summary>  \nZ₀\nA₁\nX₀\nA₂\nY₀\nA₃\nα\nR\nR\nα\n</details>  \n图4-50 角钢煨圆长度计算  \n对于等肢角钢 $n = 6$  \n对于不等肢角钢其 n 值经试验得出如下数值：  \n对 $\\lfloor 90\\times 56\\times 6$ 煨90边方向 $n = 10.0$ ；煨56边方向 $n = 4.0$  \n对 $75 \\times 50 \\times 5$ 煨75边方向 $n = 6.5$ ；煨50边方向 $n = 4.0$  \n对 $63 \\times 40 \\times 6$ 煨63边方向 $n = 7.0$ ; 煨40边方向 $n = 3.5$  \n其他规格的不等肢角钢，其 n 值可参照上述数值考虑。  \n角钢煨弯时其圆弧部分的展开长度：  \n"
+      },
+      {
+        "parent_id": "d2f6a16a-8a6e-5462-975d-cca8158357ed",
+        "doc_title": "钢结构设计手册",
+        "section_path": "6）柱脚的构造。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1056,
+        "text": "# 6）柱脚的构造。  \n①柱脚形式有整体式和分离式两种，格构式柱的分离式柱脚，一般可采用图10-35所示的形式。\n②分离式柱脚的靴板是柱肢翼缘的扩大板，可与柱肢翼缘板对接连接，也可贴焊于柱肢的两侧（对于屋盖肢），如图10-35所示，以加大柱  \n![](images/df85f6e4a37c32bfbcf620b7212d8786996bdb7fa65955e01f4fa8b707c1e1ff.jpg)  \n<details>\n<summary>text_image</summary>  \n柱截面形心轴\n混凝土受压区\n压力合力线\nAₑ·fₜᵃ\nσ₁\nN\nMₓ\na\ny\nσ₂应力\n锚栓轴线\nl\nε₁\nx\nε₂应变\n</details>  \n图10-38 锚栓计算简图之二  \n肢底板的承压面积。靴板的宽度，其上部取与柱肢翼缘同样宽度，下部取与柱底板同样宽度。靴板的厚度取与柱肢翼缘板厚度相同或适当加厚。  \n③隔板及加劲板用来加强靴板和柱腹板的刚性，减小底板的计算长度，以改善底板的受力状况。其厚度按计算确定，一般采用的厚度 $t \\geqslant \\frac{b}{50}$ （b 为靴板的跨长），且不宜小于 10mm。\n④柱脚锚栓承受排架柱弯矩在柱脚底板与基础间产生的拉力，同时作为安装过程中的临时固定柱之用。锚栓的直径可由计算确定，但不宜小于 $\\phi24$ 为了柱安装与调整方便，锚栓一般固定在柱脚外挑的支承托座上，而不穿过柱脚底板，此时，应在锚栓支承托座上开缺口，以便于柱的安装就位。锚栓支承托座的高度应按锚栓受拉所需要的焊缝长度来确定，一般不宜小于400mm。支承托座顶板的厚度根据锚栓荷载大小来确定，一般取20\\~40mm，支承加劲肋的厚度不宜小于12mm，柱脚锚栓不宜用于承受柱脚底部的水平剪力，此水平剪力应由底板与混凝土之间的摩擦力（摩擦系数取0.4）或设置抗剪键来承受。\n⑤柱脚底板的尺寸和厚度应按本条1.1款的要求计算确定，同时尚应满足构造上的需要，一般底板厚度不得小于20mm。对于等截面轻型柱脚的底板，如图10-33所示，底板的尺寸，除了按计算确定外，还要满足构造要求。如锚栓轴线至底板边缘的距离s不得小于2d（d为锚栓直径）；锚栓的间距不得小于3d。柱肢外边至锚栓轴线之间的净空距离 $a_{0}$ ：当锚栓直径小于30mm时 $a_{0}$ 不得小于40mm；当锚栓直径30\\~50mm时， $a_{0}$ 不得小于60mm。柱肢外边至底板边缘的距离一般不得小于20mm。"
+      },
+      {
+        "parent_id": "bc981ae6-83ec-5cd5-b098-b25d6966a9e5",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "7.2.3 彩色钢板镀层",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1022,
+        "text": "（2）热镀锌铝合金钢板：是在连续热镀锌铝合金生产线上把冷轧钢带浸入熔融的锌铝合金的锌铝液中，经卷取以卷状供货。  \n锌铝合金是一种含 Zn 和 5% Al 的混合稀土合金镀层。这种镀层的钢板我国尚无生产，多在欧洲、美国等地使用，需进口时应确定镀层的重量。美国 ASTM A875M97a 规定了九个级别，即双面镀层量 75、113、150、195、235、300、385、510、595g/m²，欧洲的产品也类似。该产品是热镀锌的换代产品，镀层保持了热镀锌层的各种优点，其耐蚀性能提高2\\~4倍，加工成型性能好，价格提高不多。它的裸板耐腐性、切边部位牺牲性保护性能、涂装后的耐蚀性和加工成型后的耐蚀性等综合性能，经比较是最理想的镀层类别。  \n镀锌铝合金的厚度与其耐蚀性能成正比关系。因此向国外订货时应标明供货厚度，建议使用厚度不小于 $150g/m^{2}$ 。  \n(3) 热镀铝锌合金钢板：是在连续热镀铝锌合金生产线上把冷轧钢带浸入熔融的锌铝合金的铝锌液中，经卷取成卷供货。  \n热镀铝锌合金钢板是一种含 55% A1、1.5% Si、43.5% Zn 合金的热浸镀层钢板产品。该产品我国尚未生产，美国与澳大利亚等国使用较多。目前我国使用多从澳大利亚进口。其产品厚度规格美国 ASTM A792/A 792M—97a 规定为 AZM150、165、180 三种。一般选用不小于 AZM150。  \n热镀铝锌合金镀层钢板是国际上20世纪80年代发展起来的，美国伯利恒公司于1972年6月正式投产问世。它兼具有镀锌和镀铝钢板的性能特点。镀锌层不仅为钢板面提供了较好的耐腐性，而且可提供一种被称为阴极保护的独特性能，其在裸露的切边处，或在镀层疵点处，通过腐蚀锌镀层来对钢板起保护作用。镀铝层可在不同的腐蚀性大气中为钢板提供更高的耐蚀性；而在大多数环境中，铝镀层不提供阴极保护，因此镀铝钢板在被划伤和切边处呈现易腐蚀现象。因此镀铝锌钢板具有镀锌钢板2\\~6倍的耐蚀性和抗高温氧化性。但切边牺牲性保护性能比镀锌的差，比镀铝的好。  \n(4) 热镀铝钢板：热镀铝钢板的铝表面极易形成一层非常致密的氧化铝层，具有优异的耐大气腐蚀性能。它的氧化膜十分稳定，起隔离膜的作用。美国钢铁公司使用实验证明其耐蚀性是热镀锌钢板的5\\~9倍。它还具有优良的抗硫化物腐蚀性、热反射性、和高温抗氧化性。日本国采用不涂层的镀铝钢板，大面积用于工业厂房中。我国尚无该类产品。"
+      },
+      {
+        "parent_id": "1f322488-713b-56e5-a614-672d3fbba1fb",
+        "doc_title": "钢结构设计手册",
+        "section_path": "5 有效净截面模量。",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 381,
+        "text": "  \n![](images/fce4342d4a2f033b2feda9d333817757bf302a2540657f48feefbc0954a238fa.jpg)  \n<details>\n<summary>text_image</summary>  \ny\np\npy\nθ-α\npx\n①\n②\nx\nx1\nx1\nθ\nx\n18.4°\ny\ny1\n</details>  \n图7-32 檩条截面力系图（三）  \n![](images/be0604a70fc372b28a065b0e6298d75068a93a6062f71e0968bca52608201d28.jpg)  \n<details>\n<summary>text_image</summary>  \n33.29 4.52 22.19\n35\n13\n</details>  \n图7-33 檩条有效截面图（四）  \n"
+      },
+      {
+        "parent_id": "0238596e-cdfc-5f0c-87e0-feb94394093f",
+        "doc_title": "建筑钢结构施工手册",
+        "section_path": "5.7.4.3 钢结构典型焊接接头的探伤要点",
+        "doc_type": "pdf",
+        "category": "行业规范",
+        "start_time": null,
+        "text_len": 1176,
+        "text": "![](images/95281111bc1990d7300c22048043b5e205c64825e2da851bf9535ee28a2e9aa1.jpg)  \n<details>\n<summary>text_image</summary>  \nP₃\nR₁ R₂\nS\nA\nB\n</details>  \n![](images/b32e29c13e98af66291b481cc514046174b4a1ac9f19b3282da66e7f625fc010.jpg)  \n<details>\n<summary>text_image</summary>  \nP₃\nP₁\nB\nR₁\nR₂\nA\nS₁\n</details>  \n图5-139 角接头超声波探伤扫查方式  \n(4) 管分支节点焊缝的超声波探伤。管分支节点（又称 T、K、Y 节点）的特点是在接头一周的各点几何形状是变化的，而超声波探伤的主要扫查方式为垂直于焊缝的前后扫查，由于该类接头沿焊缝一周焊缝与钢管母线的夹角（称为偏角）连续变化，因此在不同的探测点，超声波声束轴线所在的截面为不同形状  \n![](images/ebebf7dfa0917c8c7638f5376614412736df7843c6e5d99ffc3b1c8e2bed9083.jpg)  \n<details>\n<summary>text_image</summary>  \nD\nB\nE\nA\nC\nD\nB\nE\n</details>  \n图5-140 管分支节点焊缝的分区  \n的椭圆，接头任何位置上的跨距和相应声程不同，探头的临界折射角也不同。另一方面由于不同位置二面角不同，焊缝的形状也不同。基于以上理由，一般将焊缝分为三个区 $(A, B, C)$ 或五个区 $(A, B, C, D, E)$ 如图5-140，不同的区域分别选择最佳的探头折射角。  \n在建筑钢结构中，一般的管分支结构均为封闭结构，管内壁均不可接近，管壁也不厚（≤25mm），因此一般应选择支管表面作探测面，如图5-141，进行 $Q_{1}$ 、 $Q_{2}$ 扫查。其探伤工艺要点如下：  \n1）以探头垂直焊缝移动的前后扫查方式为主。  \n2）探头接触面为平面，为了减小变化曲面对耦合状况的影响，应尽可能选择较小晶片的探头，且选用粘度大、声阻抗高的耦合剂。  \n3）应尽可能选择大折射角、短前沿的探头，增大一次波探测的范围。  \n4）可以采用以下方法确定任意位置声束截面上探测点的等效直径或相贯角，并进一步得到声程修正系数：  \n①用针形样规或其他类似工具量取某一点探头扫查方向的等效直径；  \n②测量探测点的偏角 $\\alpha$ （如图 5-142），等效直径 $D_{1}$ 按以下公式计算 $D_{1}=D/\\sin^{2}\\alpha$ 。"
+      }
+    ]
+  }
+}

@@ -30,6 +30,7 @@ from .config import (
     QDRANT_DIR,
     RERANK_ENABLED,
     RERANK_TOP_K,
+    RERANK_USE_HEADER,
     SPARSE_TOP_K,
 )
 from .embed import encode_one
@@ -204,9 +205,23 @@ def retrieve(
     # Preserve RRF score per child before reranking overwrites ordering.
     child_rrf: dict[str, float] = {str(p.id): p.score for p in points}
 
-    # Cross-encoder rerank on full child text.
+    # Cross-encoder rerank on child text WITH header context prepended.
+    # Without the header, fragments of sibling sections (e.g. row-split
+    # tables in §9.3.3.1 vs §9.3.3.2) are indistinguishable to the
+    # reranker because the identifying name/code lives in section_path,
+    # not the body. Dense embeddings already see `doc_title > section_path`
+    # via Child.embed_text; we mirror that here so the rerank step doesn't
+    # undo the disambiguation. Set RERANK_USE_HEADER=False to ablate.
     if RERANK_ENABLED:
-        passages = [p.payload["text"] for p in points]
+        if RERANK_USE_HEADER:
+            passages = [
+                f"{p.payload.get('doc_title','')} > "
+                f"{p.payload.get('section_path','')}\n\n"
+                f"{p.payload.get('text','')}"
+                for p in points
+            ]
+        else:
+            passages = [p.payload["text"] for p in points]
         ce_scores = rerank_scores(query, passages)
         scored = sorted(
             zip(points, ce_scores), key=lambda x: x[1], reverse=True

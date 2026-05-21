@@ -46,7 +46,9 @@ export function useChat() {
         id: assistantId,
         role: "assistant",
         content: "",
+        query: trimmed,
         streaming: true,
+        stage: "retrieving",
       };
       setMessages((prev) => [...prev, userMsg, assistantMsg]);
 
@@ -59,13 +61,17 @@ export function useChat() {
           if (ev.type === "prep") {
             setMessages((prev) =>
               prev.map((m) =>
-                m.id === assistantId ? { ...m, prep: ev.data, sources: ev.data.used_sources } : m,
+                m.id === assistantId
+                  ? { ...m, prep: ev.data, sources: ev.data.used_sources, stage: "generating" }
+                  : m,
               ),
             );
           } else if (ev.type === "token") {
             setMessages((prev) =>
               prev.map((m) =>
-                m.id === assistantId ? { ...m, content: m.content + ev.data.text } : m,
+                m.id === assistantId
+                  ? { ...m, content: m.content + ev.data.text, stage: "streaming" }
+                  : m,
               ),
             );
           } else if (ev.type === "done") {
@@ -74,12 +80,11 @@ export function useChat() {
                 m.id === assistantId
                   ? {
                       ...m,
-                      // Use server's authoritative answer in case any token was lost in
-                      // transit (rare, but better than rendering partial text).
                       content: ev.data.answer_text || m.content,
                       sources: ev.data.sources,
                       done: ev.data,
                       streaming: false,
+                      stage: "done",
                     }
                   : m,
               ),
@@ -88,7 +93,7 @@ export function useChat() {
             setMessages((prev) =>
               prev.map((m) =>
                 m.id === assistantId
-                  ? { ...m, error: ev.data.message, streaming: false }
+                  ? { ...m, error: ev.data.message, streaming: false, stage: "done" }
                   : m,
               ),
             );
@@ -97,13 +102,20 @@ export function useChat() {
       } catch (e: any) {
         const msg = e?.name === "AbortError" ? "（已中止）" : e?.message || String(e);
         setMessages((prev) =>
-          prev.map((m) => (m.id === assistantId ? { ...m, error: msg, streaming: false } : m)),
+          prev.map((m) =>
+            m.id === assistantId
+              ? { ...m, error: msg, streaming: false, stage: "done" }
+              : m,
+          ),
         );
       } finally {
         setSending(false);
-        // Ensure streaming flag is cleared even if no `done` arrived.
         setMessages((prev) =>
-          prev.map((m) => (m.id === assistantId && m.streaming ? { ...m, streaming: false } : m)),
+          prev.map((m) =>
+            m.id === assistantId && m.streaming
+              ? { ...m, streaming: false, stage: "done" }
+              : m,
+          ),
         );
       }
     },

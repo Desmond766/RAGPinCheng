@@ -1,0 +1,131 @@
+/Users/zihan/Codes/RAGPinCheng/src/index.py:55: UserWarning: Payload indexes have no effect in the local Qdrant. Please use server Qdrant if you need payload indexes.
+  client.create_payload_index(
+[eval] loaded 98 items from /Users/zihan/Codes/RAGPinCheng/src/eval/golden.jsonl
+[embed] loading BAAI/bge-m3 on device=mps fp16=False
+Fetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]Fetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 17121.94it/s]
+You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+[  1/74] eval-factual-0001                OK  (23.72s)
+[  2/74] eval-factual-0002                OK  (5.98s)
+[  3/74] eval-factual-0003                OK  (13.25s)
+[  4/74] eval-factual-0004                OK  (13.39s)
+[  5/74] eval-factual-0005                OK  (7.80s)
+[  6/74] eval-factual-0006                OK  (5.47s)
+[  7/74] eval-factual-0007                OK  (14.21s)
+[  8/74] eval-factual-0008                OK  (14.24s)
+[  9/74] eval-factual-0009                OK  (14.86s)
+[ 10/74] eval-factual-0010                MISS (15.91s)
+[ 11/74] eval-factual-0011                OK  (15.66s)
+[ 12/74] eval-factual-0012                OK  (9.37s)
+[ 13/74] eval-factual-0013                OK  (15.22s)
+[ 14/74] eval-factual-0014                OK  (16.92s)
+[ 15/74] eval-factual-0015                OK  (16.01s)
+[ 16/74] eval-factual-0016                OK  (16.54s)
+[ 17/74] eval-factual-0017                OK  (16.86s)
+[ 18/74] eval-factual-0018                OK  (11.44s)
+[ 19/74] eval-factual-0019                OK  (10.40s)
+[ 20/74] eval-factual-0020                OK  (16.32s)
+[ 21/74] eval-factual-0021                OK  (16.70s)
+[ 22/74] eval-factual-0022                OK  (7.98s)
+[ 23/74] eval-factual-0023                MISS (16.93s)
+[ 24/74] eval-factual-0024                OK  (17.04s)
+[ 25/74] eval-factual-0025                OK  (17.06s)
+[ 26/74] eval-factual-0026                OK  (9.11s)
+[ 27/74] eval-factual-0027                OK  (17.66s)
+[ 28/74] eval-factual-0028                OK  (17.01s)
+[ 29/74] eval-factual-0029                OK  (17.15s)
+[ 30/74] eval-factual-0030                OK  (17.26s)
+[ 31/74] eval-factual-0031                OK  (17.24s)
+[ 32/74] eval-factual-0032                OK  (17.00s)
+[ 33/74] eval-factual-0033                OK  (16.87s)
+[ 34/74] eval-factual-0034                OK  (7.87s)
+[ 35/74] eval-factual-0035                OK  (17.33s)
+[ 36/74] eval-factual-0036                OK  (14.57s)
+[ 37/74] eval-table_formula-0001          OK  (18.34s)
+[ 38/74] eval-table_formula-0002          OK  (18.96s)
+[ 39/74] eval-table_formula-0003          OK  (18.56s)
+[ 40/74] eval-table_formula-0004          MISS (18.74s)
+[ 41/74] eval-table_formula-0005          OK  (18.20s)
+[ 42/74] eval-table_formula-0006          OK  (18.48s)
+[ 43/74] eval-table_formula-0007          OK  (18.79s)
+[ 44/74] eval-table_formula-0008          MISS (18.26s)
+[ 45/74] eval-table_formula-0009          OK  (20.01s)
+[ 46/74] eval-table_formula-0010          OK  (18.28s)
+[ 47/74] eval-table_formula-0011          OK  (18.37s)
+[ 48/74] eval-table_formula-0012          OK  (19.25s)
+[ 49/74] eval-table_formula-0013          OK  (18.31s)
+[ 50/74] eval-table_formula-0014          OK  (18.38s)
+[ 51/74] eval-table_formula-0015          OK  (18.32s)
+[ 52/74] eval-code_lookup-0001            OK  (18.09s)
+[ 53/74] eval-code_lookup-0002            OK  (18.81s)
+[ 54/74] eval-code_lookup-0003            OK  (17.69s)
+[ 55/74] eval-code_lookup-0004            OK  (17.76s)
+[ 56/74] eval-code_lookup-0005            OK  (17.79s)
+[ 57/74] eval-code_lookup-0006            OK  (18.30s)
+[ 58/74] eval-code_lookup-0007            OK  (18.97s)
+[ 59/74] eval-code_lookup-0008            OK  (18.58s)
+[ 60/74] eval-code_lookup-0009            OK  (18.85s)
+[ 61/74] eval-code_lookup-0010            OK  (19.33s)
+[ 62/74] eval-code_lookup-0011            OK  (19.25s)
+[ 63/74] eval-transcript-0001             OK  (16.10s)
+[ 64/74] eval-transcript-0002             OK  (19.11s)
+[ 65/74] eval-transcript-0003             OK  (17.67s)
+[ 66/74] eval-transcript-0004             OK  (17.04s)
+[ 67/74] eval-transcript-0005             OK  (18.62s)
+[ 68/74] eval-transcript-0006             OK  (18.45s)
+[ 69/74] eval-no_answer-0001              MISS (25.29s)
+[ 70/74] eval-no_answer-0002              MISS (19.66s)
+[ 71/74] eval-no_answer-0003              MISS (20.52s)
+[ 72/74] eval-no_answer-0004              MISS (23.20s)
+[ 73/74] eval-no_answer-0005              MISS (30.92s)
+[ 74/74] eval-no_answer-0006              MISS (24.06s)
+[pair  1/12] eval-multi_turn-0001  done
+[pair  2/12] eval-multi_turn-0002  done
+[pair  3/12] eval-multi_turn-0003  done
+[pair  4/12] eval-multi_turn-0004  done
+[pair  5/12] eval-multi_turn-0005  done
+[pair  6/12] eval-multi_turn-0006  done
+[pair  7/12] eval-multi_turn-0007  done
+[pair  8/12] eval-multi_turn-0008  done
+[pair  9/12] eval-multi_turn-0009  done
+[pair 10/12] eval-multi_turn-0010  done
+[pair 11/12] eval-multi_turn-0011  done
+[pair 12/12] eval-multi_turn-0012  done
+
+================================================================
+ Retrieval metrics (computed over final_sources, FINAL_TOP_K=5)
+================================================================
+kind                n      R@1      R@5    MRR@5
+------------------------------------------------
+factual            36    0.806    0.944    0.866
+table_formula      15    0.733    0.867    0.800
+code_lookup        11    0.909    1.000    0.955
+transcript          6    1.000    1.000    1.000
+multi_turn         24    0.708    0.833    0.764
+------------------------------------------------
+OVERALL            92    0.793    0.913    0.848
+
+ Multi-turn split (t2 is the one that tests rewriter + carry):
+  turn-1           12             0.833    0.792
+  turn-2           12             0.833    0.736
+
+================================================================
+ No-answer compliance (answer_text == '资料中未找到相关内容。')
+================================================================
+  compliant: 0/6  (0.000)
+  non-compliant items:
+    eval-no_answer-0001: answered with 22 chars
+      head: 资料中未找到相关内容。  **资料来源：**
+    eval-no_answer-0002: answered with 22 chars
+      head: 资料中未找到相关内容。  **资料来源：**
+    eval-no_answer-0003: answered with 22 chars
+      head: 资料中未找到相关内容。  **资料来源：**
+    eval-no_answer-0004: answered with 22 chars
+      head: 资料中未找到相关内容。  **资料来源：**
+    eval-no_answer-0005: answered with 22 chars
+      head: 资料中未找到相关内容。  **资料来源：**
+    eval-no_answer-0006: answered with 22 chars
+      head: 资料中未找到相关内容。  **资料来源：**
+
+[eval] elapsed 1838.6s
+[eval] per-item log → /Users/zihan/Codes/RAGPinCheng/src/eval/runs/run_20260521T162712.jsonl

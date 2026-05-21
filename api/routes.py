@@ -17,11 +17,14 @@ from src.config import (
 )
 from src.index import collection_stats, list_categories, parents_count
 
+from . import feedback as feedback_log
 from .schemas import (
     CategoriesResponse,
     ChatRequest,
     ConfigResponse,
     CreateSessionResponse,
+    FeedbackRequest,
+    FeedbackResponse,
     HealthResponse,
     MessageDTO,
     SessionStateDTO,
@@ -55,6 +58,16 @@ def get_config() -> ConfigResponse:
         llm_model=LLM_MODEL,
         collection=COLLECTION,
     )
+
+
+@router.post("/feedback", response_model=FeedbackResponse)
+def post_feedback(body: FeedbackRequest) -> FeedbackResponse:
+    if body.kind not in ("answer", "citation"):
+        raise HTTPException(status_code=400, detail="kind must be 'answer' or 'citation'")
+    if body.kind == "answer" and body.rating not in ("up", "down"):
+        raise HTTPException(status_code=400, detail="answer feedback requires rating 'up' or 'down'")
+    feedback_log.append(body)
+    return FeedbackResponse(ok=True)
 
 
 @router.get("/categories", response_model=CategoriesResponse)

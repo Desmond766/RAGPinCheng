@@ -2,7 +2,13 @@ import { useEffect, useRef } from "react";
 import type { ChatMessage } from "../types";
 import { Message } from "./Message";
 
-export function MessageList({ messages }: { messages: ChatMessage[] }) {
+export function MessageList({
+  messages,
+  sessionId,
+}: {
+  messages: ChatMessage[];
+  sessionId: string | null;
+}) {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   // Auto-scroll on every render so streaming tokens stay in view.
   useEffect(() => {
@@ -34,9 +40,20 @@ export function MessageList({ messages }: { messages: ChatMessage[] }) {
 
   return (
     <div className="flex-1 overflow-y-auto py-6 space-y-6">
-      {messages.map((m) => (
-        <Message key={m.id} msg={m} />
-      ))}
+      {(() => {
+        let turn = 0;
+        return messages.map((m) => {
+          if (m.role === "user") turn += 1;
+          return (
+            <Message
+              key={m.id}
+              msg={m}
+              sessionId={sessionId}
+              turnIndex={m.role === "assistant" ? turn : turn}
+            />
+          );
+        });
+      })()}
       <div ref={bottomRef} />
     </div>
   );

@@ -1,4 +1,4 @@
-import type { ApiConfig, Health } from "../types";
+import type { ApiConfig, FeedbackPayload, Health } from "../types";
 
 async function jsonFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(path, {
@@ -20,5 +20,10 @@ export const api = {
   deleteSession: (sid: string) =>
     fetch(`/api/sessions/${sid}`, { method: "DELETE" }).then((r) => {
       if (!r.ok && r.status !== 404) throw new Error(`delete failed: ${r.status}`);
+    }),
+  sendFeedback: (payload: FeedbackPayload) =>
+    jsonFetch<{ ok: boolean }>("/api/feedback", {
+      method: "POST",
+      body: JSON.stringify(payload),
     }),
 };
