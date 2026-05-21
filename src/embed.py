@@ -20,10 +20,27 @@ class Embedding:
     sparse_values: list[float]
 
 
+def _pick_device() -> str:
+    """Prefer CUDA, then Apple MPS, else CPU. fp16 is unsupported on MPS — the
+    caller checks `_use_fp16()` separately."""
+    try:
+        import torch
+        if torch.cuda.is_available():
+            return "cuda"
+        if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
+            return "mps"
+    except Exception:
+        pass
+    return "cpu"
+
+
 @lru_cache(maxsize=1)
 def get_model() -> BGEM3FlagModel:
-    # use_fp16 reduces memory; falls back gracefully on CPU
-    return BGEM3FlagModel(EMBED_MODEL, use_fp16=True)
+    device = _pick_device()
+    # fp16 is fine on CUDA, broken on MPS (silent NaNs), wasteful on CPU.
+    use_fp16 = device == "cuda"
+    print(f"[embed] loading {EMBED_MODEL} on device={device} fp16={use_fp16}")
+    return BGEM3FlagModel(EMBED_MODEL, use_fp16=use_fp16, devices=device)
 
 
 def _to_sparse_pair(weights: dict) -> tuple[list[int], list[float]]:

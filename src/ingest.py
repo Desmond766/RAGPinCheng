@@ -16,6 +16,7 @@ import shutil
 import subprocess
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterator
@@ -111,19 +112,38 @@ def _cloud_parse_batch(parts: list[Path]) -> list[str]:
     file_urls = data["file_urls"]  # list[str], one URL per file in input order
     batch_id = data["batch_id"]
 
-    # 2. Upload each part. Send raw bytes (sets Content-Length; avoids chunked
-    # encoding which S3 rejects). Per docs: do NOT set Content-Type.
-    for part, presigned_url in zip(parts, file_urls):
-        # file_urls entries are documented as plain strings, but tolerate {"url": ...}
+    # 2. Upload each part in parallel with retry-on-timeout. Send raw bytes
+    # (sets Content-Length; avoids chunked encoding which S3 rejects). Per
+    # docs: do NOT set Content-Type.
+    def _upload_part(part: Path, presigned_url) -> None:
         url = presigned_url["url"] if isinstance(presigned_url, dict) else presigned_url
         payload = part.read_bytes()
         print(f"  [upload] {part.name}: {len(payload):,} bytes → S3")
-        put_resp = requests.put(url, data=payload, timeout=600)
-        if not put_resp.ok:
-            raise RuntimeError(
-                f"S3 upload failed for {part.name} "
-                f"(status={put_resp.status_code}): {put_resp.text[:500]}"
-            )
+        last_exc: Exception | None = None
+        for attempt in range(1, 4):  # 3 attempts: ~exponential backoff between
+            try:
+                put_resp = requests.put(url, data=payload, timeout=600)
+                if not put_resp.ok:
+                    raise RuntimeError(
+                        f"S3 upload failed for {part.name} "
+                        f"(status={put_resp.status_code}): {put_resp.text[:500]}"
+                    )
+                return
+            except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as exc:
+                last_exc = exc
+                if attempt < 3:
+                    backoff = 2 ** attempt  # 2s, 4s
+                    print(f"  [retry] {part.name} attempt {attempt} failed ({exc}); retrying in {backoff}s")
+                    time.sleep(backoff)
+        raise RuntimeError(f"S3 upload exhausted retries for {part.name}: {last_exc}")
+
+    with ThreadPoolExecutor(max_workers=min(4, len(parts))) as pool:
+        futures = [
+            pool.submit(_upload_part, part, url)
+            for part, url in zip(parts, file_urls)
+        ]
+        for f in as_completed(futures):
+            f.result()  # re-raise on failure
 
     # 3. Poll batch results — no overall deadline; wait as long as MinerU needs.
     # Individual HTTP requests still have per-call timeouts to detect a dead

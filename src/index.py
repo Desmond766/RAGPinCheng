@@ -19,8 +19,12 @@ def _client() -> QdrantClient:
     return QdrantClient(path=str(QDRANT_DIR))
 
 
-def _ensure_collection(client: QdrantClient, reset: bool = False) -> None:
+def _ensure_collection(client: QdrantClient, reset: bool = False) -> bool:
     """Create the Qdrant collection if missing. If reset=True, drop first.
+
+    Returns True when the collection was just (re)created — callers can use
+    this to skip the existing-id probe when the collection is known to be
+    empty (saves N round-trips on first-time indexing).
 
     Also ensures payload indexes used by the retriever:
       - `category` (keyword)  — fast equality filter for category scoping.
@@ -31,7 +35,7 @@ def _ensure_collection(client: QdrantClient, reset: bool = False) -> None:
     if client.collection_exists(COLLECTION):
         if not reset:
             _ensure_payload_indexes(client)
-            return
+            return False
         client.delete_collection(COLLECTION)
     client.create_collection(
         collection_name=COLLECTION,
@@ -43,6 +47,7 @@ def _ensure_collection(client: QdrantClient, reset: bool = False) -> None:
         },
     )
     _ensure_payload_indexes(client)
+    return True
 
 
 def _ensure_payload_indexes(client: QdrantClient) -> None:
@@ -187,10 +192,13 @@ def index_children(children: list[Child], reset: bool = False) -> None:
     skip never masks stale data; it only suppresses redundant re-embeds.
     """
     client = _client()
-    _ensure_collection(client, reset=reset)
+    just_created = _ensure_collection(client, reset=reset)
 
     to_index: list[Child] = children
-    if not reset and children:
+    # Skip the existing-id probe when the collection is known-empty
+    # (reset, or just created). Otherwise check Qdrant for which child_ids
+    # are already present so we don't re-embed them.
+    if not reset and not just_created and children:
         all_ids = [c.child_id for c in children]
         existing: set[str] = set()
         # qdrant-client's retrieve() tolerates large id lists; chunk anyway
