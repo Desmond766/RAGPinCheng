@@ -266,26 +266,25 @@ def iter_pdfs() -> Iterator[Path]:
 
 
 TRANSCRIPTIONS_DIR = DOCS_DIR / "教学视频"
-_TRANSCRIPT_PREFIX = "MinerU_markdown_文字记录："
 _TRANSCRIPT_TITLE_RE = __import__("re").compile(
     r"^\s*\**\s*文字记录[:：]\s*(.+?)\s*\**\s*$"
 )
 
 
 def iter_transcripts() -> Iterator[Path]:
-    """Yield only `文字记录：` markdown files; `智能纪要：` files are skipped."""
+    """Yield all .md files in 教学视频/; skip 智能纪要：summary files."""
     if not TRANSCRIPTIONS_DIR.exists():
         return
     for p in sorted(TRANSCRIPTIONS_DIR.glob("*.md")):
-        if p.name.startswith(_TRANSCRIPT_PREFIX):
+        if not p.name.startswith("智能纪要："):
             yield p
 
 
 def _transcript_title(md_path: Path) -> str:
     """Read the title from the first non-empty line of a transcript file.
 
-    Falls back to the filename stem (minus the MinerU prefix) if the first
-    line doesn't match the expected `**文字记录：<title>**` shape.
+    Falls back to the filename stem if the first line doesn't match the
+    expected `**文字记录：<title>**` shape.
     """
     try:
         with md_path.open("r", encoding="utf-8") as fh:
@@ -299,10 +298,7 @@ def _transcript_title(md_path: Path) -> str:
                 break
     except OSError:
         pass
-    stem = md_path.stem
-    if stem.startswith(_TRANSCRIPT_PREFIX):
-        stem = stem[len(_TRANSCRIPT_PREFIX):]
-    return stem
+    return md_path.stem
 
 
 def ingest_all(force: bool = False) -> list[ParsedDoc]:

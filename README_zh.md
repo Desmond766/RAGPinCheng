@@ -33,7 +33,22 @@ docs/<分类>/           data/parsed/     父块 +       Qdrant +       智谱 G
 
 ---
 
-## 从零开始
+## 部署方式选择
+
+系统提供两种部署路径：
+
+| | 本地（venv） | Docker |
+|---|---|---|
+| **适合场景** | 开发调试、个人使用 | 自建服务器、团队共用 |
+| **环境要求** | Python 3.11+ venv + Node.js 18+ | Docker Engine 24+ 及 compose 插件 |
+| **前端** | Streamlit 或 Vite 开发服务器 | nginx（编译后的产物，监听 80 端口） |
+| **Qdrant 锁** | 同一时间只能一个进程 | 同样限制，单 uvicorn worker |
+
+两种方式共用同一份 `.env` 密钥配置和 `data/` 目录结构。
+
+---
+
+## 本地部署（venv）
 
 环境要求：macOS 或 Linux，Python 3.11+，约 10 GB 磁盘空间（模型权重 + 索引），智谱 API Key，可选 MinerU API Key，前端还需要 Node.js 18+。
 
@@ -55,9 +70,11 @@ pip install -r requirements.txt
 ```bash
 cp .env.example .env
 # 编辑 .env，至少填写：
-#   ZHIPU_API_KEY=...        （生成答案必需；在 bigmodel.cn 申请）
-#   MINERU_API_KEY=...       （可选；云端解析 PDF 更快，强烈建议配置）
-#   LLM_MODEL=glm-4.6        （可选；默认已是 glm-4.6）
+#   ZHIPU_API_KEY=...              （生成答案必需；在 bigmodel.cn 申请）
+#   MINERU_API_KEY=...             （可选；云端解析 PDF 更快，强烈建议配置）
+#   LLM_MODEL=glm-4.6             （可选；默认已是 glm-4.6）
+#   LLM_REWRITE_MODEL=glm-4.5-air （可选；专门用于问题改写步骤的轻量模型，
+#                                    不填则与 LLM_MODEL 相同）
 ```
 
 不配置 `ZHIPU_API_KEY` 也能跑检索部分，用 `scripts/test_retrieve.py` 验证索引是否正常即可。
@@ -75,7 +92,7 @@ docs/
 └── 教学视频/          # MinerU 导出的视频文字记录（.md 文件）
 ```
 
-视频文字记录文件名格式须为 `MinerU_markdown_文字记录：<标题>_<日期>_<id>.md`，系统才能识别并从 `说话人 N HH:MM:SS` 标记中读取时间戳。同目录下的 `智能纪要：` 摘要文件会被自动跳过——索引只需要原始文字记录，这样每条引用才能带时间戳。
+视频文字记录文件放在 `docs/教学视频/` 目录下，扩展名为 `.md`，文件名没有格式限制。系统从文件正文中的 `说话人 N HH:MM:SS` 行读取时间戳；视频标题从文件第一行的 `**文字记录：<标题>**` 读取，文件名只是解析失败时的备用。文件名以 `智能纪要：` 开头的摘要文件会被自动跳过——索引只需要原始文字记录，这样每条引用才能带时间戳。
 
 ### 第四步：建立索引
 
@@ -93,7 +110,7 @@ python scripts/build_index.py
 python scripts/build_index.py --reset
 ```
 
-### 第五步：启动界面
+### 第五步：启动前端
 
 **Streamlit 版**（最简单）：
 
@@ -118,9 +135,13 @@ npm run dev        # 访问 http://localhost:5173
 
 ---
 
-## 生产部署（Docker）
+---
+
+## Docker 部署（自建服务器）
 
 仓库自带一套两容器的 Docker 部署方案，目标是 Linux x86_64 自建服务器。下面这些操作面向负责运维这套系统的工程师。
+
+> **Apple Silicon Mac 用户**：默认构建目标是 `linux/amd64`（面向生产服务器）。在 arm64 Mac 上本地测试时，在 `.env` 里加一行 `BUILD_PLATFORM=linux/arm64` 再构建，速度会快很多（避免 QEMU 模拟）。注意这个镜像跑不了 x86 服务器，生产环境构建时不要设这个。
 
 ### 部署结构
 
@@ -158,6 +179,8 @@ cat > .env <<'EOF'
 ZHIPU_API_KEY=...
 MINERU_API_KEY=...
 LLM_MODEL=glm-4.6
+# 可选：仅用于问题改写步骤的轻量模型，不填则与 LLM_MODEL 相同
+# LLM_REWRITE_MODEL=glm-4.5-air
 # 服务器访问不到 huggingface.co 时取消注释下面这行：
 # HF_ENDPOINT=https://hf-mirror.com
 EOF

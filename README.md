@@ -50,7 +50,22 @@ Two front-ends consume the same `ChatSession`:
 
 ---
 
-## Cold start
+## Deployment options
+
+Two ways to run the system:
+
+| | Local (venv) | Docker |
+|---|---|---|
+| **Best for** | Development, debugging, single-user use | Self-hosted server, team access |
+| **Setup** | Python 3.11+ venv + Node.js 18+ | Docker Engine 24+ with compose plugin |
+| **Front-end** | Streamlit or Vite dev server | nginx (serves built bundle on port 80) |
+| **Qdrant lock** | One process at a time | Same restriction — one uvicorn worker |
+
+Both paths share the same `.env` secrets and `data/` directory layout.
+
+---
+
+## Local setup (venv)
 
 You need: macOS or Linux, Python 3.11+, ~10 GB free disk (model weights + index),
 a Zhipu API key, optionally a MinerU API key, and Node.js 18+ if you want the
@@ -75,9 +90,11 @@ expect 5-10 min and ~3 GB.
 ```bash
 cp .env.example .env
 # Edit .env and fill in at minimum:
-#   ZHIPU_API_KEY=...           (required for generation; get one at bigmodel.cn)
-#   MINERU_API_KEY=...          (optional; fast cloud PDF parsing — strongly recommended)
-#   LLM_MODEL=glm-4.6           (optional override; default is glm-4.6)
+#   ZHIPU_API_KEY=...              (required for generation; get one at bigmodel.cn)
+#   MINERU_API_KEY=...             (optional; fast cloud PDF parsing — strongly recommended)
+#   LLM_MODEL=glm-4.6             (optional override; default is glm-4.6)
+#   LLM_REWRITE_MODEL=glm-4.5-air (optional; cheaper model for the rewrite step only —
+#                                   defaults to LLM_MODEL when unset)
 ```
 
 Retrieval works without `ZHIPU_API_KEY` (you can run `scripts/test_retrieve.py`
@@ -96,11 +113,12 @@ docs/
 └── 教学视频/          # MinerU-exported video transcripts (markdown, not PDF)
 ```
 
-Transcripts must be in the form
-`MinerU_markdown_文字记录：<title>_<date>_<id>.md` so the chunker recognizes
-them and reads timestamps from `说话人 N HH:MM:SS` markers. The `智能纪要：`
-summary files in the same folder are skipped on purpose — we want every video
-citation to carry a timestamp.
+Transcript files must live in `docs/教学视频/` with a `.md` extension —
+any filename works. The chunker detects timestamps from `说话人 N HH:MM:SS`
+lines in the file body. The video title is read from the first
+`**文字记录：<title>**` line of the file; the filename stem is only a fallback.
+Files whose names start with `智能纪要：` are skipped on purpose — we index
+transcripts only so every citation carries a timestamp.
 
 ### 4. Build the index
 
@@ -117,7 +135,7 @@ and re-run — only new files get parsed and indexed; existing content is
 overwritten in place (deterministic UUIDv5 IDs). For a full rebuild after
 changing chunking or embedding logic, add `--reset`.
 
-### 5. Run a UI
+### 5. Run a front-end
 
 **Streamlit** (simplest):
 
@@ -145,11 +163,19 @@ npm run dev                  # opens http://localhost:5173
 
 ---
 
-## Production deployment (Docker)
+---
+
+## Docker deployment (self-hosted server)
 
 The repo ships with a two-container Docker setup intended for self-hosted
 deployment on a Linux x86_64 server. Everything below assumes you're the
 engineer running and maintaining this system in production.
+
+> **Apple Silicon Mac?** The default build target is `linux/amd64` (for the
+> production server). To build natively on an arm64 Mac (much faster — avoids
+> QEMU emulation), add `BUILD_PLATFORM=linux/arm64` to your `.env` before
+> running `docker compose build`. The resulting image won't run on an x86
+> server; use the default for production builds.
 
 ### What ships in the deployment
 
@@ -187,6 +213,8 @@ cat > .env <<'EOF'
 ZHIPU_API_KEY=...
 MINERU_API_KEY=...
 LLM_MODEL=glm-4.6
+# Optional: cheaper model for the query-rewrite step only. Defaults to LLM_MODEL.
+# LLM_REWRITE_MODEL=glm-4.5-air
 # Uncomment if huggingface.co is unreachable from the server:
 # HF_ENDPOINT=https://hf-mirror.com
 EOF
