@@ -58,4 +58,9 @@ MINERU_MAX_PAGES = 200  # cloud API per-file page limit; larger PDFs are split
 ZHIPU_API_KEY = os.getenv("ZHIPU_API_KEY", "")
 ZHIPU_BASE_URL = "https://open.bigmodel.cn/api/paas/v4/"
 LLM_MODEL = os.getenv("LLM_MODEL", "glm-4.6")
+# Optional: a cheaper / faster model for the standalone-query rewrite step,
+# which is short and latency-sensitive. Defaults to LLM_MODEL when unset OR
+# empty — docker-compose passes empty strings for unset env vars by default,
+# which `os.getenv("...", default)` does NOT treat as missing.
+LLM_REWRITE_MODEL = os.getenv("LLM_REWRITE_MODEL", "").strip() or LLM_MODEL
 LLM_TEMPERATURE = 0.2

@@ -30,6 +30,9 @@ services:
       ZHIPU_API_KEY: ${ZHIPU_API_KEY}
       MINERU_API_KEY: ${MINERU_API_KEY}
       LLM_MODEL: ${LLM_MODEL:-glm-4.6}
+      # Optional rewrite-specific model. If unset, src/config.py falls back to
+      # LLM_MODEL — keeps single-model setups working without compose changes.
+      LLM_REWRITE_MODEL: ${LLM_REWRITE_MODEL:-}
       # HuggingFace endpoint. Defaults to the real CDN; override in .env with
       #   HF_ENDPOINT=https://hf-mirror.com
       # if the server can't reach huggingface.co directly (common on restricted

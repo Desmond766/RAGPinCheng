@@ -12,6 +12,7 @@ from src.config import (
     COLLECTION,
     EMBED_MODEL,
     LLM_MODEL,
+    LLM_REWRITE_MODEL,
     RERANK_ENABLED,
     RERANKER_MODEL,
 )
@@ -56,6 +57,7 @@ def get_config() -> ConfigResponse:
         reranker_model=RERANKER_MODEL,
         rerank_enabled=RERANK_ENABLED,
         llm_model=LLM_MODEL,
+        llm_rewrite_model=LLM_REWRITE_MODEL,
         collection=COLLECTION,
     )
 

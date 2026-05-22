@@ -113,6 +113,7 @@ export function Sidebar({
               </code>
             </div>
             <div>生成: <code>{config?.llm_model || "—"}</code></div>
+            <div>改写: <code>{config?.llm_rewrite_model || "—"}</code></div>
             <div>集合: <code>{config?.collection || "—"}</code></div>
           </div>
         </section>

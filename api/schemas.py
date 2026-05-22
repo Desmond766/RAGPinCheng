@@ -45,6 +45,7 @@ class ConfigResponse(BaseModel):
     reranker_model: str
     rerank_enabled: bool
     llm_model: str
+    llm_rewrite_model: str
     collection: str
 
 

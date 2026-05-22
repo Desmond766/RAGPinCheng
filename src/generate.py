@@ -8,6 +8,7 @@ from openai import OpenAI
 
 from .config import (
     LLM_MODEL,
+    LLM_REWRITE_MODEL,
     LLM_TEMPERATURE,
     MAX_CONTEXT_CHARS,
     ZHIPU_API_KEY,
@@ -149,7 +150,11 @@ def rewrite_query(
     try:
         client = _client()
         resp = client.chat.completions.create(
-            model=LLM_MODEL,
+            # Rewrite uses LLM_REWRITE_MODEL, not LLM_MODEL — the rewrite is
+            # latency-critical (one cheap call before retrieval) while answer
+            # generation cares more about quality. Defaults to LLM_MODEL when
+            # LLM_REWRITE_MODEL is unset, so single-model setups still work.
+            model=LLM_REWRITE_MODEL,
             temperature=0,
             messages=[
                 {"role": "system", "content": load_prompt("rewrite_system")},

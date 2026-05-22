@@ -71,6 +71,7 @@ export type ApiConfig = {
   reranker_model: string;
   rerank_enabled: boolean;
   llm_model: string;
+  llm_rewrite_model: string;
   collection: string;
 };
 
