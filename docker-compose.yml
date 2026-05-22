@@ -1,0 +1,131 @@
+# Production compose for the PinCheng RAG system.
+#
+# Usage:
+#   docker compose build                  # build both images
+#   docker compose up -d                  # start backend + frontend
+#   docker compose logs -f backend        # tail backend logs
+#   docker compose exec backend python scripts/build_index.py   # re-index after adding PDFs
+#   docker compose down                   # stop (data on disk is preserved)
+#
+# Secrets: docker compose auto-loads `.env` from this directory. Required keys:
+#   ZHIPU_API_KEY, MINERU_API_KEY, (optional) LLM_MODEL, HF_ENDPOINT.
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+      # Target architecture is parameterized — defaults to amd64 (production
+      # server). Override per-invocation for local Mac testing:
+      #     BUILD_PLATFORM=linux/arm64 docker compose build
+      # Or set it in .env to make it sticky for one machine.
+      # For a true multi-arch image (both arches in one manifest), use buildx
+      # directly: see comments at the bottom of this file.
+      platforms:
+        - ${BUILD_PLATFORM:-linux/amd64}
+    image: pincheng-rag-backend:latest
+    restart: unless-stopped
+    environment:
+      # Secrets / model config — passed through from the host .env file.
+      ZHIPU_API_KEY: ${ZHIPU_API_KEY}
+      MINERU_API_KEY: ${MINERU_API_KEY}
+      LLM_MODEL: ${LLM_MODEL:-glm-4.6}
+      # HuggingFace endpoint. Defaults to the real CDN; override in .env with
+      #   HF_ENDPOINT=https://hf-mirror.com
+      # if the server can't reach huggingface.co directly (common on restricted
+      # networks in mainland China). FlagEmbedding + huggingface_hub honor this
+      # env var transparently — no code change required.
+      HF_ENDPOINT: ${HF_ENDPOINT:-https://huggingface.co}
+      # Frontend is same-origin via nginx proxy, so the in-app CORS list is
+      # unused in prod. Leave empty to deny browser cross-origin entirely.
+      API_CORS_ORIGINS: ${API_CORS_ORIGINS:-}
+    volumes:
+      # Persistent state — index, parsed markdown, SQLite parent store,
+      # feedback log. Lives on the host disk; the image stays stateless.
+      - ./data:/app/data
+      # Source PDFs — needed only when running scripts/build_index.py inside
+      # the container. Mounted read-write so MinerU can drop split PDFs back
+      # alongside originals if needed.
+      - ./docs:/app/docs
+      # HuggingFace model cache — separate named volume so first-boot
+      # downloads of BGE-M3 + reranker (~3 GB) survive container recreation.
+      - hf_cache:/root/.cache/huggingface
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      # Long start_period: first container start downloads ~3 GB of model
+      # weights into hf_cache before /api/health is reachable. Subsequent
+      # restarts complete in seconds.
+      start_period: 15m
+    # Not exposed to the host — frontend reaches it over the compose network.
+    expose:
+      - "8000"
+    logging:
+      # Bounded rolling buffer of stdout/stderr. The app uses Python's logging
+      # module (configured in api/main.py) which writes to stderr; uvicorn
+      # access logs go to stdout. Docker captures both. With these limits we
+      # keep up to 50 MB per service before old files are dropped, which is
+      # plenty for post-mortem debugging without risking a full disk on a
+      # long-running container. Inspect with `docker compose logs backend`.
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      platforms:
+        - ${BUILD_PLATFORM:-linux/amd64}
+    image: pincheng-rag-frontend:latest
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_started
+    ports:
+      # Publicly exposed entry point. Put a company reverse proxy / TLS
+      # terminator in front of this for HTTPS.
+      - "80:80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:80/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging:
+      # Same rolling buffer as backend. nginx access + error logs both stream
+      # to stdout/stderr in the official alpine image, so `docker compose logs
+      # frontend` shows request lines + 502/504 errors when debugging the
+      # proxy.
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+volumes:
+  hf_cache:
+    # Survives `docker compose down`; only removed with `docker compose down -v`.
+
+# -----------------------------------------------------------------------------
+# Build cheat-sheet
+# -----------------------------------------------------------------------------
+# Build for the production server (default, x86_64):
+#     docker compose build
+#
+# Build natively on an Apple Silicon Mac for fast local testing:
+#     BUILD_PLATFORM=linux/arm64 docker compose build
+#
+# Make the override sticky for one machine — add to .env:
+#     BUILD_PLATFORM=linux/arm64
+#
+# Build a true multi-arch image (single manifest containing both arches, useful
+# when pushing to a registry that mixed-arch hosts pull from). compose's
+# `platforms:` does not accept a multi-value env var, so use buildx directly:
+#     docker buildx build --platform linux/amd64,linux/arm64 \
+#         -f Dockerfile.backend -t pincheng-rag-backend:latest --push .
+#     docker buildx build --platform linux/amd64,linux/arm64 \
+#         -f frontend/Dockerfile -t pincheng-rag-frontend:latest --push ./frontend
+# (Multi-arch builds require pushing to a registry — local Docker engine can
+# only hold one arch per image tag at a time.)

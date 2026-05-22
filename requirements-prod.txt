@@ -1,0 +1,23 @@
+# Production container deps — see requirements.txt for full local-dev set.
+# Excludes:
+#   - mineru[core]  (cloud API used via MINERU_API_KEY; local CLI fallback not shipped)
+#   - streamlit     (React frontend is the production UI)
+# CPU-only torch is installed separately in the Dockerfile to avoid pulling
+# the ~2GB CUDA wheels that FlagEmbedding would otherwise drag in.
+requests>=2.32.0
+pypdf>=4.0.0
+langchain-text-splitters>=0.3.0
+FlagEmbedding>=1.3.0
+# Pin transformers to 4.x. FlagEmbedding 1.4 still calls the legacy
+# `tokenizer.prepare_for_model(...)` API which was removed in transformers 5.x,
+# producing `AttributeError: XLMRobertaTokenizer has no attribute
+# prepare_for_model` at rerank time. Lower bound is set high enough to keep
+# the torch>=2.6 CVE-2025-32434 check happy.
+transformers>=4.46,<5
+qdrant-client>=1.12.0
+openai>=1.50.0
+python-dotenv>=1.0.0
+tqdm>=4.66.0
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+sse-starlette>=2.1.0

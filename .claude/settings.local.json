@@ -46,7 +46,11 @@
       "Bash(python3 *)",
       "Bash(brew list *)",
       "Read(//opt/homebrew/bin/**)",
-      "Bash(pyenv versions *)"
+      "Bash(pyenv versions *)",
+      "Bash(docker compose *)",
+      "Bash(tee /tmp/rebuild.log)",
+      "Bash(tee /tmp/rebuild2.log)",
+      "Bash(tee /tmp/build2.log)"
     ]
   }
 }

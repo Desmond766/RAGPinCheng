@@ -1,0 +1,61 @@
+# Backend image — FastAPI + ChatSession + BGE-M3 + reranker.
+#
+# Target platform is set in docker-compose.yml (build.platforms + the service-
+# level `platform:` field). On an Apple Silicon Mac, that pins linux/amd64 so
+# the resulting image runs natively on the x86_64 server.
+FROM python:3.11-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    HF_HOME=/root/.cache/huggingface
+
+# Minimal system deps:
+#   curl            — used by the healthcheck
+#   build-essential — pip compiles any wheel that doesn't ship prebuilt for
+#                     the target arch (mainly an arm64 concern; most amd64
+#                     wheels are prebuilt on PyPI)
+#   zlib1g-dev      — `zlib-state` (transitive dep via FlagEmbedding →
+#                     ir-datasets) has no arm64 wheel on PyPI; building from
+#                     source needs zlib.h
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        curl \
+        build-essential \
+        zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# 1) Install CPU-only torch first. FlagEmbedding depends on torch; pinning the
+#    CPU wheel here means the later `pip install` sees torch as already
+#    satisfied and skips the default CUDA wheel (~2GB saved).
+# torch>=2.6 is required by current `transformers`: it refuses to load .bin
+# checkpoints on older torch due to CVE-2025-32434 (the `torch.load` pickle
+# RCE). BGE-M3 ships .bin weights, so anything < 2.6 fails at warmup with
+# "ValueError: ... upgrade torch to at least v2.6".
+RUN pip install --index-url https://download.pytorch.org/whl/cpu \
+        "torch>=2.6"
+
+# 2) Production Python deps.
+COPY requirements-prod.txt ./
+RUN pip install -r requirements-prod.txt
+
+# 3) Application code. Everything the runtime + scripts/build_index.py needs.
+COPY src/ ./src/
+COPY api/ ./api/
+COPY prompts/ ./prompts/
+COPY scripts/ ./scripts/
+
+# docs/ and data/ are bind-mounted at runtime (see docker-compose.yml).
+# Empty placeholders so src.config can mkdir/stat them even before first mount.
+RUN mkdir -p /app/docs /app/data
+
+EXPOSE 8000
+
+# Single worker on purpose: BGE-M3 + reranker hold ~3-4 GB resident; multi-worker
+# would multiply RAM with no throughput gain on a CPU-only host (torch releases
+# the GIL during inference, so a single worker already overlaps I/O and compute).
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]

@@ -12,8 +12,16 @@ from functools import lru_cache
 from typing import Sequence
 
 from FlagEmbedding import FlagReranker
+import transformers
 
 from .config import RERANKER_MODEL
+
+# Silence the advisory "You're using a XLMRobertaTokenizerFast tokenizer..."
+# message that transformers emits on every reranker batch. The hint targets
+# FlagEmbedding's internal `prepare_for_model` + `pad` call pattern, which we
+# can't change without forking FlagEmbedding. Keeping ERROR (not WARNING)
+# still surfaces real problems (missing weights, dtype mismatches, etc.).
+transformers.logging.set_verbosity_error()
 
 
 @lru_cache(maxsize=1)

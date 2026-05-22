@@ -1,0 +1,46 @@
+# Keep the backend build context small. Anything not listed under COPY in
+# Dockerfile.backend doesn't need to ship; this file mainly speeds up `docker
+# build` by not streaming gigabytes of data/docs/.venv into the daemon.
+
+.git
+.gitignore
+.venv
+venv
+__pycache__
+**/__pycache__
+*.pyc
+*.pyo
+.DS_Store
+
+# Local dev artifacts
+.env
+.env.example
+.claude/
+
+# Frontend lives in its own image
+frontend/
+
+# Bind-mounted at runtime, not baked into the image
+data/
+docs/
+
+# Streamlit UI is not part of the deployment
+app.py
+
+# Repo docs / scratch
+README.md
+README_zh.md
+CLAUDE.md
+TODO
+*.html
+eval_run.log
+src/eval/runs/
+src/eval/sampled_parents.json
+src/eval/drafts.jsonl
+
+# Local-dev requirements (we use requirements-prod.txt in-image)
+requirements.txt
+
+# Docker config doesn't need to ship into the image
+Dockerfile.backend
+docker-compose.yml
