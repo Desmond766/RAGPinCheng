@@ -2,7 +2,7 @@
   "info": {
     "name": "PinCheng BIM RAG API",
     "_postman_id": "b2d7c2c8-8aaa-4a0a-9f1a-pincheng-rag-v1",
-    "description": "FastAPI endpoints for the 品诚 BIM 知识库 RAG backend.\n\nBefore running:\n1. Start the backend:  `.venv/bin/python -m uvicorn api.main:app --port 8000`\n2. Create an environment with a variable `baseUrl` = `http://127.0.0.1:8000`.\n3. Run `Create Session` once — its Test script captures `sid` into the env so the chat / get / delete requests reuse it.\n\nThe chat endpoint streams via SSE. Postman waits for the full stream to finish before displaying the body (no token-by-token rendering); use `curl -N` if you want to see tokens arrive live.",
+    "description": "FastAPI endpoints for the 品成 BIM 知识库 RAG backend.\n\nBefore running:\n1. Start the backend:  `.venv/bin/python -m uvicorn api.main:app --port 8000`\n2. Create an environment with a variable `baseUrl` = `http://127.0.0.1:8000`.\n3. Run `Create Session` once — its Test script captures `sid` into the env so the chat / get / delete requests reuse it.\n\nThe chat endpoint streams via SSE. Postman waits for the full stream to finish before displaying the body (no token-by-token rendering); use `curl -N` if you want to see tokens arrive live.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [

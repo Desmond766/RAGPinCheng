@@ -46,7 +46,7 @@ export function ChatLayout() {
         <header className="px-6 py-3 border-b border-gray-200 bg-bg/80 backdrop-blur-sm flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-lg">📚</span>
-            <span className="font-semibold">品诚 BIM 知识库</span>
+            <span className="font-semibold">品成 BIM 知识库</span>
           </div>
           <div className="text-xs text-muted">
             {sessionId ? (

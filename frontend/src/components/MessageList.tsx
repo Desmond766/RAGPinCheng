@@ -20,7 +20,7 @@ export function MessageList({
       <div className="flex-1 flex items-center justify-center text-center px-6">
         <div className="max-w-lg">
           <div className="text-4xl mb-3">📚</div>
-          <h1 className="text-xl font-semibold text-ink">品诚 BIM 知识库</h1>
+          <h1 className="text-xl font-semibold text-ink">品成 BIM 知识库</h1>
           <p className="text-muted mt-2">
             统一管理公司多年积累的<strong>行业规范与标准</strong>、<strong>客户要求</strong>、
             <strong>内部标准</strong>、<strong>项目资料</strong>与<strong>培训视频</strong>，

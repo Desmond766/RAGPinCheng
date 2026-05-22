@@ -1,4 +1,4 @@
-# 品诚 BIM 知识库 (PinCheng BIM Knowledge Base)
+# 品成 BIM 知识库 (PinCheng BIM Knowledge Base)
 
 An internal Chinese-language RAG (retrieval-augmented generation) system for a BIM
 consultancy. It indexes the company's accumulated knowledge — **industry codes,

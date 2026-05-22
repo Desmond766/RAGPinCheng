@@ -7,7 +7,7 @@ from src.config import COLLECTION, EMBED_MODEL, LLM_MODEL, RERANK_ENABLED, RERAN
 from src.index import collection_stats, list_categories, parents_count
 from src.session import ChatSession
 
-st.set_page_config(page_title="品诚 BIM 知识库", page_icon="📚", layout="wide")
+st.set_page_config(page_title="品成 BIM 知识库", page_icon="📚", layout="wide")
 
 
 @st.cache_resource(show_spinner="正在加载嵌入模型 (BGE-M3)...")
@@ -50,7 +50,7 @@ def _render_sources(sources: list[dict]) -> None:
 
 
 def main() -> None:
-    st.title("📚 品诚 BIM 知识库")
+    st.title("📚 品成 BIM 知识库")
     st.caption("汇总公司行业规范、客户要求、内部标准、项目资料与培训视频的企业知识库")
 
     chat = _get_session()
