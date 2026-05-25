@@ -62,10 +62,17 @@ def _build_context(
                 f"</source>"
             )
         else:
+            # Show the LLM only the leaf of the breadcrumb (e.g. `(5) 钢材耐腐蚀性差`)
+            # instead of the full path `第1章 概述 > 1.1 ... > 1.1.1 ... > (5) ...`.
+            # Inline citations stay short and readable; the full breadcrumb is
+            # exposed in the SourcesPanel expand view.
+            section_leaf = (
+                p.section_path.split(" > ")[-1] if p.section_path else ""
+            )
             block = (
                 f'<source id="{p.parent_id[:8]}" doc="{p.doc_title}" '
                 f'category="{p.category}"{company_attr} '
-                f'section="{p.section_path}" type="pdf">\n'
+                f'section="{section_leaf}" type="pdf">\n'
                 f"{p.text}\n"
                 f"</source>"
             )

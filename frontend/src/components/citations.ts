@@ -45,6 +45,18 @@ export function resolveCitation(href: string, sources: Source[]): number {
     return (s.section_path || "") === tail;
   });
   if (idx >= 0) return idx;
+  // Leaf match: the LLM is instructed to cite the leaf of the breadcrumb
+  // (e.g. `(5) 钢材耐腐蚀性差`) while `section_path` stores the full path
+  // (`第1章 概述 > 1.1 ... > 1.1.1 ... > (5) 钢材耐腐蚀性差`). Match by the
+  // trailing segment so short citations still resolve.
+  if (kind === "pdf") {
+    idx = sources.findIndex(
+      (s) =>
+        s.doc_title === doc &&
+        ((s.section_path || "").split(" > ").pop() || "") === tail,
+    );
+    if (idx >= 0) return idx;
+  }
   // Lenient: prefix match on section (LLM occasionally truncates).
   if (kind === "pdf") {
     idx = sources.findIndex(

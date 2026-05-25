@@ -25,7 +25,74 @@ from .ingest import ParsedDoc
 
 NAMESPACE = uuid.UUID("00000000-0000-0000-0000-000000000001")
 
-HEADERS = [("#", "h1"), ("##", "h2"), ("###", "h3")]
+HEADERS = [("#", "h1"), ("##", "h2"), ("###", "h3"), ("####", "h4")]
+
+
+# Heading-normalization patterns. MinerU's PDF→markdown collapses every
+# detected heading to `#` regardless of its real level in the document — see
+# data/parsed/*.md, which are 100% H1, 0% h2/h3. We re-infer the level from
+# the numbering text at the start of the line so MarkdownHeaderTextSplitter
+# can build a real hierarchy. Order matters: deeper patterns must match
+# before shallower ones (e.g. `1.1.1` before `1.1`).
+#
+# Each rule = (regex on heading body, target hash count).
+_HEADING_RULES: list[tuple[re.Pattern, int]] = [
+    # `附录 N-M ...`  → H2 (appendix subsection). Match before the bare `附录`.
+    (re.compile(r"^附录\s*\d+\s*[-—]\s*\d+"), 2),
+    # `附录` or `附录 N ...` → H1
+    (re.compile(r"^附录(\s|$)"), 1),
+    # `第 N 章 ...`  → H1
+    (re.compile(r"^第\s*\d+\s*章"), 1),
+    # `N.N.N ...`   → H3 (must precede the 2-dot rule)
+    (re.compile(r"^\d+\.\d+\.\d+(?:\s|$|\.)"), 3),
+    # `N.N ...`     → H2
+    (re.compile(r"^\d+\.\d+(?:\s|$)"), 2),
+    # `(N) ...`     → H4 (parenthesized bullet inside a subsection)
+    (re.compile(r"^\(\s*\d+\s*\)"), 4),
+]
+
+# TOC entries from MinerU look like `# 第1章 概述……1` or `# 1.1 ... … 23` —
+# trailing ellipsis + page number. We drop them as headings entirely (treat
+# as body text) so they don't pollute the running h1 state when the real
+# chapter heading appears later in the document.
+_TOC_LINE_RE = re.compile(r"[…\.]{2,}\s*\d+\s*$")
+
+
+def _normalize_heading_levels(markdown: str) -> str:
+    """Rewrite `#` prefix on each heading line based on its numbering pattern.
+
+    Compensates for MinerU's lossy heading-level detection (it puts every
+    heading at H1). Lines that don't match any rule keep their original `#`
+    count. TOC-style lines ending in `……<page>` are demoted to body text
+    so they don't compete with the real chapter heading downstream.
+    """
+    out: list[str] = []
+    for line in markdown.splitlines():
+        stripped = line.lstrip()
+        if not stripped.startswith("#"):
+            out.append(line)
+            continue
+        # Separate the hash prefix from the body.
+        i = 0
+        while i < len(stripped) and stripped[i] == "#":
+            i += 1
+        body = stripped[i:].lstrip()
+        # TOC entry — strip the `#` so it becomes plain text and doesn't
+        # register as a section boundary.
+        if _TOC_LINE_RE.search(body):
+            out.append(body)
+            continue
+        target_level: int | None = None
+        for pattern, level in _HEADING_RULES:
+            if pattern.match(body):
+                target_level = level
+                break
+        if target_level is None:
+            # Unrecognized heading — leave the original `#` count alone.
+            out.append(line)
+            continue
+        out.append(("#" * target_level) + " " + body)
+    return "\n".join(out)
 
 
 @dataclass
@@ -62,7 +129,7 @@ def _stable_id(*parts: str) -> str:
 
 
 def _section_path(meta: dict) -> str:
-    parts = [meta.get(k) for k in ("h1", "h2", "h3") if meta.get(k)]
+    parts = [meta.get(k) for k in ("h1", "h2", "h3", "h4") if meta.get(k)]
     return " > ".join(parts) if parts else "(intro)"
 
 
@@ -335,6 +402,9 @@ def chunk_document(doc: ParsedDoc) -> tuple[list[Parent], list[Child]]:
         return chunk_transcript(doc)
 
     markdown = doc.markdown_path.read_text(encoding="utf-8")
+    # MinerU emits every heading as `#` regardless of its real level; re-infer
+    # the level from numbering patterns so the splitter sees a real hierarchy.
+    markdown = _normalize_heading_levels(markdown)
     header_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=HEADERS, strip_headers=False)
     sections = header_splitter.split_text(markdown)
 
