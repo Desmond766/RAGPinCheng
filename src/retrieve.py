@@ -20,21 +20,20 @@ import re
 from dataclasses import dataclass
 from functools import lru_cache
 
-from qdrant_client import QdrantClient, models
+from qdrant_client import models
 
 from .config import (
     CODE_BOOST_TOP_K,
     COLLECTION,
     DENSE_TOP_K,
     FINAL_TOP_K,
-    QDRANT_DIR,
     RERANK_ENABLED,
     RERANK_TOP_K,
     RERANK_USE_HEADER,
     SPARSE_TOP_K,
 )
 from .embed import encode_one
-from .index import _ensure_payload_indexes, fetch_parents
+from .index import _client, _ensure_payload_indexes, fetch_parents
 from .rerank import rerank_scores
 
 
@@ -95,14 +94,11 @@ def _bootstrap_indexes() -> bool:
     """Ensure payload indexes exist on the live collection.
 
     Cached so we only pay the round-trip once per process — `create_payload_index`
-    is idempotent server-side but the call still costs a file-lock open.
+    is idempotent server-side but the call is still a network hop.
     """
-    client = QdrantClient(path=str(QDRANT_DIR))
-    try:
-        if client.collection_exists(COLLECTION):
-            _ensure_payload_indexes(client)
-    finally:
-        client.close()
+    client = _client()
+    if client.collection_exists(COLLECTION):
+        _ensure_payload_indexes(client)
     return True
 
 
@@ -186,17 +182,14 @@ def retrieve(
             )
         )
 
-    client = QdrantClient(path=str(QDRANT_DIR))
-    try:
-        result = client.query_points(
-            collection_name=COLLECTION,
-            prefetch=prefetch,
-            query=models.FusionQuery(fusion=models.Fusion.RRF),
-            limit=RERANK_TOP_K,
-            with_payload=True,
-        )
-    finally:
-        client.close()
+    client = _client()
+    result = client.query_points(
+        collection_name=COLLECTION,
+        prefetch=prefetch,
+        query=models.FusionQuery(fusion=models.Fusion.RRF),
+        limit=RERANK_TOP_K,
+        with_payload=True,
+    )
 
     points = list(result.points)
     if not points:
