@@ -174,7 +174,7 @@ engineer running and maintaining this system in production.
 > **Apple Silicon Mac?** The default build target is `linux/amd64` (for the
 > production server). To build natively on an arm64 Mac (much faster — avoids
 > QEMU emulation), add `BUILD_PLATFORM=linux/arm64` to your `.env` before
-> running `docker compose build`. The resulting image won't run on an x86
+> running `docker compose -f docker/docker-compose.yml build`. The resulting image won't run on an x86
 > server; use the default for production builds.
 
 ### What ships in the deployment
@@ -198,7 +198,7 @@ Streamlit (`app.py`) and `mineru[core]` (local PDF parsing CLI) are intentionall
 - Linux x86_64 (Ubuntu 22.04+ / Debian 12 / RHEL 9 etc.)
 - Docker Engine 24+ and the `docker compose` plugin
 - ~10 GB free disk for images + model cache, plus whatever your corpus needs
-- Port 80 free (or change the `ports:` mapping in `docker-compose.yml`)
+- Port 80 free (or change the `ports:` mapping in `docker/docker-compose.yml`)
 - Network access to `bigmodel.cn` (LLM) and `huggingface.co` (model weights, or use the `HF_ENDPOINT` mirror — see below)
 
 ### First deploy
@@ -231,17 +231,17 @@ rsync -av --progress \
 
 # 3b. OR build the index fresh on the server:
 #     Put PDFs into ./docs/<category>/ first, then:
-docker compose run --rm backend python scripts/build_index.py
+docker compose -f docker/docker-compose.yml run --rm backend python scripts/build_index.py
 
 # 4. Start the system
-docker compose build
-docker compose up -d
+docker compose -f docker/docker-compose.yml build
+docker compose -f docker/docker-compose.yml up -d
 
 # 5. Watch the first-boot model download (~3 GB; 5-15 min depending on network)
-docker compose logs -f backend
+docker compose -f docker/docker-compose.yml logs -f backend
 ```
 
-System is live at `http://<server-ip>/` once `docker compose ps` shows `backend` as `healthy`.
+System is live at `http://<server-ip>/` once `docker compose -f docker/docker-compose.yml ps` shows `backend` as `healthy`.
 
 ### When to run `build_index.py` (this matters)
 
@@ -251,44 +251,44 @@ Operationally:
 
 ```bash
 # After copying new PDFs into docs/<category>/ on the server:
-docker compose exec backend python scripts/build_index.py
+docker compose -f docker/docker-compose.yml exec backend python scripts/build_index.py
 
 # Full rebuild (changed chunking / embedding logic):
-docker compose exec backend python scripts/build_index.py --reset
+docker compose -f docker/docker-compose.yml exec backend python scripts/build_index.py --reset
 ```
 
 Indexing is incremental by default — only new content gets parsed and embedded. Existing entries are overwritten in place via deterministic UUIDv5 IDs, so re-running is safe and idempotent. You can run it while the API is serving traffic; Qdrant file-mode uses short-lived clients so brief read/write coexistence works. For very large indexing passes (hundreds of new PDFs), stop the API first to avoid file-lock contention:
 
 ```bash
-docker compose stop backend
-docker compose run --rm backend python scripts/build_index.py
-docker compose start backend
+docker compose -f docker/docker-compose.yml stop backend
+docker compose -f docker/docker-compose.yml run --rm backend python scripts/build_index.py
+docker compose -f docker/docker-compose.yml start backend
 ```
 
 ### Day-to-day operations
 
 ```bash
 # Tail logs
-docker compose logs -f backend
-docker compose logs -f frontend
+docker compose -f docker/docker-compose.yml logs -f backend
+docker compose -f docker/docker-compose.yml logs -f frontend
 
 # Restart one service (preserves the other)
-docker compose restart backend
+docker compose -f docker/docker-compose.yml restart backend
 
 # Stop everything (data on disk is preserved)
-docker compose down
+docker compose -f docker/docker-compose.yml down
 
 # Restart everything
-docker compose up -d
+docker compose -f docker/docker-compose.yml up -d
 
 # Deploy new code
 git pull
-docker compose build         # rebuilds images for any changed layers
-docker compose up -d         # recreates containers using the new images
+docker compose -f docker/docker-compose.yml build         # rebuilds images for any changed layers
+docker compose -f docker/docker-compose.yml up -d         # recreates containers using the new images
                              # bind-mounted data/ and docs/ are untouched
 
 # Open a shell inside the backend container for debugging
-docker compose exec backend bash
+docker compose -f docker/docker-compose.yml exec backend bash
 
 # Check resource use
 docker stats
@@ -303,7 +303,7 @@ Everything stateful is in two bind-mounted directories on the host. There is **n
 
 ```bash
 # Stop the backend so Qdrant isn't being written during the snapshot
-docker compose stop backend
+docker compose -f docker/docker-compose.yml stop backend
 
 # Snapshot the data directory (Qdrant + SQLite + parsed markdown + feedback)
 tar czf pincheng-data-$(date +%Y%m%d).tar.gz data/
@@ -311,7 +311,7 @@ tar czf pincheng-data-$(date +%Y%m%d).tar.gz data/
 # Optionally also archive source documents
 tar czf pincheng-docs-$(date +%Y%m%d).tar.gz docs/
 
-docker compose start backend
+docker compose -f docker/docker-compose.yml start backend
 ```
 
 The `hf_cache` named volume holds nothing irreplaceable (it's just downloaded HuggingFace weights — `docker compose up` will re-download if missing). Don't bother backing it up.
@@ -324,7 +324,7 @@ If the server can't reach `huggingface.co` directly (common in mainland China), 
 HF_ENDPOINT=https://hf-mirror.com
 ```
 
-Then `docker compose up -d`. The first-boot model download will use the mirror automatically — no code changes needed. Default points at the real CDN, so leaving it unset works wherever HF is reachable.
+Then `docker compose -f docker/docker-compose.yml up -d`. The first-boot model download will use the mirror automatically — no code changes needed. Default points at the real CDN, so leaving it unset works wherever HF is reachable.
 
 ### TLS / HTTPS
 
@@ -333,10 +333,10 @@ The frontend container serves plain HTTP on port 80. For HTTPS, put a company re
 ### Deployment-time pitfalls
 
 - **First boot looks hung for 5-15 min.** That's BGE-M3 + reranker downloading into `hf_cache`. The healthcheck `start_period` is set to 15 min for exactly this reason. Tail logs to confirm progress; you should see "warming embed model (BGE-M3)..." and then "api ready".
-- **`docker compose down -v` deletes the model cache.** The `-v` flag removes named volumes. Use plain `docker compose down` for routine stop/start.
+- **`docker compose -f docker/docker-compose.yml down -v` deletes the model cache.** The `-v` flag removes named volumes. Use plain `docker compose -f docker/docker-compose.yml down` for routine stop/start.
 - **Building from a Mac (arm64) produces an x86 image** because the Dockerfiles pin `--platform=linux/amd64`. Builds are slower on Mac due to emulation but the resulting image runs natively on the x86 server. Prefer building on the server itself.
 - **`scripts/build_index.py` from the host venv works too**, since `data/` is bind-mounted. You don't strictly need to exec into the container — but keeping all indexing inside the container avoids the "did I activate the right venv?" class of bugs.
-- **Backend port 8000 is not published to the host.** If you need to hit the API directly (curl, Postman) for debugging, add `ports: ["8000:8000"]` to the backend service in `docker-compose.yml` temporarily, then `docker compose up -d`.
+- **Backend port 8000 is not published to the host.** If you need to hit the API directly (curl, Postman) for debugging, add `ports: ["8000:8000"]` to the backend service in `docker/docker-compose.yml` temporarily, then `docker compose -f docker/docker-compose.yml up -d`.
 
 ---
 
@@ -437,16 +437,19 @@ RAGPinCheng/
 │   ├── config.py           # all tuning knobs in one place
 │   └── eval/               # retrieval golden set + metrics
 ├── api/                    # FastAPI backend (routes, SSE, session store)
-├── frontend/               # React + Vite UI
-│   ├── Dockerfile          # multi-stage: node build → nginx serve
-│   └── nginx.conf          # static + /api reverse proxy with SSE settings
+├── frontend/               # React + Vite UI source
+├── docker/                 # all Docker-related files
+│   ├── docker-compose.yml  # two-service production setup
+│   ├── Dockerfile.backend  # backend image (FastAPI + ML models, CPU torch)
+│   ├── Dockerfile.frontend # multi-stage: node build → nginx serve
+│   ├── nginx.conf          # static + /api reverse proxy with SSE settings
+│   ├── Dockerfile.backend.dockerignore
+│   └── Dockerfile.frontend.dockerignore
 ├── prompts/                # all LLM prompts as .md files
 ├── scripts/                # build_index, sample_for_eval, run_eval, etc.
 ├── docs/                   # source corpus (PDFs + transcript markdown)
 ├── data/                   # parsed markdown, Qdrant index, parents.sqlite
 │   └── feedback.jsonl      # 👍/👎 from the React UI, append-only
-├── Dockerfile.backend      # backend image (FastAPI + ML models, CPU torch)
-├── docker-compose.yml      # two-service production setup
 ├── requirements.txt        # full local-dev deps (includes streamlit, mineru[core])
 └── requirements-prod.txt   # slimmed deps shipped in the backend image
 ```
@@ -467,8 +470,11 @@ about when editing.
   document hasn't been indexed (check `data/qdrant/` was rebuilt after you
   added it), or the topic is genuinely outside the corpus. Run
   `scripts/test_retrieve.py` to see what came back.
-- **MinerU cloud fails on large PDFs**: cloud limit is `MINERU_MAX_PAGES = 200`
-  per file (see `src/config.py`). Larger PDFs fall back to local parsing.
+- **Large PDFs and the 200-page cloud limit**: the cloud API accepts at most
+  `MINERU_MAX_PAGES = 200` pages per submission. `_cloud_parse()` handles this
+  automatically — it splits the PDF into ≤200-page chunks, submits each as a
+  separate batch job, and concatenates the resulting markdown. No fallback to
+  local parsing; the whole file still goes through the cloud.
 
 ---
 

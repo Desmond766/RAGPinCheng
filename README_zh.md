@@ -135,8 +135,6 @@ npm run dev        # 访问 http://localhost:5173
 
 ---
 
----
-
 ## Docker 部署（自建服务器）
 
 仓库自带一套两容器的 Docker 部署方案，目标是 Linux x86_64 自建服务器。下面这些操作面向负责运维这套系统的工程师。
@@ -197,17 +195,17 @@ rsync -av --progress \
 
 # 3b. 或者在服务器上从零开始建索引：
 #     先把 PDF 放进 ./docs/<分类>/，然后：
-docker compose run --rm backend python scripts/build_index.py
+docker compose -f docker/docker-compose.yml run --rm backend python scripts/build_index.py
 
 # 4. 启动系统
-docker compose build
-docker compose up -d
+docker compose -f docker/docker-compose.yml build
+docker compose -f docker/docker-compose.yml up -d
 
 # 5. 看首次启动的模型下载（约 3 GB，5～15 分钟，取决于网速）
-docker compose logs -f backend
+docker compose -f docker/docker-compose.yml logs -f backend
 ```
 
-`docker compose ps` 看到 `backend` 状态为 `healthy` 后，访问 `http://<服务器 IP>/` 即可。
+`docker compose -f docker/docker-compose.yml ps` 看到 `backend` 状态为 `healthy` 后，访问 `http://<服务器 IP>/` 即可。
 
 ### 什么时候要跑 `build_index.py`（关键）
 
@@ -217,44 +215,44 @@ docker compose logs -f backend
 
 ```bash
 # 把新 PDF 复制到服务器上的 docs/<分类>/ 后：
-docker compose exec backend python scripts/build_index.py
+docker compose -f docker/docker-compose.yml exec backend python scripts/build_index.py
 
 # 完全重建（改了分块或嵌入逻辑时）：
-docker compose exec backend python scripts/build_index.py --reset
+docker compose -f docker/docker-compose.yml exec backend python scripts/build_index.py --reset
 ```
 
 索引默认是**增量更新**——只有新内容会被解析和向量化。已有条目根据确定性的 UUIDv5 ID 原地覆盖，所以重复执行也是安全幂等的。API 正在服务请求时也能跑索引：Qdrant 文件模式用的是短连接客户端，读写短暂共存没问题。但如果一次索引非常大（几百份新 PDF），建议先停 API 避免文件锁竞争：
 
 ```bash
-docker compose stop backend
-docker compose run --rm backend python scripts/build_index.py
-docker compose start backend
+docker compose -f docker/docker-compose.yml stop backend
+docker compose -f docker/docker-compose.yml run --rm backend python scripts/build_index.py
+docker compose -f docker/docker-compose.yml start backend
 ```
 
 ### 日常运维
 
 ```bash
 # 跟踪日志
-docker compose logs -f backend
-docker compose logs -f frontend
+docker compose -f docker/docker-compose.yml logs -f backend
+docker compose -f docker/docker-compose.yml logs -f frontend
 
 # 单独重启某个服务（不影响另一个）
-docker compose restart backend
+docker compose -f docker/docker-compose.yml restart backend
 
 # 全部停止（磁盘上的数据保留）
-docker compose down
+docker compose -f docker/docker-compose.yml down
 
 # 全部启动
-docker compose up -d
+docker compose -f docker/docker-compose.yml up -d
 
 # 部署新代码
 git pull
-docker compose build         # 改动过的层会重新构建
-docker compose up -d         # 用新镜像重建容器
+docker compose -f docker/docker-compose.yml build         # 改动过的层会重新构建
+docker compose -f docker/docker-compose.yml up -d         # 用新镜像重建容器
                              # 绑定挂载的 data/ 和 docs/ 完全不动
 
 # 进入后端容器调试
-docker compose exec backend bash
+docker compose -f docker/docker-compose.yml exec backend bash
 
 # 看资源占用
 docker stats
@@ -269,7 +267,7 @@ docker images | grep pincheng-rag
 
 ```bash
 # 先停后端，避免 Qdrant 在快照过程中被写入
-docker compose stop backend
+docker compose -f docker/docker-compose.yml stop backend
 
 # 打包 data 目录（Qdrant + SQLite + 解析缓存 + feedback）
 tar czf pincheng-data-$(date +%Y%m%d).tar.gz data/
@@ -277,7 +275,7 @@ tar czf pincheng-data-$(date +%Y%m%d).tar.gz data/
 # 想的话再打包源文档
 tar czf pincheng-docs-$(date +%Y%m%d).tar.gz docs/
 
-docker compose start backend
+docker compose -f docker/docker-compose.yml start backend
 ```
 
 `hf_cache` 命名卷里只是从 HuggingFace 下载的权重，丢了再 `docker compose up` 会自动重新下载，不用备份。
@@ -290,7 +288,7 @@ docker compose start backend
 HF_ENDPOINT=https://hf-mirror.com
 ```
 
-然后 `docker compose up -d`，首次启动下模型自动走镜像，代码完全不用改。默认指向官方 CDN，不设置就走官方。
+然后 `docker compose -f docker/docker-compose.yml up -d`，首次启动下模型自动走镜像，代码完全不用改。默认指向官方 CDN，不设置就走官方。
 
 ### TLS / HTTPS
 
@@ -299,10 +297,10 @@ HF_ENDPOINT=https://hf-mirror.com
 ### 部署常见坑
 
 - **首次启动 5～15 分钟看着像卡住**：实际上是在下 BGE-M3 + 重排序模型到 `hf_cache`。healthcheck 的 `start_period` 已经设到 15 分钟。看日志能确认进度，应该会看到 "warming embed model (BGE-M3)..." 然后 "api ready"。
-- **`docker compose down -v` 会清掉模型缓存**：`-v` 参数会删除命名卷。日常停启用 `docker compose down` 就够了。
+- **`docker compose -f docker/docker-compose.yml down -v` 会清掉模型缓存**：`-v` 参数会删除命名卷。日常停启用 `docker compose -f docker/docker-compose.yml down` 就够了。
 - **在 Mac（arm64）上构建会得到 x86 镜像**：Dockerfile 里写死了 `--platform=linux/amd64`。Mac 上构建会因为模拟变慢，但产出的镜像能在 x86 服务器上原生跑。生产环境最好直接在服务器上构建。
 - **`scripts/build_index.py` 也可以在宿主机的 venv 里跑**——因为 `data/` 是绑定挂载的。但建议都在容器里跑，少踩"venv 没激活对"这类坑。
-- **后端 8000 端口不对宿主机暴露**：调试时需要直接 curl 后端的话，临时在 `docker-compose.yml` 的 backend 服务里加 `ports: ["8000:8000"]`，再 `docker compose up -d` 即可。
+- **后端 8000 端口不对宿主机暴露**：调试时需要直接 curl 后端的话，临时在 `docker-compose.yml` 的 backend 服务里加 `ports: ["8000:8000"]`，再 `docker compose -f docker/docker-compose.yml up -d` 即可。
 
 ---
 
@@ -390,16 +388,19 @@ RAGPinCheng/
 │   ├── config.py           # 所有可调参数集中在这里
 │   └── eval/               # 检索评估框架 + 黄金标注集
 ├── api/                    # FastAPI 后端（路由、SSE、会话管理）
-├── frontend/               # React + Vite 前端
-│   ├── Dockerfile          # 多阶段构建：node 编译 → nginx 提供静态资源
-│   └── nginx.conf          # 静态资源 + /api 反向代理（SSE 已调优）
+├── frontend/               # React + Vite 前端源码
+├── docker/                 # 所有 Docker 相关文件
+│   ├── docker-compose.yml  # 生产环境两容器编排
+│   ├── Dockerfile.backend  # 后端镜像（FastAPI + ML 模型，CPU 版 torch）
+│   ├── Dockerfile.frontend # 多阶段构建：node 编译 → nginx 提供静态资源
+│   ├── nginx.conf          # 静态资源 + /api 反向代理（SSE 已调优）
+│   ├── Dockerfile.backend.dockerignore
+│   └── Dockerfile.frontend.dockerignore
 ├── prompts/                # 提示词原文（.md 文件，不要内嵌进 Python）
 ├── scripts/                # 各类工具脚本
 ├── docs/                   # 原始语料（PDF + 文字记录）
 ├── data/                   # 解析结果、Qdrant 索引、parents.sqlite
 │   └── feedback.jsonl      # 前端点赞/踩的记录（追加写入）
-├── Dockerfile.backend      # 后端镜像（FastAPI + ML 模型，CPU 版 torch）
-├── docker-compose.yml      # 生产环境两容器编排
 ├── requirements.txt        # 本地开发完整依赖（含 streamlit、mineru[core]）
 └── requirements-prod.txt   # 生产镜像的精简依赖
 ```
@@ -416,4 +417,4 @@ RAGPinCheng/
 
 **明明有相关文档却答"资料中未找到相关内容。"**：要么文件还没建索引（确认 `data/qdrant/` 是最新的），要么文档确实没覆盖这个知识点。跑 `scripts/test_retrieve.py` 看检索层有没有召回。
 
-**大 PDF 云端解析失败**：MinerU 云端 API 单文件限制 200 页（见 `src/config.py` 中的 `MINERU_MAX_PAGES`）。超出限制的文件会自动降级为本地解析，速度慢但不会报错。
+**大 PDF 的 200 页限制**：MinerU 云端 API 单次提交最多 `MINERU_MAX_PAGES = 200` 页。`_cloud_parse()` 会自动处理——把大 PDF 拆成若干个 ≤200 页的分块，分批提交云端，再把各段 markdown 拼接起来。不会降级为本地解析，整个文件始终走云端。

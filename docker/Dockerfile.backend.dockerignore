@@ -1,6 +1,5 @@
-# Keep the backend build context small. Anything not listed under COPY in
-# Dockerfile.backend doesn't need to ship; this file mainly speeds up `docker
-# build` by not streaming gigabytes of data/docs/.venv into the daemon.
+# Build context is the repo root. Keep it small — only what the backend image
+# actually COPYs (src/, api/, prompts/, scripts/, requirements-prod.txt).
 
 .git
 .gitignore
@@ -42,5 +41,4 @@ src/eval/drafts.jsonl
 requirements.txt
 
 # Docker config doesn't need to ship into the image
-Dockerfile.backend
-docker-compose.yml
+docker/
