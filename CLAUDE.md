@@ -37,8 +37,8 @@ No test suite, lint, or typecheck is configured.
 
 - `ZHIPU_API_KEY` — Zhipu GLM (OpenAI-compatible at `https://open.bigmodel.cn/api/paas/v4/`). Required for generation, not for retrieval.
 - `MINERU_API_KEY` — if set, `src/ingest.py` uses the MinerU cloud API (fast, ~1 min/PDF). If unset, falls back to local `mineru` CLI (slow, CPU-only).
-- `LLM_MODEL` — overrides the default Zhipu model (default `glm-4.6`, see `src/config.py`).
-- `LLM_REWRITE_MODEL` — model used only for the query-rewrite step. Defaults to `LLM_MODEL` when unset. Set to a cheaper/faster model (e.g. `glm-4.5-air`) to keep multi-turn follow-ups snappy while answer generation uses a stronger model.
+- `LLM_MODEL` — overrides the default Zhipu generation model (default `glm-4.7-flashx`, see `src/config.py`).
+- `LLM_REWRITE_MODEL` — model used only for the query-rewrite step (default `glm-4.5-air`). Cheap/fast on purpose so multi-turn follow-ups stay snappy while answer generation uses the stronger `LLM_MODEL`.
 
 ## Architecture
 

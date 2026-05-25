@@ -92,9 +92,9 @@ cp .env.example .env
 # Edit .env and fill in at minimum:
 #   ZHIPU_API_KEY=...              (required for generation; get one at bigmodel.cn)
 #   MINERU_API_KEY=...             (optional; fast cloud PDF parsing — strongly recommended)
-#   LLM_MODEL=glm-4.6             (optional override; default is glm-4.6)
+#   LLM_MODEL=glm-4.7-flashx      (optional override; default is glm-4.7-flashx)
 #   LLM_REWRITE_MODEL=glm-4.5-air (optional; cheaper model for the rewrite step only —
-#                                   defaults to LLM_MODEL when unset)
+#                                   defaults to glm-4.5-air when unset)
 ```
 
 Retrieval works without `ZHIPU_API_KEY` (you can run `scripts/test_retrieve.py`
@@ -212,9 +212,6 @@ cd /srv/pincheng-rag
 cat > .env <<'EOF'
 ZHIPU_API_KEY=...
 MINERU_API_KEY=...
-LLM_MODEL=glm-4.6
-# Optional: cheaper model for the query-rewrite step only. Defaults to LLM_MODEL.
-# LLM_REWRITE_MODEL=glm-4.5-air
 # Uncomment if huggingface.co is unreachable from the server:
 # HF_ENDPOINT=https://hf-mirror.com
 EOF

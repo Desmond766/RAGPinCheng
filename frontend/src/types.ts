@@ -80,3 +80,21 @@ export type Health = {
   children: number;
   parents: number;
 };
+
+export type LlmModelHealth = {
+  model: string;
+  role: "generation" | "rewrite" | string;
+  ok: boolean;
+  latency_ms: number | null;
+  error: string | null;
+};
+
+export type LlmHealth = {
+  ok: boolean;
+  key_present: boolean;
+  key_masked: string;
+  base_url: string;
+  checked_at: number;
+  cached: boolean;
+  models: LlmModelHealth[];
+};

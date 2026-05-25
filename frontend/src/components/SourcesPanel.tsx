@@ -30,6 +30,9 @@ function SourceCard({
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState(false);
+  const PREVIEW_CHARS = 400;
+  const truncated = s.text.length > PREVIEW_CHARS;
 
   async function submit() {
     setSubmitting(true);
@@ -83,9 +86,23 @@ function SourceCard({
       <div className="text-xs text-muted mt-0.5">
         分类: <code className="bg-gray-100 px-1 rounded">{s.category || "—"}</code>
       </div>
-      <div className="text-xs text-gray-600 mt-1 whitespace-pre-wrap line-clamp-6">
-        {s.text.length > 400 ? s.text.slice(0, 400) + "…" : s.text}
+      <div
+        className={
+          "text-xs text-gray-600 mt-1 whitespace-pre-wrap " +
+          (expanded ? "max-h-96 overflow-y-auto pr-1" : "line-clamp-6")
+        }
+      >
+        {expanded || !truncated ? s.text : s.text.slice(0, PREVIEW_CHARS) + "…"}
       </div>
+      {truncated && (
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          className="mt-1 text-xs text-accent hover:underline"
+        >
+          {expanded ? "收起原文" : "展开全文"}
+        </button>
+      )}
       {reportOpen && (
         <div className="mt-2 flex flex-col gap-1.5">
           <textarea

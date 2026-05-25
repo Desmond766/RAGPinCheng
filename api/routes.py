@@ -3,9 +3,10 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import time
 from typing import AsyncIterator
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Query, Request
 from sse_starlette.sse import EventSourceResponse, ServerSentEvent
 
 from src.config import (
@@ -17,6 +18,7 @@ from src.config import (
     RERANKER_MODEL,
 )
 from src.index import collection_stats, list_categories, parents_count
+from src.llm_health import check_llm, to_dict as llm_health_to_dict
 
 from . import feedback as feedback_log
 from .schemas import (
@@ -27,6 +29,7 @@ from .schemas import (
     FeedbackRequest,
     FeedbackResponse,
     HealthResponse,
+    LLMHealthResponse,
     MessageDTO,
     SessionStateDTO,
     SourceDTO,
@@ -48,6 +51,44 @@ def health() -> HealthResponse:
         children=int(stats.get("children", 0)),
         parents=parents_count(),
     )
+
+
+# Cached LLM-health snapshot. Each probe issues two real chat-completion
+# requests, so we don't want the frontend's 60s poll to fan that out further
+# on every browser tab. TTL keeps the badge fresh enough to notice an outage
+# within ~half a minute while bounding upstream load.
+_LLM_HEALTH_TTL_S = 30.0
+_llm_health_cache: dict | None = None
+_llm_health_cached_at: float = 0.0
+_llm_health_lock = asyncio.Lock()
+
+
+@router.get("/llm_health", response_model=LLMHealthResponse)
+async def llm_health(force: bool = Query(False, description="bypass the cache")) -> LLMHealthResponse:
+    global _llm_health_cache, _llm_health_cached_at
+    now = time.time()
+    fresh = (
+        not force
+        and _llm_health_cache is not None
+        and (now - _llm_health_cached_at) < _LLM_HEALTH_TTL_S
+    )
+    if fresh:
+        return LLMHealthResponse(**{**_llm_health_cache, "cached": True})
+
+    # Serialize concurrent probes so simultaneous requests share one upstream
+    # round-trip instead of stampeding Zhipu when the cache is cold.
+    async with _llm_health_lock:
+        now = time.time()
+        if (
+            not force
+            and _llm_health_cache is not None
+            and (now - _llm_health_cached_at) < _LLM_HEALTH_TTL_S
+        ):
+            return LLMHealthResponse(**{**_llm_health_cache, "cached": True})
+        snapshot = await asyncio.to_thread(check_llm)
+        _llm_health_cache = llm_health_to_dict(snapshot)
+        _llm_health_cached_at = time.time()
+    return LLMHealthResponse(**{**_llm_health_cache, "cached": False})
 
 
 @router.get("/config", response_model=ConfigResponse)

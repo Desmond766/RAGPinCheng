@@ -1,4 +1,4 @@
-import type { ApiConfig, FeedbackPayload, Health } from "../types";
+import type { ApiConfig, FeedbackPayload, Health, LlmHealth } from "../types";
 
 async function jsonFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(path, {
@@ -14,6 +14,8 @@ async function jsonFetch<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const api = {
   health: () => jsonFetch<Health>("/api/health"),
+  llmHealth: (force = false) =>
+    jsonFetch<LlmHealth>(`/api/llm_health${force ? "?force=true" : ""}`),
   config: () => jsonFetch<ApiConfig>("/api/config"),
   categories: () => jsonFetch<{ categories: string[] }>("/api/categories"),
   createSession: () => jsonFetch<{ session_id: string }>("/api/sessions", { method: "POST", body: "{}" }),

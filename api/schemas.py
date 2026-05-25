@@ -55,6 +55,24 @@ class HealthResponse(BaseModel):
     parents: int
 
 
+class LLMHealthModel(BaseModel):
+    model: str
+    role: str  # "generation" | "rewrite"
+    ok: bool
+    latency_ms: int | None = None
+    error: str | None = None
+
+
+class LLMHealthResponse(BaseModel):
+    ok: bool
+    key_present: bool
+    key_masked: str
+    base_url: str
+    checked_at: float
+    cached: bool = False
+    models: list[LLMHealthModel]
+
+
 class CategoriesResponse(BaseModel):
     categories: list[str]
 

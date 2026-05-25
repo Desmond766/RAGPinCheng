@@ -72,9 +72,6 @@ cp .env.example .env
 # 编辑 .env，至少填写：
 #   ZHIPU_API_KEY=...              （生成答案必需；在 bigmodel.cn 申请）
 #   MINERU_API_KEY=...             （可选；云端解析 PDF 更快，强烈建议配置）
-#   LLM_MODEL=glm-4.6             （可选；默认已是 glm-4.6）
-#   LLM_REWRITE_MODEL=glm-4.5-air （可选；专门用于问题改写步骤的轻量模型，
-#                                    不填则与 LLM_MODEL 相同）
 ```
 
 不配置 `ZHIPU_API_KEY` 也能跑检索部分，用 `scripts/test_retrieve.py` 验证索引是否正常即可。
@@ -176,8 +173,8 @@ cd /srv/pincheng-rag
 cat > .env <<'EOF'
 ZHIPU_API_KEY=...
 MINERU_API_KEY=...
-LLM_MODEL=glm-4.6
-# 可选：仅用于问题改写步骤的轻量模型，不填则与 LLM_MODEL 相同
+LLM_MODEL=glm-4.7-flashx
+# 可选：仅用于问题改写步骤的轻量模型，不填则默认 glm-4.5-air
 # LLM_REWRITE_MODEL=glm-4.5-air
 # 服务器访问不到 huggingface.co 时取消注释下面这行：
 # HF_ENDPOINT=https://hf-mirror.com

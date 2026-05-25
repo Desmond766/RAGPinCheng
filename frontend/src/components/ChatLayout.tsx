@@ -1,10 +1,16 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { api } from "../api/client";
 import { useChat } from "../hooks/useChat";
-import type { ApiConfig, Health } from "../types";
+import type { ApiConfig, Health, LlmHealth } from "../types";
 import { Composer } from "./Composer";
+import { LlmHealthBadge } from "./LlmHealthBadge";
 import { MessageList } from "./MessageList";
 import { Sidebar } from "./Sidebar";
+
+// Poll the LLM health endpoint every minute. The backend caches probes for
+// 30s, so this gives us at most one real upstream round-trip per minute per
+// tab without the UI lagging too far behind a real outage.
+const LLM_HEALTH_POLL_MS = 60_000;
 
 export function ChatLayout() {
   const { sessionId, messages, send, sending, reset, bootstrapError } = useChat();
@@ -12,12 +18,30 @@ export function ChatLayout() {
   const [selected, setSelected] = useState<string[]>([]);
   const [config, setConfig] = useState<ApiConfig | null>(null);
   const [health, setHealth] = useState<Health | null>(null);
+  const [llmHealth, setLlmHealth] = useState<LlmHealth | null>(null);
+  const [llmHealthLoading, setLlmHealthLoading] = useState(false);
+
+  const refreshLlmHealth = useCallback(async (force = false) => {
+    setLlmHealthLoading(true);
+    try {
+      const r = await api.llmHealth(force);
+      setLlmHealth(r);
+    } catch {
+      // Network/backend error: keep prior snapshot so the badge doesn't flip
+      // to green just because the request itself failed.
+    } finally {
+      setLlmHealthLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     api.categories().then((r) => setCategories(r.categories)).catch(() => {});
     api.config().then(setConfig).catch(() => {});
     api.health().then(setHealth).catch(() => {});
-  }, []);
+    refreshLlmHealth();
+    const t = window.setInterval(() => refreshLlmHealth(), LLM_HEALTH_POLL_MS);
+    return () => window.clearInterval(t);
+  }, [refreshLlmHealth]);
 
   const turnIndex = useMemo(
     () => messages.filter((m) => m.role === "user").length,
@@ -40,6 +64,9 @@ export function ChatLayout() {
         onNewChat={reset}
         config={config}
         health={health}
+        llmHealth={llmHealth}
+        llmHealthLoading={llmHealthLoading}
+        onRefreshLlmHealth={() => refreshLlmHealth(true)}
         turnIndex={turnIndex}
       />
       <main className="flex-1 flex flex-col min-w-0">
@@ -47,6 +74,11 @@ export function ChatLayout() {
           <div className="flex items-center gap-2">
             <span className="text-lg">📚</span>
             <span className="font-semibold">品成 BIM 知识库</span>
+            <LlmHealthBadge
+              health={llmHealth}
+              loading={llmHealthLoading}
+              onRefresh={() => refreshLlmHealth(true)}
+            />
           </div>
           <div className="text-xs text-muted">
             {sessionId ? (
