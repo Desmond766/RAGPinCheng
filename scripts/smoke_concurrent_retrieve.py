@@ -15,7 +15,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from src.config import RERANK_ENABLED
 from src.embed import get_model
+from src.rerank import get_reranker
 from src.retrieve import retrieve
 
 QUERIES = [
@@ -38,11 +40,14 @@ def _one(q: str) -> tuple[str, int, str | None]:
 
 
 def main() -> int:
-    # Pre-warm the embedding model once, single-threaded, before spawning
-    # workers — lru_cache is not thread-safe during first load.
+    # Pre-warm models once, single-threaded, before spawning workers —
+    # lru_cache is not thread-safe during first load.
     print("Warming embedding model…")
     get_model()
-    print("Model ready. Firing parallel queries…\n")
+    if RERANK_ENABLED:
+        print("Warming reranker model…")
+        get_reranker()
+    print("Models ready. Firing parallel queries…\n")
 
     t0 = time.perf_counter()
     with cf.ThreadPoolExecutor(max_workers=N_WORKERS) as ex:

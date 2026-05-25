@@ -9,6 +9,7 @@ Model is `lru_cache`d. First load downloads weights (~600MB).
 from __future__ import annotations
 
 from functools import lru_cache
+import threading
 from typing import Sequence
 
 from FlagEmbedding import FlagReranker
@@ -22,6 +23,8 @@ from .config import RERANKER_MODEL
 # can't change without forking FlagEmbedding. Keeping ERROR (not WARNING)
 # still surfaces real problems (missing weights, dtype mismatches, etc.).
 transformers.logging.set_verbosity_error()
+
+_rerank_lock = threading.Lock()
 
 
 @lru_cache(maxsize=1)
@@ -39,7 +42,8 @@ def rerank_scores(query: str, passages: Sequence[str]) -> list[float]:
         return []
     model = get_reranker()
     pairs = [[query, p] for p in passages]
-    raw = model.compute_score(pairs, normalize=True)
+    with _rerank_lock:
+        raw = model.compute_score(pairs, normalize=True)
     # compute_score returns a float for len(pairs)==1, a list otherwise.
     if isinstance(raw, (int, float)):
         return [float(raw)]

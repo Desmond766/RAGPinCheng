@@ -22,7 +22,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from qdrant_client import QdrantClient, models
 
-from src.config import COLLECTION, QDRANT_DIR as QDRANT_PATH
+from src.config import COLLECTION
+from src.index import _client
 
 
 CATEGORY_RENAMES: dict[str, str] = {
@@ -138,34 +139,28 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    qdrant_path = Path(QDRANT_PATH)
-    if not qdrant_path.exists():
-        raise SystemExit(f"Qdrant path not found: {qdrant_path}")
+    print("[migrate] Connecting to Qdrant server via QDRANT_URL")
+    client = _client()
+    print(f"[migrate] collection={COLLECTION}")
+    before = _count_categories(client)
+    print(f"[migrate] before: {dict(before)}")
 
-    client = QdrantClient(path=str(qdrant_path))
-    try:
-        print(f"[migrate] collection={COLLECTION}")
-        before = _count_categories(client)
-        print(f"[migrate] before: {dict(before)}")
+    if args.dry_run:
+        return
 
-        if args.dry_run:
-            return
+    for old, new in CATEGORY_RENAMES.items():
+        if before.get(old, 0) == 0:
+            print(f"[migrate] skip rename {old!r} — none present")
+            continue
+        n = _rename_category(client, old, new)
+        print(f"[migrate] renamed {n} points: {old!r} → {new!r}")
 
-        for old, new in CATEGORY_RENAMES.items():
-            if before.get(old, 0) == 0:
-                print(f"[migrate] skip rename {old!r} — none present")
-                continue
-            n = _rename_category(client, old, new)
-            print(f"[migrate] renamed {n} points: {old!r} → {new!r}")
+    if args.drop_uncategorized and before.get("uncategorized", 0) > 0:
+        n = _drop_category(client, "uncategorized")
+        print(f"[migrate] dropped {n} points with category='uncategorized'")
 
-        if args.drop_uncategorized and before.get("uncategorized", 0) > 0:
-            n = _drop_category(client, "uncategorized")
-            print(f"[migrate] dropped {n} points with category='uncategorized'")
-
-        after = _count_categories(client)
-        print(f"[migrate] after:  {dict(after)}")
-    finally:
-        client.close()
+    after = _count_categories(client)
+    print(f"[migrate] after:  {dict(after)}")
 
 
 if __name__ == "__main__":
