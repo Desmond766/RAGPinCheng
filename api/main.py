@@ -32,6 +32,25 @@ async def lifespan(app: FastAPI):
     except Exception:
         logger.exception("parents.sqlite migration check failed (non-fatal)")
 
+    # Fail fast if Qdrant is unreachable — better an immediate startup error
+    # in the logs than a confusing 500 on the first chat request.
+    try:
+        from src.index import _client
+        from src.config import COLLECTION, QDRANT_URL
+        client = _client()
+        client.get_collections()  # cheap ping
+        if not client.collection_exists(COLLECTION):
+            logger.warning(
+                "qdrant connected at %s but collection '%s' does not exist — "
+                "run `python scripts/build_index.py` to populate it",
+                QDRANT_URL, COLLECTION,
+            )
+        else:
+            logger.info("qdrant ok at %s (collection '%s' present)", QDRANT_URL, COLLECTION)
+    except Exception:
+        logger.exception("qdrant ping failed at startup — check QDRANT_URL")
+        raise
+
     # Warm heavy models on startup so the first request isn't slow.
     # Mirrors the @st.cache_resource warmups in app.py.
     if os.getenv("API_SKIP_WARMUP") != "1":
