@@ -5,7 +5,12 @@ import type { Source } from "../types";
 
 function locator(s: Source): string {
   if (s.doc_type === "transcript" && s.start_time) return `🎬 @${s.start_time}`;
-  return `§${s.section_path || "(无)"}`;
+  const leaf = (s.section_path || "").split(" > ").pop() || "";
+  return `§${leaf || "(无)"}`;
+}
+
+function breadcrumbParts(section_path: string): string[] {
+  return section_path.split(" > ").filter(Boolean);
 }
 
 function SourceCard({
@@ -33,6 +38,9 @@ function SourceCard({
   const [expanded, setExpanded] = useState(false);
   const PREVIEW_CHARS = 400;
   const truncated = s.text.length > PREVIEW_CHARS;
+  const crumbs = s.doc_type === "transcript" ? [] : breadcrumbParts(s.section_path || "");
+  const hasBreadcrumb = crumbs.length > 1;
+  const canExpand = truncated || hasBreadcrumb;
 
   async function submit() {
     setSubmitting(true);
@@ -86,6 +94,11 @@ function SourceCard({
       <div className="text-xs text-muted mt-0.5">
         分类: <code className="bg-gray-100 px-1 rounded">{s.category || "—"}</code>
       </div>
+      {expanded && hasBreadcrumb && (
+        <div className="text-xs text-muted mt-1 leading-relaxed break-words">
+          § {crumbs.join(" › ")}
+        </div>
+      )}
       <div
         className={
           "text-xs text-gray-600 mt-1 whitespace-pre-wrap " +
@@ -94,13 +107,13 @@ function SourceCard({
       >
         {expanded || !truncated ? s.text : s.text.slice(0, PREVIEW_CHARS) + "…"}
       </div>
-      {truncated && (
+      {canExpand && (
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
           className="mt-1 text-xs text-accent hover:underline"
         >
-          {expanded ? "收起原文" : "展开全文"}
+          {expanded ? "收起" : "展开"}
         </button>
       )}
       {reportOpen && (

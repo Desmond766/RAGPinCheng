@@ -1,3 +1,19 @@
 问答加入上下文
 回答参考应该包含具体的文件名以及具体页数
 加速回答速度
+
+并发问题（两个用户同时提问时会出问题）：
+1. Qdrant 本地文件模式的文件锁冲突
+   - src/retrieve.py:189 和 src/index.py:18-19 每次调用都 `QdrantClient(path=...)`，
+     Qdrant 本地模式对 data/qdrant/ 持有进程级文件锁。
+   - 用户 A 的 retrieve 线程还没 close，用户 B 的线程再开就会抛
+     `RuntimeError: Storage folder ... is already accessed by another instance of Qdrant client`，
+     直接通过 SSE 的 error 事件返回给前端。
+   - 治本方案：切到 Qdrant 服务端模式（独立容器，HTTP/gRPC），用单一长连接客户端，
+     允许多 uvicorn worker；治标方案：进程级 asyncio.Lock 串行化检索（高并发会慢）。
+
+2. BGE-M3 嵌入模型 + BGE-reranker-v2-m3 交叉编码器是进程内共享单例
+   - src/embed.py / src/rerank.py 用 lru_cache 缓存模型；并发推理走 GIL + 单 CUDA 流，
+     实际是串行执行，不会崩但是吞吐受限（rerank ~100–300ms × N 用户）。
+   - 改进方向：micro-batching（聚合 ~20ms 窗口内的并发请求批量推理），
+     或把 embed/rerank 拆成独立服务（text-embeddings-inference / Triton 等）。
