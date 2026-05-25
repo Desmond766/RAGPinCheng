@@ -12,6 +12,30 @@
 # (optional) LLM_MODEL, LLM_REWRITE_MODEL, HF_ENDPOINT.
 
 services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    restart: unless-stopped
+    volumes:
+      # Persistent index storage. Separate from the `data` bind mount so the
+      # Qdrant server fully owns its on-disk format and can be upgraded
+      # independently. Survives `docker compose down`; only removed with `-v`.
+      - qdrant_storage:/qdrant/storage
+    # No `ports:` — only the backend talks to Qdrant, and it does so over the
+    # compose network. Uncomment to expose the dashboard at :6333 for debugging:
+    # ports:
+    #   - "6333:6333"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/localhost/6333'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
   backend:
     build:
       context: ..
@@ -26,6 +50,9 @@ services:
         - ${BUILD_PLATFORM:-linux/amd64}
     image: pincheng-rag-backend:latest
     restart: unless-stopped
+    depends_on:
+      qdrant:
+        condition: service_healthy
     environment:
       # Secrets / model config — passed through from the host .env file.
       ZHIPU_API_KEY: ${ZHIPU_API_KEY}
@@ -40,6 +67,8 @@ services:
       # networks in mainland China). FlagEmbedding + huggingface_hub honor this
       # env var transparently — no code change required.
       HF_ENDPOINT: ${HF_ENDPOINT:-https://huggingface.co}
+      # In-cluster Qdrant — the backend reaches it by compose service name.
+      QDRANT_URL: ${QDRANT_URL:-http://qdrant:6333}
       # Frontend is same-origin via nginx proxy, so the in-app CORS list is
       # unused in prod. Leave empty to deny browser cross-origin entirely.
       API_CORS_ORIGINS: ${API_CORS_ORIGINS:-}
@@ -101,6 +130,11 @@ services:
 volumes:
   hf_cache:
     # Survives `docker compose down`; only removed with `docker compose down -v`.
+  qdrant_storage:
+    # Persistent Qdrant index. Survives `docker compose down`; only removed
+    # with `docker compose down -v`. To inspect contents, exec into the
+    # qdrant container — do NOT touch the files from the host while the
+    # container is running.
 
 # -----------------------------------------------------------------------------
 # Build cheat-sheet
