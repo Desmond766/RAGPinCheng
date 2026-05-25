@@ -1,6 +1,8 @@
 """Qdrant collection (dense + sparse named vectors) + parents.sqlite store.
 
-Qdrant in local file mode (no server). Parents go to sqlite keyed by parent_id.
+Qdrant runs as a separate server process reached at QDRANT_URL. The backend
+holds one long-lived `QdrantClient` per process (singleton in `_client()`).
+Parents go to sqlite keyed by parent_id.
 """
 from __future__ import annotations
 
