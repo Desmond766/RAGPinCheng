@@ -8,10 +8,10 @@ ROOT = Path(__file__).resolve().parent.parent
 DOCS_DIR = ROOT / "docs"
 DATA_DIR = ROOT / "data"
 PARSED_DIR = DATA_DIR / "parsed"
-QDRANT_DIR = DATA_DIR / "qdrant"
+QDRANT_DIR = DATA_DIR / "qdrant"  # legacy embedded-mode path; unused after the server migration but kept for the optional cleanup script
 PARENTS_DB = DATA_DIR / "parents.sqlite"
 
-for d in (DATA_DIR, PARSED_DIR, QDRANT_DIR):
+for d in (DATA_DIR, PARSED_DIR):
     d.mkdir(parents=True, exist_ok=True)
 
 # Chunking — sizes are in characters (Chinese ≈ 1 char per token for budgeting)
@@ -48,6 +48,11 @@ RERANK_USE_HEADER = True
 
 # Qdrant
 COLLECTION = "pincheng_docs"
+# Qdrant server URL. The backend talks to a separate Qdrant process over
+# HTTP — no more embedded file mode, no more file lock. Default points at a
+# local `docker run -p 6333:6333 qdrant/qdrant`. In docker-compose the
+# backend reaches the `qdrant` service by name.
+QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333")
 
 # MinerU cloud API (set to use cloud parsing instead of local CLI)
 MINERU_API_KEY = os.getenv("MINERU_API_KEY", "")
