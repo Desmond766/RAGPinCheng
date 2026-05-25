@@ -5,18 +5,22 @@ Qdrant in local file mode (no server). Parents go to sqlite keyed by parent_id.
 from __future__ import annotations
 
 import sqlite3
+from functools import lru_cache
 from typing import Iterable
 
 from qdrant_client import QdrantClient, models
 from tqdm import tqdm
 
 from .chunk import Child, Parent
-from .config import COLLECTION, EMBED_BATCH, EMBED_DIM, PARENTS_DB, QDRANT_DIR
+from .config import COLLECTION, EMBED_BATCH, EMBED_DIM, PARENTS_DB, QDRANT_URL
 from .embed import encode
 
 
+@lru_cache(maxsize=1)
 def _client() -> QdrantClient:
-    return QdrantClient(path=str(QDRANT_DIR))
+    """One long-lived HTTP client per process. Never call .close() on it —
+    the next caller will get a dead client. Process exit cleans it up."""
+    return QdrantClient(url=QDRANT_URL)
 
 
 def _ensure_collection(client: QdrantClient, reset: bool = False) -> bool:
@@ -112,11 +116,8 @@ def _init_parents_db(reset: bool = False) -> sqlite3.Connection:
 def reset_index() -> None:
     """Drop the Qdrant collection and wipe parents.sqlite. Use before a full rebuild."""
     client = _client()
-    try:
-        if client.collection_exists(COLLECTION):
-            client.delete_collection(COLLECTION)
-    finally:
-        client.close()
+    if client.collection_exists(COLLECTION):
+        client.delete_collection(COLLECTION)
     conn = _init_parents_db(reset=True)
     conn.commit()
     conn.close()
@@ -218,7 +219,6 @@ def index_children(children: list[Child], reset: bool = False) -> None:
             print(f"[qdrant] skipping {skipped} already-indexed children")
 
     if not to_index:
-        client.close()
         print(f"[qdrant] nothing new to index for '{COLLECTION}'")
         return
 
@@ -251,19 +251,15 @@ def index_children(children: list[Child], reset: bool = False) -> None:
                 )
             )
         client.upsert(collection_name=COLLECTION, points=points)
-    client.close()
     print(f"[qdrant] indexed {len(to_index)} new children into '{COLLECTION}'")
 
 
 def collection_stats() -> dict:
     client = _client()
-    try:
-        if not client.collection_exists(COLLECTION):
-            return {"children": 0}
-        info = client.get_collection(COLLECTION)
-        return {"children": info.points_count or 0}
-    finally:
-        client.close()
+    if not client.collection_exists(COLLECTION):
+        return {"children": 0}
+    info = client.get_collection(COLLECTION)
+    return {"children": info.points_count or 0}
 
 
 def list_categories() -> list[str]:
