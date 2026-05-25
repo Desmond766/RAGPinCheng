@@ -4,6 +4,7 @@ Sparse output is converted to Qdrant's (indices, values) format.
 """
 from __future__ import annotations
 
+import threading
 from dataclasses import dataclass
 from functools import lru_cache
 from typing import Sequence
@@ -34,6 +35,9 @@ def _pick_device() -> str:
     return "cpu"
 
 
+_encode_lock = threading.Lock()
+
+
 @lru_cache(maxsize=1)
 def get_model() -> BGEM3FlagModel:
     device = _pick_device()
@@ -53,13 +57,14 @@ def _to_sparse_pair(weights: dict) -> tuple[list[int], list[float]]:
 
 def encode(texts: Sequence[str]) -> list[Embedding]:
     model = get_model()
-    out = model.encode(
-        list(texts),
-        batch_size=EMBED_BATCH,
-        return_dense=True,
-        return_sparse=True,
-        return_colbert_vecs=False,
-    )
+    with _encode_lock:
+        out = model.encode(
+            list(texts),
+            batch_size=EMBED_BATCH,
+            return_dense=True,
+            return_sparse=True,
+            return_colbert_vecs=False,
+        )
     dense_vecs = out["dense_vecs"]
     sparse_vecs = out["lexical_weights"]
     results: list[Embedding] = []
