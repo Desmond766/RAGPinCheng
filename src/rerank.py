@@ -4,11 +4,11 @@ The hybrid retriever over-fetches candidates via RRF; this module re-scores
 each (query, child_text) pair with a cross-encoder so the top-k handed to
 the LLM reflects fine-grained relevance, not just lexical/semantic recall.
 
-Model is `lru_cache`d. First load downloads weights (~600MB).
+Model singleton uses double-checked locking — see `get_reranker`. First load
+downloads weights (~600MB).
 """
 from __future__ import annotations
 
-from functools import lru_cache
 import threading
 from typing import Sequence
 
@@ -26,10 +26,23 @@ transformers.logging.set_verbosity_error()
 
 _rerank_lock = threading.Lock()
 
+# Double-checked locking around first-load — same pattern as src/embed.py.
+# lru_cache is unsafe during cold load (concurrent first-callers can race
+# into the constructor and corrupt MPS device placement).
+_reranker: FlagReranker | None = None
+_load_lock = threading.Lock()
 
-@lru_cache(maxsize=1)
+
 def get_reranker() -> FlagReranker:
-    return FlagReranker(RERANKER_MODEL, use_fp16=True)
+    global _reranker
+    # Fast path: unlocked read; GIL makes module-attr reads atomic.
+    if _reranker is not None:
+        return _reranker
+    # Slow path: only the first thread to acquire the lock builds the model.
+    with _load_lock:
+        if _reranker is None:
+            _reranker = FlagReranker(RERANKER_MODEL, use_fp16=True)
+        return _reranker
 
 
 def rerank_scores(query: str, passages: Sequence[str]) -> list[float]:
