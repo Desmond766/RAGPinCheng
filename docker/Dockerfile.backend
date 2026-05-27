@@ -1,8 +1,27 @@
-# Backend image — FastAPI + ChatSession + BGE-M3 + reranker.
+# Combined image — FastAPI + ChatSession + BGE-M3 + reranker, also serves
+# the built React/Vite SPA at /. Replaces the previous backend + frontend
+# two-container setup. One image, one process, fewer moving parts.
 #
-# Target platform is set in docker-compose.yml (build.platforms + the service-
-# level `platform:` field). On an Apple Silicon Mac, that pins linux/amd64 so
-# the resulting image runs natively on the x86_64 server.
+# Target platform is set in docker-compose.yml (build.platforms). On an
+# Apple Silicon Mac, that pins linux/amd64 so the resulting image runs
+# natively on the x86_64 server.
+
+# ── Stage 1: build the React/Vite bundle ───────────────────────────────────
+FROM node:20-alpine AS frontend-build
+
+WORKDIR /build
+
+# Cache npm install separately from the source — only re-runs when package
+# files change, not on every code edit.
+COPY frontend/package.json frontend/package-lock.json* ./
+RUN npm ci
+
+COPY frontend/ ./
+RUN npm run build
+# Produces /build/dist/ — copied into the runtime stage below.
+
+
+# ── Stage 2: Python runtime ────────────────────────────────────────────────
 FROM python:3.11-slim
 
 ENV PYTHONUNBUFFERED=1 \
@@ -48,6 +67,10 @@ COPY src/ ./src/
 COPY api/ ./api/
 COPY prompts/ ./prompts/
 COPY scripts/ ./scripts/
+
+# 4) React bundle from the build stage. api/main.py detects this directory
+#    and mounts it at / with SPA fallback.
+COPY --from=frontend-build /build/dist /app/frontend/dist
 
 # docs/ and data/ are bind-mounted at runtime (see docker-compose.yml).
 # Empty placeholders so src.config can mkdir/stat them even before first mount.

@@ -34,7 +34,7 @@ python scripts/build_index.py
 
 ## Docker 部署（自建服务器）
 
-三个服务：`qdrant`、`backend`、`frontend`（nginx，对外暴露 80 端口）。
+两个服务：`qdrant`（向量库）和 `backend`（FastAPI 同时提供 `/api/*` 和 React 前端，监听 80 端口）。
 
 ```bash
 cp .env.example .env   # 填写 ZHIPU_API_KEY、MINERU_API_KEY、ADMIN_EMPLOYEE_ID、ADMIN_PASSWORD
@@ -43,7 +43,17 @@ docker compose -f docker/docker-compose.yml up -d
 docker compose -f docker/docker-compose.yml logs -f backend   # 看首次模型下载进度（约 3 GB）
 ```
 
-`backend` 状态变为 `healthy` 后访问 `http://<服务器 IP>/`。首次启动因下载 BGE-M3 + 重排序权重需 5～15 分钟。
+首次启动因下载 BGE-M3 + 重排序权重需 5～15 分钟。后端镜像通过多阶段构建：node 阶段执行 `npm run build` 产出 React 静态资源，Python 阶段直接挂载提供，无需独立的前端容器或 nginx 反向代理。
+
+**访问前端**（等 `docker compose ps` 显示 `backend` 为 `healthy` 后）：
+
+- **本机访问**（Mac/Linux 开发机）：浏览器打开 `http://localhost/`。
+- **远端服务器**：浏览器打开 `http://<服务器 IP>/`（compose 已把容器 8000 端口映射到宿主 80 端口）。局域网内也可用主机名（macOS/Bonjour 下 `http://<hostname>.local/`）。
+- **首次登录**：使用 `.env` 中填写的 `ADMIN_EMPLOYEE_ID` / `ADMIN_PASSWORD` —— 该账号在首次启动时自动写入数据库。登录后在 `/admin` 管理面板可创建其他用户。
+- **健康检查**：在 SPA 可用前可先访问 `curl http://localhost/api/health`，应返回 `{"status":"ok"}`。
+- **HTTPS**：容器内只跑 HTTP（容器 8000 → 宿主 80）。生产环境请在前面架一层反向代理（Caddy、nginx、Cloudflare Tunnel、云厂商 LB 均可），并保持 `.env` 中 `SESSION_COOKIE_SECURE=true`（默认值）。
+
+> 环境变量加载：仓库根目录的 `.env` 是唯一真相，`docker/.env` 是它的软链接。这样 Compose v2 在 project 目录下的 `.env` 自动发现（用于解析 YAML 中的 `${VAR}`，例如 `BUILD_PLATFORM`）能命中；后端服务又通过 `env_file: - ../.env` 把所有 key 注入容器运行时。新克隆仓库后请重建软链接：`ln -s ../.env docker/.env`。
 
 **建立初始索引**（仅在直接往文件系统里放文件时需要）：
 
@@ -124,6 +134,6 @@ docs/<分类>/   →(1)→   data/parsed/   →(2)→  父块+   →(3)→ Qdran
 
 **多轮对话**（`src/session.py`）：对追问自动改写为独立问题；继承上轮 top-2 来源；上下文预算随历史增长动态收缩。
 
-**HTTP 层**（`api/`）：FastAPI + SSE 流式输出，服务端 session cookie 鉴权（`pc_sid`），变更操作需带 CSRF Token。管理接口涵盖用户管理、对话查看、反馈日志，以及文档上传/索引任务队列。
+**HTTP 层**（`api/`）：FastAPI + SSE 流式输出，服务端 session cookie 鉴权（`pc_sid`），变更操作需带 CSRF Token。生产环境下同一个 FastAPI 进程也负责在 `/` 提供 React 静态资源（通过 `SPAStaticFiles` 实现客户端路由的 index.html 回退）。管理接口涵盖用户管理、对话查看、反馈日志，以及文档上传/索引任务队列。
 
 架构细节和注意事项见 `CLAUDE.md`。

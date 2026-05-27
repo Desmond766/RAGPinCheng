@@ -34,7 +34,7 @@ python scripts/build_index.py
 
 ## Quick start — Docker (self-hosted server)
 
-Three services: `qdrant`, `backend`, `frontend` (nginx on port 80).
+Two services: `qdrant` (vector store) and `backend` (FastAPI serving both `/api/*` and the React SPA on port 80).
 
 ```bash
 cp .env.example .env   # fill in ZHIPU_API_KEY, MINERU_API_KEY, ADMIN_EMPLOYEE_ID, ADMIN_PASSWORD
@@ -43,7 +43,17 @@ docker compose -f docker/docker-compose.yml up -d
 docker compose -f docker/docker-compose.yml logs -f backend   # watch first-boot model download (~3 GB)
 ```
 
-Live at `http://<server-ip>/` once `backend` is `healthy`. First boot takes 5–15 min while BGE-M3 + reranker weights download.
+First boot takes 5–15 min while BGE-M3 + reranker weights download. The backend image bundles the built React app (multi-stage Dockerfile runs `npm run build` in a node stage), so there's no separate frontend container or nginx proxy.
+
+**Accessing the app** once `docker compose ps` shows `backend` as `healthy`:
+
+- **Same machine** (Mac/Linux dev): open `http://localhost/` in a browser.
+- **Remote server**: open `http://<server-ip>/` (port 80 is published by the compose file). On a LAN you can also use the hostname (`http://<hostname>.local/` on macOS/Bonjour).
+- **First login**: use the `ADMIN_EMPLOYEE_ID` / `ADMIN_PASSWORD` you set in `.env` — that account is auto-seeded on first boot. From the admin dashboard at `/admin` you can register additional users.
+- **Health check**: `curl http://localhost/api/health` should return `{"status":"ok"}` before the SPA is usable.
+- **HTTPS**: the container only speaks HTTP on :8000 (mapped to host :80). For production HTTPS, put a reverse proxy (Caddy, nginx, Cloudflare Tunnel, your cloud LB) in front and set `SESSION_COOKIE_SECURE=true` in `.env` (the default).
+
+> Env wiring: the repo-root `.env` is the single source of truth. `docker/.env` is a symlink to it so Compose v2's project-directory `.env` discovery resolves `${VAR}` substitutions (e.g. `BUILD_PLATFORM`); the backend service also lists `../.env` under `env_file:` so all keys land inside the container at runtime. If you clone fresh, recreate the symlink with `ln -s ../.env docker/.env`.
 
 **Build initial index** (only needed when adding documents via the filesystem directly):
 
@@ -124,6 +134,6 @@ docs/<category>/   →(1)→   data/parsed/  →(2)→ parent+  →(3)→ Qdrant
 
 **Multi-turn** (`src/session.py`): query rewriter resolves follow-ups; top 2 sources from the previous turn carry forward; context budget shrinks dynamically as history grows.
 
-**HTTP layer** (`api/`): FastAPI with SSE streaming, server-side session cookie auth (`pc_sid`), CSRF token on mutating requests. Admin endpoints cover user management, conversation browsing, feedback log, and the document upload/indexing queue.
+**HTTP layer** (`api/`): FastAPI with SSE streaming, server-side session cookie auth (`pc_sid`), CSRF token on mutating requests. In production the same FastAPI process also serves the React bundle at `/` (mounted via `SPAStaticFiles` with index.html fallback for client-side routes). Admin endpoints cover user management, conversation browsing, feedback log, and the document upload/indexing queue.
 
 See `CLAUDE.md` for architecture invariants and what to be careful about when editing.

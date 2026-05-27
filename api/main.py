@@ -9,8 +9,13 @@ import logging
 import os
 from contextlib import asynccontextmanager
 
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.staticfiles import StaticFiles
+from starlette.types import Scope
 
 from src.config import RERANK_ENABLED
 
@@ -133,3 +138,53 @@ app.include_router(core_router, prefix="/api")
 app.include_router(auth_router, prefix="/api")
 app.include_router(chat_router, prefix="/api")
 app.include_router(admin_router, prefix="/api")
+
+
+# ── React SPA hosting ──────────────────────────────────────────────────────
+#
+# In production the React bundle is built into the same image as the backend
+# (Dockerfile.backend has a node stage that produces /app/frontend/dist).
+# uvicorn serves it directly — no separate nginx container, no proxy.
+#
+# In local dev the Vite dev server (`npm run dev` on :5173) talks to this
+# backend over CORS, so when frontend/dist doesn't exist we just skip the
+# mount and the API runs API-only.
+class SPAStaticFiles(StaticFiles):
+    """StaticFiles that falls back to index.html for unknown paths.
+
+    Without this, hard-refreshing a client-side route like /login or /admin
+    returns 404 from FastAPI instead of letting React Router handle it.
+    Starlette's StaticFiles *raises* HTTPException(404) for missing files
+    (rather than returning a Response with status_code=404), so we catch
+    it and serve index.html instead.
+
+    Also sets cache headers: 1y immutable for /assets/* (hashed bundles),
+    no-store for index.html (so deploys take effect on next reload). The
+    root path "/" arrives here as path="." after Starlette's mount
+    normalization, which is why we check both forms.
+    """
+
+    async def get_response(self, path: str, scope: Scope):
+        try:
+            response = await super().get_response(path, scope)
+        except StarletteHTTPException as exc:
+            if exc.status_code != 404:
+                raise
+            # Unknown path → SPA route. Hand React Router the entry point.
+            response = await super().get_response("index.html", scope)
+        if path.startswith("assets/"):
+            response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        elif path in (".", "", "index.html"):
+            response.headers["Cache-Control"] = "no-store"
+        return response
+
+
+_frontend_dist = Path(__file__).resolve().parent.parent / "frontend" / "dist"
+if _frontend_dist.is_dir():
+    # Mount LAST so /api/* routes registered above take precedence.
+    app.mount("/", SPAStaticFiles(directory=str(_frontend_dist), html=True), name="spa")
+    logger.info("serving React SPA from %s", _frontend_dist)
+else:
+    logger.info(
+        "frontend/dist not found — running API-only; use `npm run dev` for the UI",
+    )

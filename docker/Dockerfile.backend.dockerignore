@@ -1,5 +1,6 @@
-# Build context is the repo root. Keep it small — only what the backend image
-# actually COPYs (src/, api/, prompts/, scripts/, requirements-prod.txt).
+# Build context is the repo root. Keep it small — the backend image COPYs
+# src/, api/, prompts/, scripts/, requirements-prod.txt, and the frontend
+# source (the first build stage runs `npm run build` to produce dist/).
 
 .git
 .gitignore
@@ -16,8 +17,13 @@ __pycache__
 .env.example
 .claude/
 
-# Frontend lives in its own image
-frontend/
+# Frontend: we ship the SOURCE so the node stage can build it inside the
+# image. Exclude local build artifacts and node_modules to keep the context
+# small and force a clean install inside the container.
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/tsconfig.tsbuildinfo
 
 # Bind-mounted at runtime, not baked into the image
 data/

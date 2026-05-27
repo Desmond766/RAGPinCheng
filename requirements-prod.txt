@@ -21,3 +21,7 @@ tqdm>=4.66.0
 fastapi>=0.115.0
 uvicorn[standard]>=0.32.0
 sse-starlette>=2.1.0
+# Auth: argon2 password hashing for users table.
+passlib[argon2]>=1.7.4
+# Required by FastAPI for multipart/form-data parsing — admin upload endpoint.
+python-multipart>=0.0.20

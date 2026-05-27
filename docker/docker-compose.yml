@@ -1,5 +1,9 @@
 # Production compose for the PinCheng RAG system.
 #
+# Two services: qdrant (vector store) and backend (FastAPI + React bundle in
+# one image). The backend serves both /api/* and the React SPA at / — no
+# separate frontend container or nginx proxy.
+#
 # Run all commands from the repo root:
 #   docker compose -f docker/docker-compose.yml build
 #   docker compose -f docker/docker-compose.yml up -d
@@ -7,9 +11,11 @@
 #   docker compose -f docker/docker-compose.yml exec backend python scripts/build_index.py
 #   docker compose -f docker/docker-compose.yml down
 #
-# Secrets: docker compose auto-loads `.env` from the directory where the command
-# is run (repo root). Required keys: ZHIPU_API_KEY, MINERU_API_KEY,
-# (optional) LLM_MODEL, LLM_REWRITE_MODEL, HF_ENDPOINT.
+# Env wiring: the repo-root `.env` is the single source of truth. `docker/.env`
+# is a symlink to it, so compose-time substitution (e.g. ${BUILD_PLATFORM})
+# resolves; the backend also loads it via `env_file:` for container runtime
+# injection. Required keys: ZHIPU_API_KEY, MINERU_API_KEY, ADMIN_EMPLOYEE_ID,
+# ADMIN_PASSWORD, (optional) LLM_MODEL, LLM_REWRITE_MODEL, HF_ENDPOINT.
 
 services:
   qdrant:
@@ -44,8 +50,6 @@ services:
       # server). Override per-invocation for local Mac testing:
       #     BUILD_PLATFORM=linux/arm64 docker compose -f docker/docker-compose.yml build
       # Or set it in .env to make it sticky for one machine.
-      # For a true multi-arch image (both arches in one manifest), use buildx
-      # directly: see comments at the bottom of this file.
       platforms:
         - ${BUILD_PLATFORM:-linux/amd64}
     image: pincheng-rag-backend:latest
@@ -53,38 +57,21 @@ services:
     depends_on:
       qdrant:
         condition: service_healthy
+    env_file:
+      # Injects all keys from the repo-root .env into the container so we don't
+      # have to enumerate them in `environment:`. Code defaults in
+      # src/config.py and api/auth.py cover any keys missing from .env.
+      - ../.env
     environment:
-      # Secrets / model config — passed through from the host .env file.
-      ZHIPU_API_KEY: ${ZHIPU_API_KEY}
-      MINERU_API_KEY: ${MINERU_API_KEY}
-      LLM_MODEL: ${LLM_MODEL:-glm-4.7-flashx}
-      # Optional rewrite-specific model. If unset, src/config.py defaults to
-      # glm-4.5-air — the cheap/fast model used for the standalone-query rewrite.
-      LLM_REWRITE_MODEL: ${LLM_REWRITE_MODEL:-}
-      # HuggingFace endpoint. Defaults to the real CDN; override in .env with
-      #   HF_ENDPOINT=https://hf-mirror.com
-      # if the server can't reach huggingface.co directly (common on restricted
-      # networks in mainland China). FlagEmbedding + huggingface_hub honor this
-      # env var transparently — no code change required.
-      HF_ENDPOINT: ${HF_ENDPOINT:-https://huggingface.co}
       # In-cluster Qdrant — the backend reaches it by compose service name.
-      QDRANT_URL: ${QDRANT_URL:-http://qdrant:6333}
-      # Frontend is same-origin via nginx proxy, so the in-app CORS list is
-      # unused in prod. Leave empty to deny browser cross-origin entirely.
-      API_CORS_ORIGINS: ${API_CORS_ORIGINS:-}
-      # ── Auth ───────────────────────────────────────────────────────────
-      # On first boot, if no admin exists, one is seeded from these vars.
-      # Subsequent boots are no-ops once an admin row is present.
-      ADMIN_EMPLOYEE_ID: ${ADMIN_EMPLOYEE_ID:-}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
-      ADMIN_REAL_NAME: ${ADMIN_REAL_NAME:-管理员}
-      # Set to "false" only when running over plain HTTP (local dev / VPN
-      # behind a TLS terminator). In production with HTTPS, leave unset
-      # so cookies are sent only over secure transports.
-      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-true}
+      # Forced literal (not ${QDRANT_URL}) so a host-side .env that points
+      # to http://localhost:6333 for local scripts cannot leak in and break
+      # the container's connection to the qdrant service.
+      QDRANT_URL: http://qdrant:6333
     volumes:
-      # Persistent state — index, parsed markdown, SQLite parent store,
-      # feedback log. Lives on the host disk; the image stays stateless.
+      # Persistent state — parsed markdown cache, parents.sqlite, app.sqlite
+      # (users + conversations), feedback.jsonl. Lives on the host disk;
+      # the image stays stateless. Qdrant has its own volume above.
       - ../data:/app/data
       # Source PDFs — needed only when running scripts/build_index.py inside
       # the container. Mounted read-write so MinerU can drop split PDFs back
@@ -93,6 +80,11 @@ services:
       # HuggingFace model cache — separate named volume so first-boot
       # downloads of BGE-M3 + reranker (~3 GB) survive container recreation.
       - hf_cache:/root/.cache/huggingface
+    ports:
+      # Publicly exposed entry point. Maps host :80 to the container's
+      # uvicorn on :8000 — same URL as the old nginx setup, just one fewer
+      # hop. Put a company reverse proxy / TLS terminator in front for HTTPS.
+      - "80:8000"
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8000/api/health"]
       interval: 30s
@@ -102,35 +94,6 @@ services:
       # weights into hf_cache before /api/health is reachable. Subsequent
       # restarts complete in seconds.
       start_period: 15m
-    # Not exposed to the host — frontend reaches it over the compose network.
-    expose:
-      - "8000"
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "5"
-
-  frontend:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile.frontend
-      platforms:
-        - ${BUILD_PLATFORM:-linux/amd64}
-    image: pincheng-rag-frontend:latest
-    restart: unless-stopped
-    depends_on:
-      backend:
-        condition: service_started
-    ports:
-      # Publicly exposed entry point. Put a company reverse proxy / TLS
-      # terminator in front of this for HTTPS.
-      - "80:80"
-    healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:80/"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
     logging:
       driver: json-file
       options:
@@ -157,11 +120,3 @@ volumes:
 #
 # Make the override sticky for one machine — add to .env:
 #     BUILD_PLATFORM=linux/arm64
-#
-# Build a true multi-arch image (single manifest containing both arches):
-#     docker buildx build --platform linux/amd64,linux/arm64 \
-#         -f docker/Dockerfile.backend -t pincheng-rag-backend:latest --push .
-#     docker buildx build --platform linux/amd64,linux/arm64 \
-#         -f docker/Dockerfile.frontend -t pincheng-rag-frontend:latest --push .
-# (Multi-arch builds require pushing to a registry — local Docker engine can
-# only hold one arch per image tag at a time.)
