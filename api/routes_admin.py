@@ -303,7 +303,7 @@ def trigger_sweep(
 # Filenames coming from the browser can carry path separators or shell-hostile
 # chars. Reject anything that isn't a plain-ish name; admins can rename their
 # files locally before uploading.
-_SAFE_NAME_RE = re.compile(r"^[\w\-.一-鿿（）()【】\[\] ]+$")
+_SAFE_NAME_RE = re.compile(r"^[\w\-.,，''’（）()【】\[\] ]+$")
 
 # Cap individual uploads — MinerU cloud accepts ~200 MB per file. Tune via
 # env if you regularly handle larger PDFs.
@@ -338,12 +338,26 @@ def _job_row_to_dto(r: sqlite3.Row) -> IndexJobDTO:
     )
 
 
-def _classify_doc_type(filename: str) -> str | None:
+TRANSCRIPT_CATEGORY = "教学视频"
+
+
+def _classify_doc_type(filename: str, category: str) -> str | None:
+    """Map the uploaded filename → internal doc_type.
+
+    `.pdf` is always doc_type="pdf" (MinerU parse).
+    `.md` is ambiguous — same extension covers both video transcripts (with
+    speaker-turn markers + timestamps) and regular markdown documents that
+    happen to skip the MinerU parse stage. We disambiguate by category:
+    files uploaded under 教学视频 are transcripts; everywhere else, .md
+    is treated as a regular markdown document (chunked like a parsed PDF).
+    Non-transcript markdown reuses `doc_type="pdf"` so the chunker takes the
+    header-anchored branch — semantically a markdown doc IS a parsed PDF.
+    """
     lower = filename.lower()
     if lower.endswith(".pdf"):
         return "pdf"
     if lower.endswith(".md"):
-        return "transcript"
+        return "transcript" if category == TRANSCRIPT_CATEGORY else "pdf"
     return None
 
 
@@ -437,9 +451,9 @@ async def upload_documents(
         if not name or not _SAFE_NAME_RE.match(name):
             skipped.append({"filename": name or "(empty)", "reason": "文件名包含非法字符"})
             continue
-        doc_type = _classify_doc_type(name)
+        doc_type = _classify_doc_type(name, cat)
         if doc_type is None:
-            skipped.append({"filename": name, "reason": "仅支持 .pdf 和 .md (教学视频转写)"})
+            skipped.append({"filename": name, "reason": "仅支持 .pdf 和 .md"})
             continue
 
         target = category_dir / name

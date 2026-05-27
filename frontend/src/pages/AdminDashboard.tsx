@@ -646,6 +646,8 @@ const NEW_CATEGORY_SENTINEL = "__new__";
 
 const STATUS_LABELS: Record<string, string> = {
   pending: "排队中",
+  uploading: "上传中",
+  queued_mineru: "等待 MinerU",
   parsing: "解析中",
   chunking: "切块中",
   embedding: "嵌入中",
@@ -653,14 +655,40 @@ const STATUS_LABELS: Record<string, string> = {
   failed: "失败",
 };
 
+const STATUS_HINTS: Record<string, string> = {
+  uploading: "正在上传文件至 MinerU…",
+  queued_mineru: "文件已提交，等待 MinerU 服务器开始解析（通常需 1–3 分钟）",
+  parsing: "MinerU 正在解析 PDF…",
+  chunking: "切块中…",
+  embedding: "向量嵌入中…",
+};
+
 const STATUS_COLORS: Record<string, string> = {
   pending: "bg-gray-100 text-gray-700",
+  uploading: "bg-sky-100 text-sky-700",
+  queued_mineru: "bg-violet-100 text-violet-700",
   parsing: "bg-blue-100 text-blue-700",
   chunking: "bg-blue-100 text-blue-700",
   embedding: "bg-amber-100 text-amber-700",
   done: "bg-green-100 text-green-700",
   failed: "bg-red-100 text-red-700",
 };
+
+const ACTIVE_STATUSES = new Set(["pending", "uploading", "queued_mineru", "parsing", "chunking", "embedding"]);
+
+function useElapsed(startTs: number | null | undefined): string {
+  const [now, setNow] = useState(() => Date.now());
+  const active = startTs != null;
+  useEffect(() => {
+    if (!active) return;
+    const t = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(t);
+  }, [active]);
+  if (!startTs) return "";
+  const sec = Math.floor((now - startTs * 1000) / 1000);
+  if (sec < 60) return `${sec}s`;
+  return `${Math.floor(sec / 60)}m${sec % 60}s`;
+}
 
 function fmtBytes(n: number): string {
   if (n < 1024) return `${n} B`;
@@ -841,8 +869,10 @@ function UploadCard({
     <div className="rounded-lg border border-gray-200 bg-panel p-4">
       <h2 className="font-semibold mb-3">上传资料</h2>
       <p className="text-xs text-muted mb-3">
-        支持 <code>.pdf</code>（自动经 MinerU 解析）与 <code>.md</code>
-        （教学视频转写格式）。可一次选择多个文件，会依次排队处理；处理过程中可继续聊天，但响应可能变慢。
+        支持 <code>.pdf</code>（自动经 MinerU 解析）与 <code>.md</code>。
+        在「教学视频」分类下上传的 <code>.md</code> 会按转写格式（说话人 + 时间戳）处理，
+        其它分类下则作为普通 Markdown 文档（按标题切分）处理。
+        可一次选择多个文件，会依次排队；处理过程中可继续聊天，但响应可能变慢。
       </p>
       <div className="flex flex-col gap-3">
         <div>
@@ -1051,7 +1081,11 @@ function DocumentsCard({
                 </td>
                 <td className="px-2 py-1.5">{d.category}</td>
                 <td className="px-2 py-1.5 text-muted">
-                  {d.doc_type === "transcript" ? "教学视频转写" : "PDF"}
+                  {d.doc_type === "transcript"
+                    ? "教学视频转写"
+                    : d.source_path.toLowerCase().endsWith(".md")
+                      ? "Markdown 文档"
+                      : "PDF"}
                 </td>
                 <td className="px-2 py-1.5 text-right">{d.parent_count}</td>
                 <td className="px-2 py-1.5">
@@ -1072,6 +1106,43 @@ function DocumentsCard({
   );
 }
 
+
+function JobStatusCell({ job: j }: { job: IndexJob }) {
+  const isActive = ACTIVE_STATUSES.has(j.status);
+  const elapsed = useElapsed(isActive ? j.started_at ?? j.created_at : null);
+  const hint = isActive ? STATUS_HINTS[j.status] : null;
+  return (
+    <>
+      <span
+        className={
+          "inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[11px] " +
+          (STATUS_COLORS[j.status] || "bg-gray-100 text-gray-700") +
+          (isActive ? " animate-pulse" : "")
+        }
+      >
+        {isActive && (
+          <svg className="w-2.5 h-2.5 animate-spin" viewBox="0 0 24 24" fill="none">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z" />
+          </svg>
+        )}
+        {STATUS_LABELS[j.status] || j.status}
+        {elapsed && <span className="opacity-70">{elapsed}</span>}
+      </span>
+      {hint && (
+        <div className="text-[11px] text-muted mt-0.5">{hint}</div>
+      )}
+      {j.error && (
+        <div
+          className="text-[11px] text-red-600 mt-1 max-w-xs whitespace-pre-wrap"
+          title={j.error}
+        >
+          {j.error.length > 200 ? j.error.slice(0, 200) + "…" : j.error}
+        </div>
+      )}
+    </>
+  );
+}
 
 function JobsCard({
   jobs,
@@ -1131,22 +1202,7 @@ function JobsCard({
                 </td>
                 <td className="px-2 py-1.5">{j.category}</td>
                 <td className="px-2 py-1.5">
-                  <span
-                    className={
-                      "px-1.5 py-0.5 rounded text-[11px] " +
-                      (STATUS_COLORS[j.status] || "bg-gray-100 text-gray-700")
-                    }
-                  >
-                    {STATUS_LABELS[j.status] || j.status}
-                  </span>
-                  {j.error && (
-                    <div
-                      className="text-[11px] text-red-600 mt-1 max-w-xs whitespace-pre-wrap"
-                      title={j.error}
-                    >
-                      {j.error.length > 200 ? j.error.slice(0, 200) + "…" : j.error}
-                    </div>
-                  )}
+                  <JobStatusCell job={j} />
                 </td>
                 <td className="px-2 py-1.5 text-muted">
                   {j.real_name || "—"}
@@ -1156,6 +1212,9 @@ function JobsCard({
                 </td>
                 <td className="px-2 py-1.5 text-muted text-[11px]">
                   <div>提交 {fmtDate(j.created_at)}</div>
+                  {j.started_at && !j.finished_at && (
+                    <div>开始 {fmtDate(j.started_at)}</div>
+                  )}
                   {j.finished_at && <div>完成 {fmtDate(j.finished_at)}</div>}
                 </td>
                 <td className="px-2 py-1.5 text-right text-[11px] text-muted">

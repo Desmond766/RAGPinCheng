@@ -102,7 +102,11 @@ async def _run_one(job_id: int) -> None:
 
     source_path = Path(row["source_path"])
     doc_type = row["doc_type"]
-    _update_status(job_id, status="parsing", started_at=int(time.time()), error=None)
+    # `.md` files (transcript or regular document) skip the MinerU upload/queue
+    # phases entirely — they're already markdown on disk. Start at "chunking"
+    # so the badge doesn't briefly flash a misleading "uploading" state.
+    initial_status = "uploading" if source_path.suffix.lower() == ".pdf" else "chunking"
+    _update_status(job_id, status=initial_status, started_at=int(time.time()), error=None)
 
     loop = asyncio.get_running_loop()
 

@@ -93,15 +93,20 @@ def _build_pdf_doc(source_path: Path, on_status: StatusFn) -> ParsedDoc:
     PARSED_DIR.mkdir(parents=True, exist_ok=True)
     stem = _safe_stem(source_path)
     md_path = PARSED_DIR / f"{stem}.md"
-    on_status("parsing")
     # Match `ingest_all`'s preference: cloud if MINERU_API_KEY is set,
     # otherwise the local CLI.
     if md_path.exists():
         # Cached parse from a prior attempt — reuse it. Re-uploading the
         # same filename therefore skips the slow MinerU call.
+        on_status("parsing")
         markdown = md_path.read_text(encoding="utf-8")
+    elif MINERU_API_KEY:
+        # Cloud path: on_status is threaded into _cloud_parse so it fires
+        # "uploading" → "queued_mineru" → "parsing" at the right moments.
+        markdown = _cloud_parse(source_path, on_status=on_status)
     else:
-        markdown = _cloud_parse(source_path) if MINERU_API_KEY else _local_parse(source_path)
+        on_status("parsing")
+        markdown = _local_parse(source_path)
         md_path.write_text(markdown, encoding="utf-8")
     category, company = _derive_category_and_company(source_path)
     return ParsedDoc(
@@ -127,6 +132,26 @@ def _build_transcript_doc(source_path: Path) -> ParsedDoc:
     )
 
 
+def _build_markdown_doc(source_path: Path) -> ParsedDoc:
+    """Build a ParsedDoc for a `.md` uploaded as a regular document.
+
+    Unlike `_build_pdf_doc`, no MinerU parse is needed — the file is already
+    markdown. Unlike `_build_transcript_doc`, we use `doc_type="pdf"` so the
+    chunker takes the header-anchored branch (table/formula atomic detection,
+    section paths in citations). The original .md path is the markdown source
+    directly; we don't copy it under `data/parsed/`.
+    """
+    category, company = _derive_category_and_company(source_path)
+    return ParsedDoc(
+        source_path=source_path,
+        category=category,
+        doc_title=source_path.stem,
+        markdown_path=source_path,
+        doc_type="pdf",
+        company=company,
+    )
+
+
 def index_single(
     source_path: Path,
     doc_type: str,
@@ -145,10 +170,14 @@ def index_single(
     if doc_type not in ("pdf", "transcript"):
         raise ValueError(f"unsupported doc_type: {doc_type!r}")
 
-    if doc_type == "pdf":
-        doc = _build_pdf_doc(source_path, on_status)
-    else:
+    if doc_type == "transcript":
         doc = _build_transcript_doc(source_path)
+    elif source_path.suffix.lower() == ".md":
+        # Non-transcript markdown — already markdown, skip the parse pass.
+        # Chunker still uses the PDF (header-anchored) branch via doc_type="pdf".
+        doc = _build_markdown_doc(source_path)
+    else:
+        doc = _build_pdf_doc(source_path, on_status)
 
     # Purge before chunking so a partial failure doesn't leave both old and
     # new chunks present. If chunking fails, the doc is gone from the index;

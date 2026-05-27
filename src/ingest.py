@@ -19,7 +19,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterator
+from typing import Callable, Iterator
 
 import requests
 from pypdf import PdfReader, PdfWriter
@@ -81,7 +81,10 @@ def _split_pdf_for_cloud(pdf: Path, work_dir: Path) -> list[Path]:
     return parts
 
 
-def _cloud_parse_batch(parts: list[Path]) -> list[str]:
+def _cloud_parse_batch(
+    parts: list[Path],
+    on_status: "Callable[[str], None] | None" = None,
+) -> list[str]:
     """Submit N PDF parts as one MinerU batch. Returns markdown per part, in order.
 
     Flow per the official docs (https://mineru.net/apiManage/docs):
@@ -90,7 +93,13 @@ def _cloud_parse_batch(parts: list[Path]) -> list[str]:
       3. GET /extract-results/batch/{batch_id} until every entry's state == 'done'
 
     Extraction is auto-submitted post-upload — there is NO /extract/task/batch call.
+
+    on_status is called with:
+      "uploading"     — while uploading parts to S3
+      "queued_mineru" — after upload, while waiting in MinerU's queue
+      "parsing"       — once MinerU reports state='running' for any part
     """
+    _notify = on_status or (lambda _: None)
     # 1. Request presigned upload URLs.
     files_meta = [{"name": p.name, "data_id": p.name} for p in parts]
     resp = requests.post(
@@ -138,6 +147,7 @@ def _cloud_parse_batch(parts: list[Path]) -> list[str]:
                     time.sleep(backoff)
         raise RuntimeError(f"S3 upload exhausted retries for {part.name}: {last_exc}")
 
+    _notify("uploading")
     with ThreadPoolExecutor(max_workers=min(4, len(parts))) as pool:
         futures = [
             pool.submit(_upload_part, part, url)
@@ -151,7 +161,9 @@ def _cloud_parse_batch(parts: list[Path]) -> list[str]:
     # connection, but the polling loop itself runs until all parts succeed or
     # any part fails. Cancel with Ctrl-C if you genuinely want to give up.
     print(f"  [cloud] uploaded {len(parts)} part(s), polling batch {batch_id} ...")
+    _notify("queued_mineru")
     result: dict = {}
+    _seen_running = False
     while True:
         poll = requests.get(
             f"{MINERU_API_BASE}/extract-results/batch/{batch_id}",
@@ -168,6 +180,9 @@ def _cloud_parse_batch(parts: list[Path]) -> list[str]:
             states = [(e.get("file_name", e.get("data_id", "?")), e.get("state", "")) for e in entries]
             n_done = sum(1 for _, s in states if s == "done")
             print(f"  [poll] {n_done}/{len(states)} done — {states}")
+            if not _seen_running and any(s == "running" for _, s in states):
+                _seen_running = True
+                _notify("parsing")
             if all(s == "done" for _, s in states):
                 break
             if any(s == "failed" for _, s in states):
@@ -207,13 +222,13 @@ def _cloud_parse_batch(parts: list[Path]) -> list[str]:
     return markdowns
 
 
-def _cloud_parse(pdf: Path) -> str:
+def _cloud_parse(pdf: Path, on_status: "Callable[[str], None] | None" = None) -> str:
     """Parse one PDF via the MinerU cloud API, splitting into ≤200-page parts
     if necessary and concatenating the resulting markdown."""
     split_dir = PARSED_DIR / f"_split_{_safe_stem(pdf)}"
     try:
         parts = _split_pdf_for_cloud(pdf, split_dir)
-        markdowns = _cloud_parse_batch(parts)
+        markdowns = _cloud_parse_batch(parts, on_status=on_status)
         if len(markdowns) == 1:
             return markdowns[0]
         joined = []
