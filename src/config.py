@@ -14,6 +14,16 @@ PARENTS_DB = DATA_DIR / "parents.sqlite"
 for d in (DATA_DIR, PARSED_DIR):
     d.mkdir(parents=True, exist_ok=True)
 
+# Category convention: most top-level folders under docs/ are flat
+# (`<category>/<file>`). 客户标准 uses a second level for grouping —
+# `客户标准/<customer>/<file>` — and the customer name is preserved on
+# each parent/child as the `company` field for downstream filtering.
+# When adding new two-level categories, add them here; the upload UI reads
+# the list (via /api/admin/index/category-tree) to know when to prompt for
+# a subcategory.
+SECOND_LEVEL_CATEGORIES = frozenset({"客户标准"})
+
+
 # Chunking — sizes are in characters (Chinese ≈ 1 char per token for budgeting)
 PARENT_SIZE = 1200
 PARENT_OVERLAP = 100

@@ -132,6 +132,71 @@ class SweepResponse(BaseModel):
     deleted_auth_sessions: int
 
 
+# ── admin: indexing ─────────────────────────────────────────────────────────
+
+
+class IndexJobDTO(BaseModel):
+    id: int
+    user_id: int | None
+    employee_id: str | None
+    real_name: str | None
+    filename: str
+    category: str
+    doc_type: str
+    source_path: str
+    file_size: int
+    status: str
+    error: str | None
+    parents: int | None = None
+    children: int | None = None
+    created_at: int
+    started_at: int | None
+    finished_at: int | None
+
+
+class IndexJobListResponse(BaseModel):
+    jobs: list[IndexJobDTO]
+
+
+class UploadResponse(BaseModel):
+    accepted: list[IndexJobDTO]
+    skipped: list[dict]  # [{filename, reason}] for files we refused
+
+
+class IndexedDocumentDTO(BaseModel):
+    source_path: str
+    doc_title: str
+    category: str
+    doc_type: str
+    company: str | None
+    parent_count: int
+
+
+class IndexedDocumentListResponse(BaseModel):
+    documents: list[IndexedDocumentDTO]
+
+
+class CategoryNodeDTO(BaseModel):
+    name: str
+    two_level: bool                # True if uploads should ask for a subcategory
+    subcategories: list[str]       # existing second-level folder names (may be empty)
+
+
+class CategoryTreeResponse(BaseModel):
+    categories: list[CategoryNodeDTO]
+    second_level_categories: list[str]  # names that REQUIRE a subcategory on upload
+
+
+class DeleteDocumentRequest(BaseModel):
+    source_path: str
+    delete_file: bool = False
+
+
+class DeleteDocumentResponse(BaseModel):
+    parents_deleted: int
+    file_deleted: bool
+
+
 class SourceDTO(BaseModel):
     """Shape matches ChatSession._sources_for_ui()."""
     parent_id: str

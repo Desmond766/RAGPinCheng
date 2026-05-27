@@ -113,6 +113,45 @@ export type AdminStats = {
   messages_7d: number;
 };
 
+export type IndexJob = {
+  id: number;
+  user_id: number | null;
+  employee_id: string | null;
+  real_name: string | null;
+  filename: string;
+  category: string;
+  doc_type: "pdf" | "transcript" | string;
+  source_path: string;
+  file_size: number;
+  status: "pending" | "parsing" | "chunking" | "embedding" | "done" | "failed" | string;
+  error: string | null;
+  parents: number | null;
+  children: number | null;
+  created_at: number;
+  started_at: number | null;
+  finished_at: number | null;
+};
+
+export type IndexedDocument = {
+  source_path: string;
+  doc_title: string;
+  category: string;
+  doc_type: string;
+  company: string | null;
+  parent_count: number;
+};
+
+export type CategoryNode = {
+  name: string;
+  two_level: boolean;
+  subcategories: string[];
+};
+
+export type CategoryTree = {
+  categories: CategoryNode[];
+  second_level_categories: string[];
+};
+
 export type AdminFeedbackEntry = {
   ts?: string | null;
   kind?: string | null;

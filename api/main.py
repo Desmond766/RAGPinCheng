@@ -17,6 +17,7 @@ from src.config import RERANK_ENABLED
 from .auth import bootstrap_admin_from_env
 from .conversation_runtime import sweep_once
 from .db import init_db
+from .indexing import resume_pending_on_boot, start_worker, stop_worker
 from .routes import router as core_router
 from .routes_admin import router as admin_router
 from .routes_auth import router as auth_router
@@ -95,6 +96,10 @@ async def lifespan(app: FastAPI):
             get_reranker()
 
     sweeper_task = asyncio.create_task(_sweeper_loop())
+    # Indexing worker: started before resuming pending jobs so the queue
+    # has a consumer ready when resume_pending_on_boot enqueues them.
+    await start_worker()
+    resume_pending_on_boot()
     logger.info("api ready")
     try:
         yield
@@ -104,6 +109,7 @@ async def lifespan(app: FastAPI):
             await sweeper_task
         except (asyncio.CancelledError, Exception):
             pass
+        await stop_worker()
 
 
 app = FastAPI(title="PinCheng RAG API", version="0.2.0", lifespan=lifespan)

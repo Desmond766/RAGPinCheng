@@ -7,10 +7,13 @@ import type {
   AdminFeedbackEntry,
   AdminStats,
   AdminUser,
+  CategoryTree,
   ConversationState,
+  IndexJob,
+  IndexedDocument,
 } from "../types";
 
-type Tab = "users" | "conversations" | "stats" | "feedback";
+type Tab = "users" | "conversations" | "stats" | "feedback" | "corpus";
 
 function fmtDate(ts: number | null | undefined): string {
   if (!ts) return "—";
@@ -56,6 +59,7 @@ export function AdminDashboard() {
           {([
             ["users", "用户"],
             ["conversations", "对话"],
+            ["corpus", "资料管理"],
             ["stats", "概览"],
             ["feedback", "反馈"],
           ] as [Tab, string][]).map(([key, label]) => (
@@ -79,6 +83,7 @@ export function AdminDashboard() {
       <div className="flex-1 overflow-y-auto p-6">
         {tab === "users" && <UsersTab />}
         {tab === "conversations" && <ConversationsTab />}
+        {tab === "corpus" && <CorpusTab />}
         {tab === "stats" && <StatsTab />}
         {tab === "feedback" && <FeedbackTab />}
       </div>
@@ -629,6 +634,560 @@ function FeedbackTab() {
           )}
         </div>
       ))}
+    </div>
+  );
+}
+
+
+// ── Corpus management ─────────────────────────────────────────────────────
+
+
+const NEW_CATEGORY_SENTINEL = "__new__";
+
+const STATUS_LABELS: Record<string, string> = {
+  pending: "排队中",
+  parsing: "解析中",
+  chunking: "切块中",
+  embedding: "嵌入中",
+  done: "已完成",
+  failed: "失败",
+};
+
+const STATUS_COLORS: Record<string, string> = {
+  pending: "bg-gray-100 text-gray-700",
+  parsing: "bg-blue-100 text-blue-700",
+  chunking: "bg-blue-100 text-blue-700",
+  embedding: "bg-amber-100 text-amber-700",
+  done: "bg-green-100 text-green-700",
+  failed: "bg-red-100 text-red-700",
+};
+
+function fmtBytes(n: number): string {
+  if (n < 1024) return `${n} B`;
+  if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
+  if (n < 1024 * 1024 * 1024) return `${(n / (1024 * 1024)).toFixed(1)} MB`;
+  return `${(n / (1024 * 1024 * 1024)).toFixed(2)} GB`;
+}
+
+
+function CorpusTab() {
+  const [tree, setTree] = useState<CategoryTree | null>(null);
+  const [documents, setDocuments] = useState<IndexedDocument[]>([]);
+  const [jobs, setJobs] = useState<IndexJob[]>([]);
+  const [loadingDocs, setLoadingDocs] = useState(true);
+  const [loadingJobs, setLoadingJobs] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const refreshAll = useCallback(async () => {
+    try {
+      const [t, docs, j] = await Promise.all([
+        api.adminCategoryTree(),
+        api.adminListIndexedDocuments(),
+        api.adminListIndexJobs(100),
+      ]);
+      setTree(t);
+      setDocuments(docs.documents);
+      setJobs(j.jobs);
+    } catch (e: any) {
+      setError(e?.message || String(e));
+    } finally {
+      setLoadingDocs(false);
+      setLoadingJobs(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    refreshAll();
+  }, [refreshAll]);
+
+  // While anything is queued or running, poll the jobs list every 3s so the
+  // admin sees status flip without manually refreshing. Stop polling when
+  // everything settles.
+  const hasActive = jobs.some(
+    (j) => j.status !== "done" && j.status !== "failed",
+  );
+  useEffect(() => {
+    if (!hasActive) return;
+    const t = window.setInterval(async () => {
+      try {
+        const { jobs: latest } = await api.adminListIndexJobs(100);
+        setJobs(latest);
+        // Once a job finishes, refresh documents too.
+        if (latest.some((j) => j.status === "done")) {
+          const docs = await api.adminListIndexedDocuments();
+          setDocuments(docs.documents);
+        }
+      } catch {
+        /* ignore — next tick retries */
+      }
+    }, 3000);
+    return () => window.clearInterval(t);
+  }, [hasActive]);
+
+  return (
+    <div className="space-y-6">
+      {error && <div className="text-sm text-red-600">{error}</div>}
+      <UploadCard
+        tree={tree}
+        onUploaded={() => refreshAll()}
+      />
+      <DocumentsCard
+        documents={documents}
+        loading={loadingDocs}
+        onChange={() => refreshAll()}
+      />
+      <JobsCard
+        jobs={jobs}
+        loading={loadingJobs}
+        onChange={() => refreshAll()}
+      />
+    </div>
+  );
+}
+
+
+function UploadCard({
+  tree,
+  onUploaded,
+}: {
+  tree: CategoryTree | null;
+  onUploaded: () => void;
+}) {
+  const [files, setFiles] = useState<File[]>([]);
+  const [pickedCategory, setPickedCategory] = useState<string>("");
+  const [newCategory, setNewCategory] = useState<string>("");
+  const [pickedSub, setPickedSub] = useState<string>("");
+  const [newSub, setNewSub] = useState<string>("");
+  const [submitting, setSubmitting] = useState(false);
+  const [result, setResult] = useState<{
+    accepted: number;
+    skipped: { filename: string; reason: string }[];
+  } | null>(null);
+
+  const categoryNames = useMemo(
+    () => (tree ? tree.categories.map((c) => c.name) : []),
+    [tree],
+  );
+
+  // Default the dropdown to the first known category once they load.
+  useEffect(() => {
+    if (!pickedCategory && categoryNames.length > 0) {
+      setPickedCategory(categoryNames[0]);
+    }
+  }, [categoryNames, pickedCategory]);
+
+  const effectiveCategory =
+    pickedCategory === NEW_CATEGORY_SENTINEL ? newCategory.trim() : pickedCategory;
+
+  // Look up the node for the currently-selected (existing) category.
+  // New categories typed by the admin are treated as flat — admins who need
+  // a two-level new category can just type "客户标准" which already exists.
+  const currentNode = useMemo(() => {
+    if (!tree) return null;
+    return tree.categories.find((c) => c.name === effectiveCategory) || null;
+  }, [tree, effectiveCategory]);
+
+  const needsSubcategory = !!currentNode?.two_level;
+  const existingSubs = currentNode?.subcategories || [];
+
+  // Reset subcategory selection when the parent category changes so the
+  // dropdown defaults sensibly (first existing sub, or "+ new" if empty).
+  useEffect(() => {
+    if (!needsSubcategory) {
+      setPickedSub("");
+      setNewSub("");
+      return;
+    }
+    if (existingSubs.length > 0) {
+      setPickedSub(existingSubs[0]);
+    } else {
+      setPickedSub(NEW_CATEGORY_SENTINEL);
+    }
+    setNewSub("");
+  }, [effectiveCategory, needsSubcategory, existingSubs.join("|")]);
+
+  const effectiveSub = needsSubcategory
+    ? pickedSub === NEW_CATEGORY_SENTINEL ? newSub.trim() : pickedSub
+    : "";
+
+  const canSubmit =
+    files.length > 0 &&
+    !!effectiveCategory &&
+    (!needsSubcategory || !!effectiveSub);
+
+  async function submit() {
+    if (!canSubmit) return;
+    setSubmitting(true);
+    setResult(null);
+    try {
+      const r = await api.adminUploadDocuments(
+        files,
+        effectiveCategory,
+        effectiveSub || undefined,
+      );
+      setResult({ accepted: r.accepted.length, skipped: r.skipped });
+      setFiles([]);
+      const input = document.getElementById("corpus-upload-input") as HTMLInputElement | null;
+      if (input) input.value = "";
+      onUploaded();
+    } catch (e: any) {
+      setResult({ accepted: 0, skipped: [{ filename: "(upload)", reason: e?.message || String(e) }] });
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="rounded-lg border border-gray-200 bg-panel p-4">
+      <h2 className="font-semibold mb-3">上传资料</h2>
+      <p className="text-xs text-muted mb-3">
+        支持 <code>.pdf</code>（自动经 MinerU 解析）与 <code>.md</code>
+        （教学视频转写格式）。可一次选择多个文件，会依次排队处理；处理过程中可继续聊天，但响应可能变慢。
+      </p>
+      <div className="flex flex-col gap-3">
+        <div>
+          <label className="block text-sm mb-1">分类</label>
+          <div className="flex items-center gap-2">
+            <select
+              value={pickedCategory}
+              onChange={(e) => setPickedCategory(e.target.value)}
+              className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm bg-bg"
+            >
+              {categoryNames.length === 0 && <option value="">（暂无现有分类）</option>}
+              {categoryNames.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+              <option value={NEW_CATEGORY_SENTINEL}>＋ 新建分类…</option>
+            </select>
+            {pickedCategory === NEW_CATEGORY_SENTINEL && (
+              <input
+                type="text"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                placeholder="新分类名（如：行业规范）"
+                className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm bg-bg flex-1"
+                autoFocus
+              />
+            )}
+          </div>
+        </div>
+        {needsSubcategory && (
+          <div>
+            <label className="block text-sm mb-1">
+              {effectiveCategory === "客户标准" ? "客户" : "公司"}
+              <span className="text-xs text-muted ml-2">
+                （「{effectiveCategory}」按 {effectiveCategory === "客户标准" ? "客户" : "公司"} 分组）
+              </span>
+            </label>
+            <div className="flex items-center gap-2">
+              <select
+                value={pickedSub}
+                onChange={(e) => setPickedSub(e.target.value)}
+                className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm bg-bg"
+              >
+                {existingSubs.length === 0 && (
+                  <option value={NEW_CATEGORY_SENTINEL}>
+                    （暂无；请新建）
+                  </option>
+                )}
+                {existingSubs.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+                {existingSubs.length > 0 && (
+                  <option value={NEW_CATEGORY_SENTINEL}>＋ 新建…</option>
+                )}
+              </select>
+              {pickedSub === NEW_CATEGORY_SENTINEL && (
+                <input
+                  type="text"
+                  value={newSub}
+                  onChange={(e) => setNewSub(e.target.value)}
+                  placeholder={
+                    effectiveCategory === "客户标准"
+                      ? "新客户名（如：C客户标准）"
+                      : "新公司名"
+                  }
+                  className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm bg-bg flex-1"
+                  autoFocus
+                />
+              )}
+            </div>
+          </div>
+        )}
+        <div>
+          <label className="block text-sm mb-1">文件</label>
+          <input
+            id="corpus-upload-input"
+            type="file"
+            multiple
+            accept=".pdf,.md"
+            onChange={(e) => setFiles(Array.from(e.target.files || []))}
+            className="text-sm"
+          />
+          {files.length > 0 && (
+            <ul className="mt-2 text-xs text-muted space-y-0.5">
+              {files.map((f) => (
+                <li key={f.name}>
+                  {f.name} <span className="ml-1">· {fmtBytes(f.size)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <div>
+          <button
+            type="button"
+            onClick={submit}
+            disabled={submitting || !canSubmit}
+            className="rounded-lg bg-accent text-white px-4 py-1.5 text-sm hover:opacity-90 disabled:opacity-50"
+          >
+            {submitting ? "上传中…" : `上传 ${files.length} 个文件`}
+          </button>
+        </div>
+        {result && (
+          <div className="text-sm">
+            {result.accepted > 0 && (
+              <div className="text-green-700">
+                已加入队列 {result.accepted} 个文件，可在下方“索引任务”查看进度。
+              </div>
+            )}
+            {result.skipped.length > 0 && (
+              <div className="text-red-600 mt-1">
+                以下文件未受理：
+                <ul className="list-disc list-inside">
+                  {result.skipped.map((s, i) => (
+                    <li key={i}>{s.filename}：{s.reason}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+
+function DocumentsCard({
+  documents,
+  loading,
+  onChange,
+}: {
+  documents: IndexedDocument[];
+  loading: boolean;
+  onChange: () => void;
+}) {
+  const [filter, setFilter] = useState("");
+
+  const visible = useMemo(() => {
+    const q = filter.trim().toLowerCase();
+    if (!q) return documents;
+    return documents.filter(
+      (d) =>
+        d.doc_title.toLowerCase().includes(q) ||
+        d.category.toLowerCase().includes(q),
+    );
+  }, [documents, filter]);
+
+  async function onDelete(d: IndexedDocument) {
+    const ok = confirm(
+      `从索引中移除「${d.doc_title}」？\n` +
+        `这将删除该资料的 ${d.parent_count} 个父段落及其所有子块。`,
+    );
+    if (!ok) return;
+    const alsoFile = confirm("同时从磁盘删除源文件？（取消 = 仅清除索引，保留文件）");
+    try {
+      await api.adminDeleteIndexedDocument(d.source_path, alsoFile);
+      onChange();
+    } catch (e: any) {
+      alert(e?.message || String(e));
+    }
+  }
+
+  return (
+    <div className="rounded-lg border border-gray-200 bg-panel p-4">
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="font-semibold">已索引资料</h2>
+        <div className="flex items-center gap-2">
+          <input
+            type="search"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            placeholder="按标题或分类筛选…"
+            className="w-64 rounded-lg border border-gray-300 px-3 py-1 text-sm bg-bg"
+          />
+          <span className="text-xs text-muted">
+            {filter ? `${visible.length} / ${documents.length}` : `${documents.length} 个文档`}
+          </span>
+        </div>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="text-muted">
+            <tr>
+              <th className="text-left px-2 py-1">标题</th>
+              <th className="text-left px-2 py-1">分类</th>
+              <th className="text-left px-2 py-1">类型</th>
+              <th className="text-right px-2 py-1">父段落</th>
+              <th className="text-left px-2 py-1">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading && (
+              <tr><td colSpan={5} className="px-2 py-3 text-muted">加载中…</td></tr>
+            )}
+            {!loading && visible.length === 0 && (
+              <tr>
+                <td colSpan={5} className="px-2 py-3 text-muted">
+                  {filter ? `没有匹配 “${filter}” 的资料` : "（暂无已索引资料 — 上传 PDF 或转写以开始）"}
+                </td>
+              </tr>
+            )}
+            {visible.map((d) => (
+              <tr key={d.source_path} className="border-t border-gray-100 dark:border-gray-800">
+                <td className="px-2 py-1.5 max-w-md truncate" title={d.doc_title}>
+                  {d.doc_title}
+                </td>
+                <td className="px-2 py-1.5">{d.category}</td>
+                <td className="px-2 py-1.5 text-muted">
+                  {d.doc_type === "transcript" ? "教学视频转写" : "PDF"}
+                </td>
+                <td className="px-2 py-1.5 text-right">{d.parent_count}</td>
+                <td className="px-2 py-1.5">
+                  <button
+                    type="button"
+                    onClick={() => onDelete(d)}
+                    className="text-xs text-red-600 hover:underline"
+                  >
+                    删除
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+
+function JobsCard({
+  jobs,
+  loading,
+  onChange,
+}: {
+  jobs: IndexJob[];
+  loading: boolean;
+  onChange: () => void;
+}) {
+  async function onRetry(j: IndexJob) {
+    try {
+      await api.adminRetryIndexJob(j.id);
+      onChange();
+    } catch (e: any) {
+      alert(e?.message || String(e));
+    }
+  }
+  async function onDelete(j: IndexJob) {
+    if (!confirm(`删除该任务记录？（不影响已索引的内容）`)) return;
+    try {
+      await api.adminDeleteIndexJob(j.id);
+      onChange();
+    } catch (e: any) {
+      alert(e?.message || String(e));
+    }
+  }
+
+  return (
+    <div className="rounded-lg border border-gray-200 bg-panel p-4">
+      <h2 className="font-semibold mb-3">索引任务</h2>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="text-muted">
+            <tr>
+              <th className="text-left px-2 py-1">文件</th>
+              <th className="text-left px-2 py-1">分类</th>
+              <th className="text-left px-2 py-1">状态</th>
+              <th className="text-left px-2 py-1">上传者</th>
+              <th className="text-left px-2 py-1">时间</th>
+              <th className="text-right px-2 py-1">规模</th>
+              <th className="text-left px-2 py-1">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading && (
+              <tr><td colSpan={7} className="px-2 py-3 text-muted">加载中…</td></tr>
+            )}
+            {!loading && jobs.length === 0 && (
+              <tr><td colSpan={7} className="px-2 py-3 text-muted">（暂无任务）</td></tr>
+            )}
+            {jobs.map((j) => (
+              <tr key={j.id} className="border-t border-gray-100 dark:border-gray-800 align-top">
+                <td className="px-2 py-1.5 max-w-xs truncate" title={j.filename}>
+                  {j.filename}
+                  <div className="text-[11px] text-muted">{fmtBytes(j.file_size)}</div>
+                </td>
+                <td className="px-2 py-1.5">{j.category}</td>
+                <td className="px-2 py-1.5">
+                  <span
+                    className={
+                      "px-1.5 py-0.5 rounded text-[11px] " +
+                      (STATUS_COLORS[j.status] || "bg-gray-100 text-gray-700")
+                    }
+                  >
+                    {STATUS_LABELS[j.status] || j.status}
+                  </span>
+                  {j.error && (
+                    <div
+                      className="text-[11px] text-red-600 mt-1 max-w-xs whitespace-pre-wrap"
+                      title={j.error}
+                    >
+                      {j.error.length > 200 ? j.error.slice(0, 200) + "…" : j.error}
+                    </div>
+                  )}
+                </td>
+                <td className="px-2 py-1.5 text-muted">
+                  {j.real_name || "—"}
+                  {j.employee_id && (
+                    <div className="text-[11px]">{j.employee_id}</div>
+                  )}
+                </td>
+                <td className="px-2 py-1.5 text-muted text-[11px]">
+                  <div>提交 {fmtDate(j.created_at)}</div>
+                  {j.finished_at && <div>完成 {fmtDate(j.finished_at)}</div>}
+                </td>
+                <td className="px-2 py-1.5 text-right text-[11px] text-muted">
+                  {j.status === "done" && j.parents != null && j.children != null
+                    ? `${j.parents} 父 / ${j.children} 子`
+                    : "—"}
+                </td>
+                <td className="px-2 py-1.5 space-x-2 whitespace-nowrap">
+                  {(j.status === "failed" || j.status === "done") && (
+                    <button
+                      type="button"
+                      onClick={() => onRetry(j)}
+                      className="text-xs text-accent hover:underline"
+                    >
+                      重试
+                    </button>
+                  )}
+                  {(j.status === "done" || j.status === "failed") && (
+                    <button
+                      type="button"
+                      onClick={() => onDelete(j)}
+                      className="text-xs text-muted hover:text-red-600"
+                    >
+                      删除记录
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

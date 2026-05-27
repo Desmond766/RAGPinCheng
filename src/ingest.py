@@ -30,6 +30,7 @@ from .config import (
     MINERU_API_KEY,
     MINERU_MAX_PAGES,
     PARSED_DIR,
+    SECOND_LEVEL_CATEGORIES,
 )
 
 
@@ -314,8 +315,10 @@ def ingest_all(force: bool = False) -> list[ParsedDoc]:
         final_md = PARSED_DIR / f"{stem}.md"
         parts = pdf.relative_to(DOCS_DIR).parts
         category = parts[0] if len(parts) > 1 else "uncategorized"
-        # Only 公司内部标准 carries a company name (second-level folder).
-        company = parts[1] if category == "公司内部标准" and len(parts) > 2 else None
+        # Categories in SECOND_LEVEL_CATEGORIES carry a subcategory name
+        # (customer for 客户标准, company for 公司内部标准) in the second-level
+        # folder; stored in the `company` field for backward-compat.
+        company = parts[1] if category in SECOND_LEVEL_CATEGORIES and len(parts) > 2 else None
         doc_title = pdf.stem
 
         if final_md.exists() and not force:

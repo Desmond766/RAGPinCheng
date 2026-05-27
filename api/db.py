@@ -62,6 +62,27 @@ CREATE TABLE IF NOT EXISTS messages (
 );
 CREATE INDEX IF NOT EXISTS idx_messages_conversation_id
     ON messages (conversation_id, id);
+
+CREATE TABLE IF NOT EXISTS index_jobs (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id       INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    filename      TEXT NOT NULL,
+    category      TEXT NOT NULL,
+    doc_type      TEXT NOT NULL,            -- 'pdf' | 'transcript'
+    source_path   TEXT NOT NULL,            -- absolute path on disk under docs/
+    file_size     INTEGER NOT NULL,
+    status        TEXT NOT NULL DEFAULT 'pending',
+                                            -- pending | parsing | chunking | embedding | done | failed
+    error         TEXT,
+    stats_json    TEXT,                     -- {"parents":N,"children":N} once done
+    created_at    INTEGER NOT NULL,
+    started_at    INTEGER,
+    finished_at   INTEGER
+);
+CREATE INDEX IF NOT EXISTS idx_index_jobs_status_created
+    ON index_jobs (status, created_at);
+CREATE INDEX IF NOT EXISTS idx_index_jobs_created_desc
+    ON index_jobs (created_at DESC);
 """
 
 

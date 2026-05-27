@@ -5,10 +5,13 @@ import type {
   AdminUser,
   ApiConfig,
   AuthUser,
+  CategoryTree,
   Conversation,
   ConversationState,
   FeedbackPayload,
   Health,
+  IndexJob,
+  IndexedDocument,
   LlmHealth,
 } from "../types";
 
@@ -149,5 +152,63 @@ export const api = {
     jsonFetch<{ deleted_conversations: number; deleted_auth_sessions: number }>(
       "/api/admin/sweep",
       { method: "POST" },
+    ),
+
+  // admin: indexing
+  adminCategoryTree: () =>
+    jsonFetch<CategoryTree>("/api/admin/index/category-tree"),
+  adminUploadDocuments: async (
+    files: File[],
+    category: string,
+    subcategory?: string,
+  ) => {
+    // FormData triggers multipart; we deliberately don't set content-type
+    // so the browser appends the multipart boundary itself. The CSRF
+    // header is still injected by rawFetch via the X-CSRF-Token branch.
+    const fd = new FormData();
+    for (const f of files) fd.append("files", f, f.name);
+    fd.append("category", category);
+    if (subcategory) fd.append("subcategory", subcategory);
+    const method = "POST";
+    const csrf = csrfToken;
+    const headers: Record<string, string> = {};
+    if (csrf) headers["X-CSRF-Token"] = csrf;
+    const res = await fetch("/api/admin/upload", {
+      method,
+      headers,
+      body: fd,
+      credentials: "include",
+    });
+    if (res.status === 401 && unauthorizedHandler) {
+      try { unauthorizedHandler(); } catch { /* noop */ }
+    }
+    if (!res.ok) {
+      const txt = await res.text().catch(() => "");
+      let detail = txt;
+      try {
+        const parsed = JSON.parse(txt);
+        if (parsed && typeof parsed.detail === "string") detail = parsed.detail;
+      } catch {
+        /* keep raw */
+      }
+      throw new ApiError(res.status, txt, `${res.status} ${res.statusText}${detail ? `: ${detail}` : ""}`);
+    }
+    return (await res.json()) as {
+      accepted: IndexJob[];
+      skipped: { filename: string; reason: string }[];
+    };
+  },
+  adminListIndexJobs: (limit = 100) =>
+    jsonFetch<{ jobs: IndexJob[] }>(`/api/admin/index/jobs?limit=${limit}`),
+  adminRetryIndexJob: (id: number) =>
+    jsonFetch<IndexJob>(`/api/admin/index/jobs/${id}/retry`, { method: "POST" }),
+  adminDeleteIndexJob: (id: number) =>
+    jsonFetch<void>(`/api/admin/index/jobs/${id}`, { method: "DELETE" }),
+  adminListIndexedDocuments: () =>
+    jsonFetch<{ documents: IndexedDocument[] }>("/api/admin/index/documents"),
+  adminDeleteIndexedDocument: (source_path: string, delete_file: boolean) =>
+    jsonFetch<{ parents_deleted: number; file_deleted: boolean }>(
+      "/api/admin/index/documents",
+      { method: "DELETE", body: JSON.stringify({ source_path, delete_file }) },
     ),
 };
