@@ -4,6 +4,7 @@ Run with:  uvicorn api.main:app --reload --port 8000
 """
 from __future__ import annotations
 
+import asyncio
 import logging
 import os
 from contextlib import asynccontextmanager
@@ -13,11 +14,38 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.config import RERANK_ENABLED
 
-from .routes import router
-from .session_store import store
+from .auth import bootstrap_admin_from_env
+from .conversation_runtime import sweep_once
+from .db import init_db
+from .routes import router as core_router
+from .routes_admin import router as admin_router
+from .routes_auth import router as auth_router
+from .routes_chat import router as chat_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("api")
+
+
+# How often the background sweeper runs. Hourly is plenty for a 30-day
+# retention window — even a missed run only delays the purge by an hour.
+SWEEPER_INTERVAL_SECONDS = 60 * 60
+
+
+async def _sweeper_loop() -> None:
+    while True:
+        try:
+            await asyncio.sleep(SWEEPER_INTERVAL_SECONDS)
+            conv, sess = await asyncio.to_thread(sweep_once)
+            if conv or sess:
+                logger.info(
+                    "sweeper deleted %d expired conversations, %d expired auth sessions",
+                    conv, sess,
+                )
+        except asyncio.CancelledError:
+            break
+        except Exception:
+            logger.exception("sweeper iteration failed (non-fatal)")
+            continue
 
 
 @asynccontextmanager
@@ -31,6 +59,10 @@ async def lifespan(app: FastAPI):
         conn.close()
     except Exception:
         logger.exception("parents.sqlite migration check failed (non-fatal)")
+
+    # App-level DB (users, auth_sessions, conversations, messages).
+    init_db()
+    bootstrap_admin_from_env()
 
     # Fail fast if Qdrant is unreachable — better an immediate startup error
     # in the logs than a confusing 500 on the first chat request.
@@ -61,17 +93,23 @@ async def lifespan(app: FastAPI):
             logger.info("warming reranker (BGE-reranker-v2-m3)...")
             from src.rerank import get_reranker
             get_reranker()
-    await store.start_sweeper()
+
+    sweeper_task = asyncio.create_task(_sweeper_loop())
     logger.info("api ready")
     try:
         yield
     finally:
-        await store.stop_sweeper()
+        sweeper_task.cancel()
+        try:
+            await sweeper_task
+        except (asyncio.CancelledError, Exception):
+            pass
 
 
-app = FastAPI(title="PinCheng RAG API", version="0.1.0", lifespan=lifespan)
+app = FastAPI(title="PinCheng RAG API", version="0.2.0", lifespan=lifespan)
 
 # CORS — Vite dev server on :5173 by default. Comma-separated overrides via env.
+# `allow_credentials=True` is required for cookie-based auth across origins.
 _default_origins = "http://localhost:5173,http://127.0.0.1:5173"
 _origins = [
     o.strip() for o in os.getenv("API_CORS_ORIGINS", _default_origins).split(",")
@@ -80,9 +118,12 @@ _origins = [
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_origins,
-    allow_credentials=False,
-    allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
-app.include_router(router, prefix="/api")
+app.include_router(core_router, prefix="/api")
+app.include_router(auth_router, prefix="/api")
+app.include_router(chat_router, prefix="/api")
+app.include_router(admin_router, prefix="/api")

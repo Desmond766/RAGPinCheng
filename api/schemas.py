@@ -6,13 +6,130 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 
-class CreateSessionResponse(BaseModel):
-    session_id: str
+# ── auth ────────────────────────────────────────────────────────────────────
+
+
+class RegisterRequest(BaseModel):
+    employee_id: str = Field(..., min_length=1, max_length=64)
+    real_name: str = Field(..., min_length=1, max_length=64)
+    password: str = Field(..., min_length=6, max_length=128)
+
+
+class LoginRequest(BaseModel):
+    employee_id: str = Field(..., min_length=1)
+    password: str = Field(..., min_length=1)
+
+
+class AuthMeResponse(BaseModel):
+    id: int
+    employee_id: str
+    real_name: str
+    role: str  # 'user' | 'admin'
+    csrf_token: str
+
+
+# ── chat / conversations ────────────────────────────────────────────────────
 
 
 class ChatRequest(BaseModel):
     query: str = Field(..., min_length=1)
     categories: list[str] | None = None
+
+
+class ConversationSummaryDTO(BaseModel):
+    id: str
+    title: str
+    created_at: int
+    updated_at: int
+    turn_index: int
+
+
+class ConversationListResponse(BaseModel):
+    conversations: list[ConversationSummaryDTO]
+
+
+class CreateConversationResponse(BaseModel):
+    id: str
+    title: str
+    created_at: int
+    updated_at: int
+    turn_index: int
+
+
+# ── admin ───────────────────────────────────────────────────────────────────
+
+
+class AdminUserDTO(BaseModel):
+    id: int
+    employee_id: str
+    real_name: str
+    role: str
+    is_active: bool
+    created_at: int
+    last_login_at: int | None
+    conversation_count: int
+
+
+class AdminUserListResponse(BaseModel):
+    users: list[AdminUserDTO]
+
+
+class AdminUserPatchRequest(BaseModel):
+    is_active: bool | None = None
+    role: str | None = None  # 'user' | 'admin'
+    reset_password: str | None = None  # new plaintext password if non-null
+
+
+class AdminStatsResponse(BaseModel):
+    users_total: int
+    users_active: int
+    conversations_total: int
+    conversations_7d: int
+    messages_total: int
+    messages_7d: int
+
+
+class AdminConversationSummaryDTO(BaseModel):
+    id: str
+    title: str
+    user_id: int
+    employee_id: str
+    real_name: str
+    created_at: int
+    updated_at: int
+    turn_index: int
+
+
+class AdminConversationListResponse(BaseModel):
+    conversations: list[AdminConversationSummaryDTO]
+
+
+class AdminFeedbackEntry(BaseModel):
+    ts: str | None = None
+    kind: str | None = None
+    rating: str | None = None
+    note: str | None = None
+    parent_id: str | None = None
+    doc_title: str | None = None
+    section_path: str | None = None
+    start_time: str | None = None
+    category: str | None = None
+    query: str | None = None
+    answer_text: str | None = None
+    session_id: str | None = None
+    conversation_id: str | None = None
+    turn_index: int | None = None
+    message_id: str | None = None
+
+
+class AdminFeedbackResponse(BaseModel):
+    entries: list[AdminFeedbackEntry]
+    total: int
+
+
+class SweepResponse(BaseModel):
+    deleted_conversations: int
+    deleted_auth_sessions: int
 
 
 class SourceDTO(BaseModel):
@@ -29,13 +146,20 @@ class SourceDTO(BaseModel):
 
 
 class MessageDTO(BaseModel):
+    id: int | None = None
     role: str
     content: str
     sources_for_ui: list[SourceDTO] | None = None
+    created_at: int | None = None
 
 
-class SessionStateDTO(BaseModel):
-    session_id: str
+class ConversationStateDTO(BaseModel):
+    """Full state of one conversation — what the SPA renders on resume."""
+    id: str
+    title: str
+    user_id: int
+    created_at: int
+    updated_at: int
     turn_index: int
     messages: list[MessageDTO]
 
@@ -99,7 +223,7 @@ class DoneEvent(BaseModel):
 
 class FeedbackRequest(BaseModel):
     """User feedback on either an assistant answer or a specific cited source."""
-    session_id: str | None = None
+    conversation_id: str | None = None
     turn_index: int | None = None
     message_id: str | None = None
     kind: str  # "answer" | "citation"

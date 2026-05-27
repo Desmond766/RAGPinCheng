@@ -3,6 +3,10 @@ data/parsed/
 data/qdrant/
 data/qdrant_server/
 data/parents.sqlite
+data/app.sqlite
+data/app.sqlite-shm
+data/app.sqlite-wal
+data/feedback.jsonl
 __pycache__/
 *.pyc
 .venv/
@@ -16,6 +20,7 @@ rag_cheatsheet.html
 node_modules/
 frontend/dist/
 frontend/.vite/
+frontend/tsconfig.tsbuildinfo
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

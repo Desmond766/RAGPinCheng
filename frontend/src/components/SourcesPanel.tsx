@@ -19,7 +19,7 @@ function SourceCard({
   id,
   highlight,
   cardRef,
-  sessionId,
+  conversationId,
   messageId,
 }: {
   s: Source;
@@ -27,7 +27,7 @@ function SourceCard({
   id: string;
   highlight: boolean;
   cardRef: (el: HTMLLIElement | null) => void;
-  sessionId: string | null;
+  conversationId: string | null;
   messageId: string;
 }) {
   const [reportOpen, setReportOpen] = useState(false);
@@ -49,7 +49,7 @@ function SourceCard({
       await api.sendFeedback({
         kind: "citation",
         note: note.trim() || undefined,
-        session_id: sessionId,
+        conversation_id: conversationId,
         message_id: messageId,
         parent_id: s.parent_id,
         doc_title: s.doc_title,
@@ -145,11 +145,11 @@ function SourceCard({
 export function SourcesPanel({
   sources,
   messageId,
-  sessionId,
+  conversationId,
 }: {
   sources: Source[];
   messageId: string;
-  sessionId: string | null;
+  conversationId: string | null;
 }) {
   const [open, setOpen] = useState(false);
   const [highlightIdx, setHighlightIdx] = useState<number | null>(null);
@@ -195,7 +195,7 @@ export function SourcesPanel({
               cardRef={(el) => {
                 refs.current[i] = el;
               }}
-              sessionId={sessionId}
+              conversationId={conversationId}
               messageId={messageId}
             />
           ))}

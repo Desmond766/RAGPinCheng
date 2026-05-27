@@ -1,54 +1,68 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "../api/client";
 import { useChat } from "../hooks/useChat";
-import type { ApiConfig, Health, LlmHealth } from "../types";
+import type { Conversation } from "../types";
 import { Composer } from "./Composer";
-import { LlmHealthBadge } from "./LlmHealthBadge";
 import { MessageList } from "./MessageList";
 import { Sidebar } from "./Sidebar";
 
-// Poll the LLM health endpoint every minute. The backend caches probes for
-// 30s, so this gives us at most one real upstream round-trip per minute per
-// tab without the UI lagging too far behind a real outage.
-const LLM_HEALTH_POLL_MS = 60_000;
-
 export function ChatLayout() {
-  const { sessionId, messages, send, sending, reset, bootstrapError } = useChat();
   const [categories, setCategories] = useState<string[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
-  const [config, setConfig] = useState<ApiConfig | null>(null);
-  const [health, setHealth] = useState<Health | null>(null);
-  const [llmHealth, setLlmHealth] = useState<LlmHealth | null>(null);
-  const [llmHealthLoading, setLlmHealthLoading] = useState(false);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [conversationsLoading, setConversationsLoading] = useState(true);
+  const [currentId, setCurrentId] = useState<string | null>(null);
 
-  const refreshLlmHealth = useCallback(async (force = false) => {
-    setLlmHealthLoading(true);
+  const refreshConversations = useCallback(async () => {
     try {
-      const r = await api.llmHealth(force);
-      setLlmHealth(r);
+      const { conversations: list } = await api.listConversations();
+      setConversations(list);
+      return list;
     } catch {
-      // Network/backend error: keep prior snapshot so the badge doesn't flip
-      // to green just because the request itself failed.
+      return [] as Conversation[];
     } finally {
-      setLlmHealthLoading(false);
+      setConversationsLoading(false);
     }
   }, []);
 
   useEffect(() => {
     api.categories().then((r) => setCategories(r.categories)).catch(() => {});
-    api.config().then(setConfig).catch(() => {});
-    api.health().then(setHealth).catch(() => {});
-    refreshLlmHealth();
-    const t = window.setInterval(() => refreshLlmHealth(), LLM_HEALTH_POLL_MS);
-    return () => window.clearInterval(t);
-  }, [refreshLlmHealth]);
+    refreshConversations();
+  }, [refreshConversations]);
 
-  const turnIndex = useMemo(
-    () => messages.filter((m) => m.role === "user").length,
-    [messages],
+  const { messages, send, sending, loading } = useChat({
+    conversationId: currentId,
+    onConversationCreated: (id) => {
+      setCurrentId(id);
+      refreshConversations();
+    },
+    onConversationUpdated: () => {
+      refreshConversations();
+    },
+  });
+
+  const onSelectConversation = useCallback((id: string) => {
+    setCurrentId(id);
+  }, []);
+
+  const onNewChat = useCallback(() => {
+    setCurrentId(null);
+  }, []);
+
+  const onDeleteConversation = useCallback(
+    async (id: string) => {
+      try {
+        await api.deleteConversation(id);
+      } catch (e) {
+        console.error(e);
+      }
+      if (id === currentId) setCurrentId(null);
+      refreshConversations();
+    },
+    [currentId, refreshConversations],
   );
 
-  function toggle(c: string) {
+  function toggleCategory(c: string) {
     setSelected((prev) =>
       prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c],
     );
@@ -57,47 +71,29 @@ export function ChatLayout() {
   return (
     <div className="h-full flex">
       <Sidebar
+        conversations={conversations}
+        conversationsLoading={conversationsLoading}
+        currentConversationId={currentId}
+        onSelectConversation={onSelectConversation}
+        onDeleteConversation={onDeleteConversation}
         categories={categories}
         selected={selected}
-        onToggle={toggle}
+        onToggle={toggleCategory}
         onClearCategories={() => setSelected([])}
-        onNewChat={reset}
-        config={config}
-        health={health}
-        llmHealth={llmHealth}
-        llmHealthLoading={llmHealthLoading}
-        onRefreshLlmHealth={() => refreshLlmHealth(true)}
-        turnIndex={turnIndex}
+        onNewChat={onNewChat}
       />
       <main className="flex-1 flex flex-col min-w-0">
         <header className="px-6 py-3 border-b border-gray-200 bg-bg/80 backdrop-blur-sm flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-lg">📚</span>
             <span className="font-semibold">品成 BIM 知识库</span>
-            <LlmHealthBadge
-              health={llmHealth}
-              loading={llmHealthLoading}
-              onRefresh={() => refreshLlmHealth(true)}
-            />
           </div>
-          <div className="text-xs text-muted">
-            {sessionId ? (
-              <>
-                session: <code>{sessionId.slice(0, 8)}…</code>
-              </>
-            ) : bootstrapError ? (
-              <span className="text-red-600">
-                后端连接失败：{bootstrapError}
-              </span>
-            ) : (
-              "正在连接后端…"
-            )}
-          </div>
+          {loading && <div className="text-xs text-muted">加载历史…</div>}
         </header>
-        <MessageList messages={messages} sessionId={sessionId} />
+        <MessageList messages={messages} conversationId={currentId} />
         <Composer
           onSend={(t) => send(t, selected)}
-          disabled={sending || !sessionId}
+          disabled={sending || loading}
         />
       </main>
     </div>

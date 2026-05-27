@@ -72,6 +72,16 @@ services:
       # Frontend is same-origin via nginx proxy, so the in-app CORS list is
       # unused in prod. Leave empty to deny browser cross-origin entirely.
       API_CORS_ORIGINS: ${API_CORS_ORIGINS:-}
+      # ── Auth ───────────────────────────────────────────────────────────
+      # On first boot, if no admin exists, one is seeded from these vars.
+      # Subsequent boots are no-ops once an admin row is present.
+      ADMIN_EMPLOYEE_ID: ${ADMIN_EMPLOYEE_ID:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      ADMIN_REAL_NAME: ${ADMIN_REAL_NAME:-管理员}
+      # Set to "false" only when running over plain HTTP (local dev / VPN
+      # behind a TLS terminator). In production with HTTPS, leave unset
+      # so cookies are sent only over secure transports.
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-true}
     volumes:
       # Persistent state — index, parsed markdown, SQLite parent store,
       # feedback log. Lives on the host disk; the image stays stateless.

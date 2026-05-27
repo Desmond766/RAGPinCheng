@@ -4,11 +4,11 @@ import type { ChatMessage } from "../types";
 
 export function FeedbackBar({
   msg,
-  sessionId,
+  conversationId,
   turnIndex,
 }: {
   msg: ChatMessage;
-  sessionId: string | null;
+  conversationId: string | null;
   turnIndex: number;
 }) {
   const [open, setOpen] = useState(false);
@@ -30,7 +30,7 @@ export function FeedbackBar({
         kind: "answer",
         rating: "down",
         note: trimmed,
-        session_id: sessionId,
+        conversation_id: conversationId,
         turn_index: turnIndex,
         message_id: msg.id,
         query: msg.query,

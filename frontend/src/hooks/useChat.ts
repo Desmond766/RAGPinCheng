@@ -7,33 +7,98 @@ function newId() {
   return Math.random().toString(36).slice(2, 10);
 }
 
-export function useChat() {
-  const [sessionId, setSessionId] = useState<string | null>(null);
+/** Manages the active chat thread.
+ *
+ * The owning component drives `conversationId`. When it changes, we replay
+ * the conversation's messages from the backend. A null id means "fresh
+ * chat, not yet persisted" — the first `send()` call will create one on
+ * the fly and notify the parent.
+ */
+export function useChat({
+  conversationId,
+  onConversationCreated,
+  onConversationUpdated,
+}: {
+  conversationId: string | null;
+  onConversationCreated?: (id: string) => void;
+  onConversationUpdated?: (id: string) => void;
+}) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
-  const [bootstrapError, setBootstrapError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+  // When send() lazy-creates a conversation, it stashes the new id here so
+  // the next [conversationId] effect run treats it as a no-op — otherwise
+  // the effect would abort the streaming controller we just set and replace
+  // the optimistic user/assistant messages with the (still-empty) DB read.
+  const skipNextLoadRef = useRef<string | null>(null);
 
-  // Bootstrap a session on mount.
+  // Reload messages whenever the active conversation changes.
   useEffect(() => {
+    if (conversationId && skipNextLoadRef.current === conversationId) {
+      skipNextLoadRef.current = null;
+      return;
+    }
+    abortRef.current?.abort();
+    setError(null);
+    if (!conversationId) {
+      setMessages([]);
+      return;
+    }
     let cancelled = false;
+    setLoading(true);
     (async () => {
       try {
-        const { session_id } = await api.createSession();
-        if (!cancelled) setSessionId(session_id);
+        const state = await api.getConversation(conversationId);
+        if (cancelled) return;
+        // Pair each assistant message with the immediately-preceding user
+        // turn so the FeedbackBar has `query` to ship — otherwise resumed
+        // conversations would send feedback with only `answer_text`.
+        let lastUserContent: string | undefined;
+        const replayed: ChatMessage[] = state.messages.map((m) => {
+          if (m.role === "user") lastUserContent = m.content;
+          return {
+            id: m.id != null ? String(m.id) : newId(),
+            role: m.role,
+            content: m.content,
+            sources: m.sources_for_ui || undefined,
+            query: m.role === "assistant" ? lastUserContent : undefined,
+            stage: "done",
+          };
+        });
+        setMessages(replayed);
       } catch (e: any) {
-        if (!cancelled) setBootstrapError(e?.message || String(e));
+        if (!cancelled) setError(e?.message || String(e));
+      } finally {
+        if (!cancelled) setLoading(false);
       }
     })();
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [conversationId]);
 
   const send = useCallback(
     async (query: string, categories?: string[] | null) => {
       const trimmed = query.trim();
-      if (!trimmed || sending || !sessionId) return;
+      if (!trimmed || sending) return;
+
+      // Lazy-create a conversation on the first message if there isn't one.
+      let cid = conversationId;
+      if (!cid) {
+        try {
+          const conv = await api.createConversation();
+          cid = conv.id;
+          // Mark the just-created id so the [conversationId] effect doesn't
+          // run its abort+reload path when the parent calls setCurrentId.
+          skipNextLoadRef.current = cid;
+          onConversationCreated?.(cid);
+        } catch (e: any) {
+          setError(e?.message || String(e));
+          return;
+        }
+      }
 
       setSending(true);
       abortRef.current?.abort();
@@ -54,7 +119,7 @@ export function useChat() {
 
       try {
         for await (const ev of streamChat(
-          sessionId,
+          cid,
           { query: trimmed, categories: categories && categories.length ? categories : null },
           ctrl.signal,
         )) {
@@ -117,28 +182,12 @@ export function useChat() {
               : m,
           ),
         );
+        // Persisted; let the sidebar refresh title + updated_at.
+        if (cid) onConversationUpdated?.(cid);
       }
     },
-    [sending, sessionId],
+    [sending, conversationId, onConversationCreated, onConversationUpdated],
   );
 
-  const reset = useCallback(async () => {
-    abortRef.current?.abort();
-    if (sessionId) {
-      try {
-        await api.deleteSession(sessionId);
-      } catch {
-        /* noop */
-      }
-    }
-    setMessages([]);
-    try {
-      const { session_id } = await api.createSession();
-      setSessionId(session_id);
-    } catch (e: any) {
-      setBootstrapError(e?.message || String(e));
-    }
-  }, [sessionId]);
-
-  return { sessionId, messages, send, sending, reset, bootstrapError };
+  return { messages, send, sending, loading, error };
 }

@@ -4,10 +4,10 @@ import { Message } from "./Message";
 
 export function MessageList({
   messages,
-  sessionId,
+  conversationId,
 }: {
   messages: ChatMessage[];
-  sessionId: string | null;
+  conversationId: string | null;
 }) {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   // Auto-scroll on every render so streaming tokens stay in view.
@@ -48,7 +48,7 @@ export function MessageList({
             <Message
               key={m.id}
               msg={m}
-              sessionId={sessionId}
+              conversationId={conversationId}
               turnIndex={m.role === "assistant" ? turn : turn}
             />
           );

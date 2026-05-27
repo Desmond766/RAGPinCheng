@@ -1,4 +1,5 @@
 import type { ChatEvent } from "../types";
+import { getCsrfToken } from "./client";
 
 /** SSE-over-POST consumer.
  *
@@ -7,14 +8,21 @@ import type { ChatEvent } from "../types";
  * `event: <name>` and `data: <json>` lines.
  */
 export async function* streamChat(
-  sessionId: string,
+  conversationId: string,
   body: { query: string; categories?: string[] | null },
   signal?: AbortSignal,
 ): AsyncGenerator<ChatEvent, void, void> {
-  const res = await fetch(`/api/sessions/${sessionId}/chat`, {
+  const headers: Record<string, string> = {
+    "content-type": "application/json",
+    accept: "text/event-stream",
+  };
+  const csrf = getCsrfToken();
+  if (csrf) headers["X-CSRF-Token"] = csrf;
+  const res = await fetch(`/api/conversations/${conversationId}/chat`, {
     method: "POST",
-    headers: { "content-type": "application/json", accept: "text/event-stream" },
+    headers,
     body: JSON.stringify(body),
+    credentials: "include",
     signal,
   });
   if (!res.ok || !res.body) {

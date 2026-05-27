@@ -50,8 +50,89 @@ export type ChatMessage = {
   error?: string;
 };
 
-export type FeedbackPayload = {
+export type AuthUser = {
+  id: number;
+  employee_id: string;
+  real_name: string;
+  role: "user" | "admin";
+  csrf_token: string;
+};
+
+export type Conversation = {
+  id: string;
+  title: string;
+  created_at: number;
+  updated_at: number;
+  turn_index: number;
+};
+
+export type ConversationState = {
+  id: string;
+  title: string;
+  user_id: number;
+  created_at: number;
+  updated_at: number;
+  turn_index: number;
+  messages: {
+    id?: number;
+    role: "user" | "assistant" | "system";
+    content: string;
+    sources_for_ui?: Source[] | null;
+    created_at?: number;
+  }[];
+};
+
+export type AdminUser = {
+  id: number;
+  employee_id: string;
+  real_name: string;
+  role: "user" | "admin";
+  is_active: boolean;
+  created_at: number;
+  last_login_at: number | null;
+  conversation_count: number;
+};
+
+export type AdminConversation = {
+  id: string;
+  title: string;
+  user_id: number;
+  employee_id: string;
+  real_name: string;
+  created_at: number;
+  updated_at: number;
+  turn_index: number;
+};
+
+export type AdminStats = {
+  users_total: number;
+  users_active: number;
+  conversations_total: number;
+  conversations_7d: number;
+  messages_total: number;
+  messages_7d: number;
+};
+
+export type AdminFeedbackEntry = {
+  ts?: string | null;
+  kind?: string | null;
+  rating?: string | null;
+  note?: string | null;
+  parent_id?: string | null;
+  doc_title?: string | null;
+  section_path?: string | null;
+  start_time?: string | null;
+  category?: string | null;
+  query?: string | null;
+  answer_text?: string | null;
   session_id?: string | null;
+  conversation_id?: string | null;
+  turn_index?: number | null;
+  message_id?: string | null;
+};
+
+export type FeedbackPayload = {
+  conversation_id?: string | null;
   turn_index?: number | null;
   message_id?: string | null;
   kind: "answer" | "citation";

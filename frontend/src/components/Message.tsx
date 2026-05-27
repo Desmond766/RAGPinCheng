@@ -40,11 +40,11 @@ function StageIndicator({ msg }: { msg: ChatMessage }) {
 
 export function Message({
   msg,
-  sessionId,
+  conversationId,
   turnIndex,
 }: {
   msg: ChatMessage;
-  sessionId: string | null;
+  conversationId: string | null;
   turnIndex: number;
 }) {
   const isUser = msg.role === "user";
@@ -108,11 +108,11 @@ export function Message({
               <SourcesPanel
                 sources={msg.sources}
                 messageId={msg.id}
-                sessionId={sessionId}
+                conversationId={conversationId}
               />
             )}
             {!msg.streaming && !msg.error && msg.content && (
-              <FeedbackBar msg={msg} sessionId={sessionId} turnIndex={turnIndex} />
+              <FeedbackBar msg={msg} conversationId={conversationId} turnIndex={turnIndex} />
             )}
             <DebugPanel msg={msg} />
           </>
