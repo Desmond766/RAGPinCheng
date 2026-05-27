@@ -40,7 +40,7 @@ function SourceCard({
   const truncated = s.text.length > PREVIEW_CHARS;
   const crumbs = s.doc_type === "transcript" ? [] : breadcrumbParts(s.section_path || "");
   const hasBreadcrumb = crumbs.length > 1;
-  const canExpand = truncated || hasBreadcrumb;
+  const canExpand = truncated;
 
   async function submit() {
     setSubmitting(true);
@@ -94,7 +94,7 @@ function SourceCard({
       <div className="text-xs text-muted mt-0.5">
         分类: <code className="bg-gray-100 px-1 rounded">{s.category || "—"}</code>
       </div>
-      {expanded && hasBreadcrumb && (
+      {hasBreadcrumb && (
         <div className="text-xs text-muted mt-1 leading-relaxed break-words">
           § {crumbs.join(" › ")}
         </div>
