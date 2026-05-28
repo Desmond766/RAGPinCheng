@@ -1,7 +1,7 @@
 """GLM-4 generation with cited sources, via Zhipu's OpenAI-compatible API."""
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Iterator
 
 from openai import OpenAI
@@ -27,6 +27,9 @@ class Answer:
     context_chars: int = 0
     budget_used: int = 0   # chars actually packed into <sources> after budget trim
     budget: int = 0        # the budget passed in (for telemetry / regression detection)
+    # Token usage from the provider (populated when the API returns it).
+    # Keys: prompt_tokens, completion_tokens, total_tokens.
+    usage: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -41,6 +44,9 @@ class GenerationPrep:
     model: str
     context_chars: int
     budget: int
+    # Populated by the streaming iterator as it consumes the final
+    # usage-bearing chunk. Empty until the stream is exhausted.
+    usage: dict = field(default_factory=dict)
 
 
 def _build_context(
@@ -125,10 +131,26 @@ def _prepare_generation(
     )
 
 
+def _extract_usage(resp) -> dict:
+    """Best-effort pull of token usage off an OpenAI-compatible response/chunk."""
+    u = getattr(resp, "usage", None)
+    if u is None:
+        return {}
+    out: dict = {}
+    for k in ("prompt_tokens", "completion_tokens", "total_tokens"):
+        v = getattr(u, k, None)
+        if v is None and isinstance(u, dict):
+            v = u.get(k)
+        if v is not None:
+            out[k] = int(v)
+    return out
+
+
 def rewrite_query(
     history: list[dict],
     question: str,
     max_turns: int = 6,
+    usage_out: dict | None = None,
 ) -> str:
     """Rewrite a follow-up question into a standalone one using recent chat history.
 
@@ -170,6 +192,9 @@ def rewrite_query(
             extra_body={"thinking": {"type": "disabled"}},
         )
         rewritten = (resp.choices[0].message.content or "").strip()
+        if usage_out is not None:
+            usage_out.update(_extract_usage(resp))
+            usage_out["model"] = LLM_REWRITE_MODEL
     except Exception:
         return question
 
@@ -209,6 +234,7 @@ def generate(
         context_chars=prep.context_chars,
         budget_used=prep.context_chars,
         budget=prep.budget,
+        usage=_extract_usage(resp),
     )
 
 
@@ -236,11 +262,18 @@ def stream_generate(
         temperature=LLM_TEMPERATURE,
         messages=prep.messages,
         stream=True,
+        # Ask the provider to send a final chunk carrying token usage.
+        stream_options={"include_usage": True},
         extra_body={"thinking": {"type": "disabled"}},
     )
 
     def _iter() -> Iterator[str]:
         for chunk in resp:
+            # Usage-only chunks have no `choices`; capture and continue.
+            usage = _extract_usage(chunk)
+            if usage:
+                prep.usage.update(usage)
+                prep.usage["model"] = prep.model
             if not chunk.choices:
                 continue
             delta = chunk.choices[0].delta.content

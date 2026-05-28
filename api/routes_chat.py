@@ -28,6 +28,7 @@ from .conversation_runtime import (
     wrap_stream_with_persistence,
 )
 from .db import get_db
+from .rate_limit import chat_limiter
 from .schemas import (
     ChatRequest,
     ConversationListResponse,
@@ -39,6 +40,8 @@ from .schemas import (
     source_to_dto,
 )
 from .sse import event
+
+turn_logger = logging.getLogger("api.chat.turn")
 
 logger = logging.getLogger("api.routes_chat")
 
@@ -138,6 +141,17 @@ async def chat(
     request: Request,
     user: CurrentUser = Depends(require_csrf),
 ) -> EventSourceResponse:
+    # Per-user rate limit. Reject early — before doing DB work or hydration —
+    # so a hot-spinning client can't queue up expensive turns we'll just
+    # discard. 429 with Retry-After is the standard contract.
+    allowed, retry_after = await chat_limiter.try_acquire(user.id)
+    if not allowed:
+        raise HTTPException(
+            status_code=429,
+            detail="rate limit exceeded; slow down",
+            headers={"Retry-After": str(max(1, int(retry_after)))},
+        )
+
     # Authorization + existence check up front, with its own short-lived
     # connection so we don't hold one through the SSE stream.
     from .db import connect as db_connect
@@ -235,8 +249,62 @@ async def chat(
                             for s in session._sources_for_ui(result.sources)
                         ],
                     })
+                    _emit_turn_telemetry(
+                        conversation_id=conversation_id,
+                        user_id=user.id,
+                        result=result,
+                        outcome=("no_source" if not result.sources else "success"),
+                    )
             except Exception as exc:  # noqa: BLE001
                 logger.exception("chat stream failed")
+                _emit_turn_telemetry(
+                    conversation_id=conversation_id,
+                    user_id=user.id,
+                    result=session.last_turn_result if 'session' in locals() else None,
+                    outcome="error",
+                    error=str(exc),
+                )
                 yield event("error", {"message": str(exc)})
 
     return EventSourceResponse(event_generator())
+
+
+def _emit_turn_telemetry(
+    *,
+    conversation_id: str,
+    user_id: int,
+    result,
+    outcome: str,
+    error: str | None = None,
+) -> None:
+    """Single sink for per-turn observability: structured log + Prometheus.
+
+    Keeps the SSE handler clean and ensures both signals stay in sync.
+    Never raises — telemetry must not break the user-facing path.
+    """
+    try:
+        timings = dict(result.timings) if result and result.timings else {}
+        usage_by_call = dict(result.usage_by_call) if result and result.usage_by_call else {}
+        final_count = len(result.final_sources) if result and result.final_sources else 0
+        budget = int(result.budget) if result else 0
+
+        payload = {
+            "event": "chat_turn",
+            "outcome": outcome,
+            "conversation_id": conversation_id,
+            "user_id": user_id,
+            "search_query": result.search_query if result else None,
+            "rewrite_applied": bool(result.rewrite_applied) if result else None,
+            "fresh_sources": len(result.fresh_sources) if result and result.fresh_sources else 0,
+            "final_sources": final_count,
+            "history_chars": int(result.history_chars) if result else 0,
+            "budget": budget,
+            "timings": {k: round(float(v), 4) for k, v in timings.items()},
+            "usage": dict(result.usage) if result and result.usage else {},
+            "usage_by_call": usage_by_call,
+        }
+        if error:
+            payload["error"] = error
+        turn_logger.info(json.dumps(payload, ensure_ascii=False))
+    except Exception:  # noqa: BLE001
+        logger.exception("telemetry emit failed (non-fatal)")

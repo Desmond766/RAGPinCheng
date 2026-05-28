@@ -110,6 +110,13 @@ class TurnResult:
     budget: int
     rewrite_applied: bool
     timings: dict[str, float] = field(default_factory=dict)
+    # Token usage aggregated across the turn's LLM calls (rewrite + answer).
+    # Keys: prompt_tokens, completion_tokens, total_tokens. Empty when the
+    # provider didn't return usage (e.g. on the no-source fallback path).
+    usage: dict = field(default_factory=dict)
+    # Per-call breakdown so we can attribute spend to the cheap rewrite model
+    # vs the more expensive answer model. Keys: "rewrite", "generate".
+    usage_by_call: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -130,6 +137,34 @@ class StreamingTurnPrep:
     budget: int
     timings: dict[str, float]
     no_source_fallback: bool = False
+
+
+_USAGE_KEYS = ("prompt_tokens", "completion_tokens", "total_tokens")
+
+
+def _aggregate_usage(rewrite: dict, generate: dict) -> tuple[dict, dict]:
+    """Sum token counts across the two LLM calls; preserve per-call breakdown.
+
+    Returns (total, by_call). Either input dict may be empty (no call made
+    or provider didn't return usage).
+    """
+    total: dict = {}
+    for src in (rewrite, generate):
+        for k in _USAGE_KEYS:
+            v = src.get(k)
+            if v is None:
+                continue
+            total[k] = total.get(k, 0) + int(v)
+    by_call: dict = {}
+    if rewrite:
+        by_call["rewrite"] = {k: rewrite[k] for k in _USAGE_KEYS if k in rewrite}
+        if "model" in rewrite:
+            by_call["rewrite"]["model"] = rewrite["model"]
+    if generate:
+        by_call["generate"] = {k: generate[k] for k in _USAGE_KEYS if k in generate}
+        if "model" in generate:
+            by_call["generate"]["model"] = generate["model"]
+    return total, by_call
 
 
 def retrieve_for_turn(
@@ -192,7 +227,9 @@ class ChatSession:
 
     # ── Internal helpers ──────────────────────────────────────────────────────
 
-    def _resolve_search_query(self, query: str) -> tuple[str, float]:
+    def _resolve_search_query(
+        self, query: str, usage_out: dict | None = None,
+    ) -> tuple[str, float]:
         """Step ①: pick the query to send to retrieval, with timing.
 
         Skips the rewrite LLM call when:
@@ -218,7 +255,7 @@ class ChatSession:
         ):
             return self.state.last_search_query, perf_counter() - t0
 
-        rewritten = rewrite_query(prior, query)
+        rewritten = rewrite_query(prior, query, usage_out=usage_out)
         return rewritten, perf_counter() - t0
 
     def _sources_for_ui(
@@ -245,9 +282,12 @@ class ChatSession:
         self, query: str, categories: list[str] | None = None
     ) -> TurnResult:
         timings: dict[str, float] = {}
+        rewrite_usage: dict = {}
 
         # ① REWRITE
-        search_query, rewrite_t = self._resolve_search_query(query)
+        search_query, rewrite_t = self._resolve_search_query(
+            query, usage_out=rewrite_usage,
+        )
         timings["rewrite"] = rewrite_t
         rewrite_applied = search_query != query
 
@@ -296,6 +336,7 @@ class ChatSession:
         )
         timings["generate"] = perf_counter() - t
         timings["total"] = sum(timings.values())
+        usage_total, usage_by_call = _aggregate_usage(rewrite_usage, answer.usage)
 
         # ⑤ UPDATE STATE — assistant text only; sources stripped from history.
         sources_for_ui = self._sources_for_ui(answer.sources)
@@ -314,6 +355,8 @@ class ChatSession:
             budget=budget,
             rewrite_applied=rewrite_applied,
             timings=timings,
+            usage=usage_total,
+            usage_by_call=usage_by_call,
         )
         self.last_turn_result = result
         return result
@@ -330,9 +373,12 @@ class ChatSession:
         `self.last_turn_result` is set with the full TurnResult.
         """
         timings: dict[str, float] = {}
+        rewrite_usage: dict = {}
 
         # ① REWRITE
-        search_query, rewrite_t = self._resolve_search_query(query)
+        search_query, rewrite_t = self._resolve_search_query(
+            query, usage_out=rewrite_usage,
+        )
         timings["rewrite"] = rewrite_t
         rewrite_applied = search_query != query
 
@@ -374,6 +420,7 @@ class ChatSession:
                 history_chars=0,
                 budget=0,
                 timings_so_far=dict(timings),
+                rewrite_usage=dict(rewrite_usage),
             )
             return prep, stream
 
@@ -410,6 +457,7 @@ class ChatSession:
             history_chars=history_chars,
             budget=budget,
             timings_so_far=dict(timings),
+            rewrite_usage=dict(rewrite_usage),
         )
         return prep, stream
 
@@ -426,6 +474,7 @@ class ChatSession:
         history_chars: int,
         budget: int,
         timings_so_far: dict[str, float],
+        rewrite_usage: dict,
     ) -> Iterator[str]:
         """Accumulate streamed text, time the generate stage, then finalize.
 
@@ -456,6 +505,7 @@ class ChatSession:
                 history_chars=history_chars,
                 budget=budget,
                 timings=timings,
+                rewrite_usage=rewrite_usage,
             )
 
     def _finalize_streaming_turn(
@@ -471,6 +521,7 @@ class ChatSession:
         history_chars: int,
         budget: int,
         timings: dict[str, float],
+        rewrite_usage: dict,
     ) -> None:
         """Mirror of the ⑤ UPDATE STATE block in `ask()`, for the streaming path."""
         if gen_prep is None:
@@ -478,6 +529,7 @@ class ChatSession:
             self.state.append_turn(query, full_text, sources_for_ui=[])
             self.state.last_sources = []
             self.state.last_search_query = search_query
+            usage_total, usage_by_call = _aggregate_usage(rewrite_usage, {})
             self.last_turn_result = TurnResult(
                 answer_text=full_text,
                 sources=[],
@@ -489,6 +541,8 @@ class ChatSession:
                 budget=0,
                 rewrite_applied=rewrite_applied,
                 timings=timings,
+                usage=usage_total,
+                usage_by_call=usage_by_call,
             )
             return
 
@@ -505,7 +559,9 @@ class ChatSession:
             context_chars=gen_prep.context_chars,
             budget_used=gen_prep.context_chars,
             budget=gen_prep.budget,
+            usage=dict(gen_prep.usage),
         )
+        usage_total, usage_by_call = _aggregate_usage(rewrite_usage, gen_prep.usage)
         self.last_turn_result = TurnResult(
             answer_text=full_text,
             sources=gen_prep.used_sources,
@@ -517,4 +573,6 @@ class ChatSession:
             budget=budget,
             rewrite_applied=rewrite_applied,
             timings=timings,
+            usage=usage_total,
+            usage_by_call=usage_by_call,
         )
