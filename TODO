@@ -1,12 +1,15 @@
-问答加入上下文
-回答参考应该包含具体的文件名以及具体页数
-加速回答速度
+查询拆分 / 多跳检索 — Phase 2（LLM-based decomposer）：
 
-并发问题（两个用户同时提问时会出问题）：
+适用场景：用户提问需要对比/合并多个实体或主题，但**没有规范编号**做为
+确定性触发信号。例如：
+   - "对比 Revit 族与 Dynamo 节点的复用方式"
+   - "客户A和客户B对图层命名的不同要求"
+   - "钢结构和混凝土结构在BIM建模流程上的差异"
 
-BGE-M3 嵌入模型 + BGE-reranker-v2-m3 交叉编码器是进程内共享单例
-   - src/embed.py 现在用 threading.Lock 串行化 model.encode()，避免 MPS 上的崩溃；
-     但代价是并发推理排队执行（5 个用户大约多 ~500ms 尾延迟）。
-   - rerank 仍然走 GIL + 单 CUDA 流，吞吐受限（~100–300ms × N 用户）。
-   - 改进方向：micro-batching（聚合 ~20ms 窗口内的并发请求批量推理），
-     或把 embed/rerank 拆成独立服务（text-embeddings-inference / Triton 等）。
+思路：
+   - 新增 prompt `prompts/decompose_system.md`，让一个**便宜模型**
+     （复用 LLM_REWRITE_MODEL = glm-4.5-air）判断是否需要拆分，并返回
+     JSON `{"decompose": bool, "sub_queries": [...]}`。最多 3 个子查询。
+   - 用启发式 gate：query 包含 "对比|比较|区别|差异|分别|VS|vs" 等
+     比较标记时才调用 LLM，估计触发率 <5%/turn。
+   - 拆分后走 `retrieve_multi`（Phase 1 已建好的多路检索 + 全局重排）。
