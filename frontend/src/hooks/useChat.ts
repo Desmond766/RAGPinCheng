@@ -117,6 +117,8 @@ export function useChat({
       };
       setMessages((prev) => [...prev, userMsg, assistantMsg]);
 
+      let gotContent = false;
+      let aborted = false;
       try {
         for await (const ev of streamChat(
           cid,
@@ -132,6 +134,7 @@ export function useChat({
               ),
             );
           } else if (ev.type === "token") {
+            if (ev.data.text) gotContent = true;
             setMessages((prev) =>
               prev.map((m) =>
                 m.id === assistantId
@@ -140,6 +143,7 @@ export function useChat({
               ),
             );
           } else if (ev.type === "done") {
+            gotContent = true;
             setMessages((prev) =>
               prev.map((m) =>
                 m.id === assistantId
@@ -165,7 +169,8 @@ export function useChat({
           }
         }
       } catch (e: any) {
-        const msg = e?.name === "AbortError" ? "（已中止）" : e?.message || String(e);
+        aborted = e?.name === "AbortError";
+        const msg = aborted ? "（已中止）" : e?.message || String(e);
         setMessages((prev) =>
           prev.map((m) =>
             m.id === assistantId
@@ -182,7 +187,16 @@ export function useChat({
               : m,
           ),
         );
-        // Persisted; let the sidebar refresh title + updated_at.
+        // If the user switched away before any assistant content arrived,
+        // drop the lazily-created conversation so it doesn't clutter history.
+        if (cid && aborted && !gotContent) {
+          try {
+            await api.deleteConversation(cid);
+          } catch {
+            // best-effort cleanup; ignore failures
+          }
+        }
+        // Persisted (or deleted); let the sidebar refresh either way.
         if (cid) onConversationUpdated?.(cid);
       }
     },
