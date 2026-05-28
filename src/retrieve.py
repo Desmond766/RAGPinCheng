@@ -53,11 +53,30 @@ class RetrievedParent:
     rrf_score: float = 0.0
 
 
-# Matches Chinese standard codes: GB / GB/T / JGJ / JGJ/T / CECS / YB / JG /
-# TB / DB / DBJ (case-insensitive), optional separator, then the number
-# (e.g. "50017-2017" or "16.3-2019"). Half-width and full-width slashes both.
+# Matches BIM-relevant standard codes (case-insensitive, half-width and
+# full-width slashes both accepted, optional separator before the number
+# like "50017-2017" or "16.3-2019"):
+#   National / industry:  GB, JGJ, JG, CJJ, YB, TB, JC, DBJ, DB, CECS
+#                          (each with an optional /T推荐 variant)
+#   Group / association:  T/CECS, T/CCES, T/CSCS, T/CCS
+#   International:        ISO
+# Ordering matters in the alternation: longer prefixes must come first
+# (JGJ before JG, DBJ before DB) so the regex engine doesn't bite off the
+# shorter match and leave a dangling letter.
+# Left boundary uses (?<![A-Za-z]) instead of \b: in Python's default
+# Unicode re, Chinese chars are word chars, so \b does NOT fire between
+# `在` and `GB` — meaning "在GB 50017" (very common in CJK queries) was
+# previously missed. Asserting "preceding char is not an ASCII letter"
+# instead lets the boundary fire in CJK-adjacent contexts while still
+# preventing matches inside longer Latin tokens (e.g. "subGB").
 _CODE_RE = re.compile(
-    r"\b(GB(?:[/／]T)?|JGJ(?:[/／]T)?|CECS|YB|JG|TB|DB|DBJ)\s*[-—/／\s]?\s*"
+    r"(?<![A-Za-z])("
+    r"T[/／](?:CECS|CCES|CSCS|CCS)"
+    r"|"
+    r"(?:GB|JGJ|JG|CJJ|YB|TB|JC|CECS|DBJ|DB)(?:[/／]T)?"
+    r"|"
+    r"ISO"
+    r")\s*[-—/／\s]?\s*"
     r"(\d{2,5}(?:[-．\.]\d+)*)",
     re.IGNORECASE,
 )
