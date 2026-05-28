@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from src.chunk import chunk_all
 from src.index import index_children, reset_index, store_parents
 from src.ingest import ingest_all
+from src.table_summary import summarize_table_children
 
 
 def main(force_parse: bool = False, reset: bool = False) -> None:
@@ -35,10 +36,14 @@ def main(force_parse: bool = False, reset: bool = False) -> None:
     parents, children = chunk_all(docs)
     print(f"Total: {len(parents)} parents, {len(children)} children")
 
-    print("\n=== Stage 3: Parent store (upsert) ===")
+    print("\n=== Stage 3: Table summarization (retrieval-time keywords) ===")
+    summary_stats = summarize_table_children(children)
+    print(f"[table-summary] {summary_stats}")
+
+    print("\n=== Stage 4: Parent store (upsert) ===")
     store_parents(parents)
 
-    print("\n=== Stage 4: Embed + Qdrant upsert ===")
+    print("\n=== Stage 5: Embed + Qdrant upsert ===")
     index_children(children)
 
     print("\nDone.")

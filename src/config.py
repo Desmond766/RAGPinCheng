@@ -79,3 +79,15 @@ LLM_MODEL = os.getenv("LLM_MODEL", "glm-4.7-flashx")
 # which `os.getenv("...", default)` does NOT treat as missing.
 LLM_REWRITE_MODEL = os.getenv("LLM_REWRITE_MODEL", "").strip() or "glm-4.5-air"
 LLM_TEMPERATURE = 0.2
+
+# Table summarization at index time. Generates a short natural-language
+# summary for each `content_type="table"` child and prepends it to the
+# embed text + payload text so dense/sparse retrieval and the reranker see
+# real keywords instead of raw <td> soup. Summaries are cached in
+# parents.sqlite (table_summaries) keyed by content hash.
+TABLE_SUMMARY_ENABLED = os.getenv("TABLE_SUMMARY_ENABLED", "1").strip() not in ("0", "false", "False", "")
+TABLE_SUMMARY_MODEL = os.getenv("TABLE_SUMMARY_MODEL", "").strip() or "glm-4.5-air"
+# Skip tables shorter than this — tiny tables already embed fine as raw text.
+TABLE_SUMMARY_MIN_CHARS = 200
+# Truncate giant tables before sending to the summarizer (LLM context cap).
+TABLE_SUMMARY_MAX_CHARS = 8000

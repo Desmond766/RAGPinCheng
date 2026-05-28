@@ -650,6 +650,7 @@ const STATUS_LABELS: Record<string, string> = {
   queued_mineru: "等待 MinerU",
   parsing: "解析中",
   chunking: "切块中",
+  summarizing: "表格摘要中",
   embedding: "嵌入中",
   done: "已完成",
   failed: "失败",
@@ -660,6 +661,7 @@ const STATUS_HINTS: Record<string, string> = {
   queued_mineru: "文件已提交，等待 MinerU 服务器开始解析（通常需 1–3 分钟）",
   parsing: "MinerU 正在解析 PDF…",
   chunking: "切块中…",
+  summarizing: "正在为表格生成检索摘要…",
   embedding: "向量嵌入中…",
 };
 
@@ -669,12 +671,13 @@ const STATUS_COLORS: Record<string, string> = {
   queued_mineru: "bg-violet-100 text-violet-700",
   parsing: "bg-blue-100 text-blue-700",
   chunking: "bg-blue-100 text-blue-700",
+  summarizing: "bg-teal-100 text-teal-700",
   embedding: "bg-amber-100 text-amber-700",
   done: "bg-green-100 text-green-700",
   failed: "bg-red-100 text-red-700",
 };
 
-const ACTIVE_STATUSES = new Set(["pending", "uploading", "queued_mineru", "parsing", "chunking", "embedding"]);
+const ACTIVE_STATUSES = new Set(["pending", "uploading", "queued_mineru", "parsing", "chunking", "summarizing", "embedding"]);
 
 function useElapsed(startTs: number | null | undefined): string {
   const [now, setNow] = useState(() => Date.now());

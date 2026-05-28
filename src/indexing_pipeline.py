@@ -30,6 +30,7 @@ from .config import (
     SECOND_LEVEL_CATEGORIES,
 )
 from .index import _client, _init_parents_db, index_children, store_parents
+from .table_summary import summarize_table_children
 from .ingest import (
     ParsedDoc,
     _cloud_parse,
@@ -186,6 +187,14 @@ def index_single(
 
     on_status("chunking")
     parents, children = chunk_document(doc)
+
+    # Generate retrieval-time summaries for table children (no-op when
+    # there are no tables or ZHIPU_API_KEY is missing). Status flips to
+    # "summarizing" so the admin UI shows the stage; harmless if it
+    # finishes in milliseconds (cache hit / no tables).
+    if any(c.content_type == "table" for c in children):
+        on_status("summarizing")
+        summarize_table_children(children)
 
     on_status("embedding")
     store_parents(parents)

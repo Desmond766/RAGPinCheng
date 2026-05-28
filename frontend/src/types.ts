@@ -123,7 +123,7 @@ export type IndexJob = {
   doc_type: "pdf" | "transcript" | string;
   source_path: string;
   file_size: number;
-  status: "pending" | "parsing" | "chunking" | "embedding" | "done" | "failed" | string;
+  status: "pending" | "parsing" | "chunking" | "summarizing" | "embedding" | "done" | "failed" | string;
   error: string | null;
   parents: number | null;
   children: number | null;
