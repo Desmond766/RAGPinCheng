@@ -52,7 +52,7 @@ def register(
         "SELECT id FROM users WHERE employee_id = ?", (emp,)
     ).fetchone()
     if existing is not None:
-        raise HTTPException(status_code=409, detail="该工号已注册")
+        raise HTTPException(status_code=409, detail="该用户名已注册")
 
     now = int(time.time())
     cur = conn.execute(
@@ -81,7 +81,7 @@ def login(
         "SELECT * FROM users WHERE employee_id = ?", (emp,)
     ).fetchone()
     if row is None or not verify_password(body.password, row["password_hash"]):
-        raise HTTPException(status_code=401, detail="工号或密码错误")
+        raise HTTPException(status_code=401, detail="用户名或密码错误")
     if not row["is_active"]:
         raise HTTPException(status_code=403, detail="账号已停用")
 

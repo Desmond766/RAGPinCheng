@@ -26,10 +26,10 @@ export function LoginPage() {
     <div className="h-full flex items-center justify-center bg-bg">
       <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-panel p-8 shadow-sm">
         <h1 className="text-xl font-semibold mb-1">登录 · 品成 BIM 知识库</h1>
-        <p className="text-sm text-muted mb-6">使用工号和密码登录</p>
+        <p className="text-sm text-muted mb-6">使用用户名和密码登录</p>
         <form onSubmit={onSubmit} className="space-y-4">
           <label className="block">
-            <span className="text-sm">工号</span>
+            <span className="text-sm">用户名</span>
             <input
               type="text"
               value={employeeId}

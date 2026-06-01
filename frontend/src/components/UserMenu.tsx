@@ -35,7 +35,7 @@ export function UserMenu() {
         </span>
         <div className="flex-1 min-w-0 text-left">
           <div className="text-sm truncate">{u.real_name}</div>
-          <div className="text-[11px] text-muted truncate">工号 {u.employee_id}</div>
+          <div className="text-[11px] text-muted truncate">用户名 {u.employee_id}</div>
         </div>
         <span className="text-muted text-xs">▾</span>
       </button>

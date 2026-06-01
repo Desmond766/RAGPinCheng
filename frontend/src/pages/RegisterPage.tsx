@@ -36,10 +36,10 @@ export function RegisterPage() {
     <div className="h-full flex items-center justify-center bg-bg">
       <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-panel p-8 shadow-sm">
         <h1 className="text-xl font-semibold mb-1">注册 · 品成 BIM 知识库</h1>
-        <p className="text-sm text-muted mb-6">填写工号、姓名和密码</p>
+        <p className="text-sm text-muted mb-6">填写用户名、姓名和密码</p>
         <form onSubmit={onSubmit} className="space-y-4">
           <label className="block">
-            <span className="text-sm">工号（登录用，唯一）</span>
+            <span className="text-sm">用户名（登录用，唯一）</span>
             <input
               type="text"
               value={employeeId}

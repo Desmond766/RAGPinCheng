@@ -171,7 +171,7 @@ function UsersTab() {
           type="search"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          placeholder="按姓名或工号筛选…"
+          placeholder="按姓名或用户名筛选…"
           className="w-72 rounded-lg border border-gray-300 px-3 py-1.5 text-sm bg-bg"
         />
         <span className="text-xs text-muted">
@@ -193,7 +193,7 @@ function UsersTab() {
         <table className="w-full text-sm">
           <thead className="bg-gray-50 dark:bg-gray-800 text-muted">
             <tr>
-              <th className="text-left px-3 py-2">工号</th>
+              <th className="text-left px-3 py-2">用户名</th>
               <th className="text-left px-3 py-2">姓名</th>
               <th className="text-left px-3 py-2">角色</th>
               <th className="text-left px-3 py-2">状态</th>
@@ -314,7 +314,7 @@ function UserConversationsDrillIn({
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
           <div className="text-sm">
             <span className="font-semibold">{user.real_name}</span>
-            <span className="text-muted ml-2">工号 {user.employee_id} 的对话</span>
+            <span className="text-muted ml-2">用户名 {user.employee_id} 的对话</span>
           </div>
           <button onClick={onClose} className="text-muted hover:text-ink">
             ✕
@@ -418,7 +418,7 @@ function ConversationsTab() {
           type="search"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          placeholder="按姓名、工号或对话标题筛选…"
+          placeholder="按姓名、用户名或对话标题筛选…"
           className="w-80 rounded-lg border border-gray-300 px-3 py-1.5 text-sm bg-bg"
         />
         <span className="text-xs text-muted">
