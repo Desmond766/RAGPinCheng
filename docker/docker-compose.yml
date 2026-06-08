@@ -54,6 +54,21 @@ services:
         - ${BUILD_PLATFORM:-linux/amd64}
     image: pincheng-rag-backend:latest
     restart: unless-stopped
+    # GPU passthrough — Compose v2 equivalent of `docker run --gpus all`.
+    # Requires the NVIDIA Container Toolkit on the host (one-time:
+    #   sudo apt-get install -y nvidia-container-toolkit
+    #   sudo nvidia-ctk runtime configure --runtime=docker
+    #   sudo systemctl restart docker
+    # ). Without the toolkit this block is a silent no-op and the backend
+    # stays on CPU. With it, the cu128 torch wheel sees the RTX 5060 Ti and
+    # src/embed.py:_pick_device() returns "cuda".
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
     depends_on:
       qdrant:
         condition: service_healthy

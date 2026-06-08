@@ -48,15 +48,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# 1) Install CPU-only torch first. FlagEmbedding depends on torch; pinning the
-#    CPU wheel here means the later `pip install` sees torch as already
-#    satisfied and skips the default CUDA wheel (~2GB saved).
-# torch>=2.6 is required by current `transformers`: it refuses to load .bin
-# checkpoints on older torch due to CVE-2025-32434 (the `torch.load` pickle
-# RCE). BGE-M3 ships .bin weights, so anything < 2.6 fails at warmup with
-# "ValueError: ... upgrade torch to at least v2.6".
-RUN pip install --index-url https://download.pytorch.org/whl/cpu \
-        "torch>=2.6"
+# 1) Install CUDA-enabled torch first. FlagEmbedding depends on torch; pinning
+#    the wheel here means the later `pip install` sees torch as already
+#    satisfied and won't pull a different build.
+# cu128 (CUDA 12.8) is REQUIRED for the RTX 5060 Ti — it's Blackwell (sm_120),
+# and the default pip / cu126 wheels are NOT compiled for sm_120, so they fail
+# at runtime with "no kernel image is available for execution on the device".
+# The cu128 index serves torch>=2.7, the first release built for sm_120.
+# (torch>=2.6 is also needed to satisfy transformers' CVE-2025-32434 check,
+# which refuses to load BGE-M3's .bin weights on older torch — cu128 clears it.)
+# Host prerequisites for this to actually reach the GPU:
+#   - NVIDIA driver >= 570 on the host (Blackwell support)
+#   - NVIDIA Container Toolkit installed + `docker compose` GPU reservation
+#     (see docker-compose.yml backend.deploy.resources).
+# To go back to a CPU-only build (e.g. a host with no GPU), swap the index
+# back to .../whl/cpu and drop the compose GPU reservation.
+RUN pip install --index-url https://download.pytorch.org/whl/cu128 \
+        "torch>=2.7"
 
 # 2) Production Python deps.
 COPY requirements-prod.txt ./

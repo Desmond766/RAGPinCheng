@@ -2,8 +2,11 @@
 # Excludes:
 #   - mineru[core]  (cloud API used via MINERU_API_KEY; local CLI fallback not shipped)
 #   - streamlit     (React frontend is the production UI)
-# CPU-only torch is installed separately in the Dockerfile to avoid pulling
-# the ~2GB CUDA wheels that FlagEmbedding would otherwise drag in.
+# torch is installed separately in the Dockerfile from the cu128 index
+# (CUDA 12.8, required for the RTX 5060 Ti / Blackwell sm_120). Pinning it
+# there means this `pip install` sees torch already satisfied and won't pull
+# a different build. See docker/Dockerfile.backend for the wheel + the host
+# GPU prerequisites.
 requests>=2.32.0
 pypdf>=4.0.0
 langchain-text-splitters>=0.3.0
