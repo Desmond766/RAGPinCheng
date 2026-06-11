@@ -296,6 +296,17 @@ def iter_transcripts() -> Iterator[Path]:
             yield p
 
 
+def iter_markdown_docs() -> Iterator[Path]:
+    """Yield .md files anywhere under docs/ EXCEPT 教学视频/ — these are
+    markdown-as-document sources (already-parsed PDF equivalents), the same
+    classification rule the admin upload path applies
+    (`routes_admin._classify_doc_type`): a .md is a transcript iff it lives
+    under 教学视频/, otherwise a regular document."""
+    for p in sorted(DOCS_DIR.rglob("*.md")):
+        if not p.is_relative_to(TRANSCRIPTIONS_DIR):
+            yield p
+
+
 def _transcript_title(md_path: Path) -> str:
     """Read the title from the first non-empty line of a transcript file.
 
@@ -350,6 +361,25 @@ def ingest_all(force: bool = False) -> list[ParsedDoc]:
 
         final_md.write_text(markdown, encoding="utf-8")
         docs.append(ParsedDoc(pdf, category, doc_title, final_md, doc_type="pdf", company=company))
+
+    # Markdown-as-document: .md outside 教学视频/ is already markdown — no
+    # MinerU pass. doc_type="pdf" so the chunker takes the header-anchored
+    # branch (same semantics as indexing_pipeline._build_markdown_doc).
+    for md_path in iter_markdown_docs():
+        parts = md_path.relative_to(DOCS_DIR).parts
+        category = parts[0] if len(parts) > 1 else "uncategorized"
+        company = parts[1] if category in SECOND_LEVEL_CATEGORIES and len(parts) > 2 else None
+        docs.append(
+            ParsedDoc(
+                source_path=md_path,
+                category=category,
+                doc_title=md_path.stem,
+                markdown_path=md_path,
+                doc_type="pdf",
+                company=company,
+            )
+        )
+        print(f"[markdown] {md_path.name}")
 
     # Transcripts are already markdown — no MinerU pass needed.
     for md_path in iter_transcripts():
